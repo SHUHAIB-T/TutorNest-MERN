@@ -5,6 +5,6 @@ import mongoose from "mongoose";
 const PORT = env.PORT;
 
 mongoose.connect(env.MONGO_URI).then(() => {
-  console.log("Database connected succefully");
+  console.log("Database connected successfully");
   app.listen(PORT, () => console.log(`server running on port ${PORT}`));
 });

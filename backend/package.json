@@ -4,8 +4,6 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "npx tsc",
-    "lint": "eslint . --ext .ts",
     "dev": "nodemon src/server.ts"
   },
   "keywords": [],
