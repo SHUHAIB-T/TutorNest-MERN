@@ -1,7 +1,7 @@
-import { cleanEnv, str } from "envalid";
+import { cleanEnv, str, port } from "envalid";
 
 // validasting and accessing environment variables
 export const env = cleanEnv(process.env, {
-  PORT: str(),
+  PORT: port(),
   MONGO_URI: str(),
 });
