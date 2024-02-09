@@ -1,16 +1,30 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { validate } from "../util/validateForms";
 import { userData } from "../../types/authTypes";
+import SignupOTPmodal from "../Modal/SignupOTPmodal";
+import api from "../../API/api";
+import { AxiosError } from "axios";
+import { useAppDispatch, useAppSelector } from "../../app/store";
+import Loader from "../Loader/Loader";
+import { signup } from "../../features/auth/authService";
+import { reset } from "../../features/auth/authSlice";
+import { toast } from "react-toastify";
 
 type Props = {
   role: string;
 };
 
 export default function Signup({ role }: Props) {
-  console.log(role);
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const { isLoading, isError, errorMessage, isSuccess } = useAppSelector(
+    (state) => state.auth
+  );
+  const [formSubmit, setFormSubmit] = useState(false);
+
   const [isviewPass, setIsviewPass] = useState(false);
   const viewPassword = () => {
     setIsviewPass((pre) => !pre);
@@ -21,6 +35,7 @@ export default function Signup({ role }: Props) {
     email: "",
     phone: "",
     password: "",
+    role: role,
   });
   const [confirmpass, setconfirmpass] = useState<string>("");
   const onchange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -33,6 +48,11 @@ export default function Signup({ role }: Props) {
     password: "",
     phone: "",
   });
+
+  const [serverError, setServerError] = useState("");
+
+  const [openModal, setOpenModal] = useState(false);
+  const [isSubmit, setisSubmit] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -51,25 +71,87 @@ export default function Signup({ role }: Props) {
       phone: validate("phone", userData.phone),
       password: validate("password", userData.password),
     });
+
     if (formError.password === "" && confirmpass !== userData.password) {
       setFormError({
         ...formError,
         password: "password not matching",
       });
     }
+
+    if (
+      !formError.name &&
+      !formError.email &&
+      !formError.password &&
+      !formError.phone &&
+      userData.email.length > 0 &&
+      userData.password.length > 0 &&
+      userData.phone.length > 0 &&
+      userData.name.length > 0
+    ) {
+      (async function () {
+        try {
+          const response = await api.post("/verify-email", {
+            email: userData.email,
+          });
+          if (response.data.success) {
+            setisSubmit(true);
+            setServerError("");
+            setOpenModal(true);
+          }
+        } catch (error) {
+          const message = error as AxiosError;
+          const Error = (message?.response?.data as { message: string }).message;
+          setServerError(Error);
+          setOpenModal(false);
+        }
+      })();
+    }
   };
 
+  useEffect(() => {
+    if (formSubmit) {
+      dispatch(signup(userData));
+      dispatch(reset());
+    }
+  }, [dispatch, userData, formSubmit]);
+
+  if (isError) {
+    toast.error(errorMessage);
+  }
+
+  useEffect(() => {
+    if (isSuccess) {
+      navigate("/");
+    }
+  }, [isSuccess, navigate]);
+
+  if (isLoading) {
+    return <Loader />;
+  }
   return (
     <>
-      <div className="flex justify-center items-center bg-gradient-to-r from-custom-gradient-start to-custom-gradient-end h-[100vh] md:pt-20 md:pb-10 md:px-52 sm:py-5 w-full">
-        <div className="w-[100%] relative flex justify-between bg-white h-[100%] rounded-3xl">
-          <div className="bg-primary h-[100%] w-80 left-20 hidden md:inline-flex rounded-3xl"></div>
+      <SignupOTPmodal
+        openModal={openModal}
+        setOpenModal={setOpenModal}
+        email={userData.email}
+        isSubmit={isSubmit}
+        setFormSubmit={setFormSubmit}
+      />
+      <div className="flex justify-center items-center bg-gradient-to-r from-custom-gradient-start to-custom-gradient-end h-[100vh]  md:px-72 px-4 w-full">
+        <div className="w-[100%] relative flex justify-between bg-white rounded-3xl">
+          <div className="bg-primary w-72 left-20 hidden md:inline-flex rounded-3xl"></div>
           <div className="flex flex-col items-center w-[100%]">
             <h1 className="text-primary font-black text-5xl mt-9">SIGNUP</h1>
             <form
               onSubmit={handleSubmit}
               className="flex flex-col items-start w-[70%]"
             >
+              {serverError && (
+                <small className="text-red-600 rounded-sm mt-2 bg-red-100 w-[100%] text-center">
+                  {serverError}
+                </small>
+              )}
               <label htmlFor="name" className="text-primary font-medium mt-2">
                 Name
               </label>
@@ -181,13 +263,13 @@ export default function Signup({ role }: Props) {
                   </button>
                 </div>
               </div>
-              <Link to={"/login"} className="text-blue-500 text-sm mt-1">
+              <Link to={"/login"} className="text-blue-500 text-sm mt-1 mb-5">
                 Already have account? login
               </Link>
             </form>
           </div>
           <img
-            className="absolute hidden top-10 left-10 md:inline-flex"
+            className="absolute hidden top-0 left-0 md:inline-flex"
             src="https://lh3.google.com/u/0/d/1ro0qQB_ADXEi2KRwzyxJ-xLjHvYpjHwC"
             alt=""
           />

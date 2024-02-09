@@ -1,8 +1,8 @@
 import app from "./app";
-import { env } from "./utils/envvalid";
+import {env} from "./utils/envvalid";
 import mongoose from "mongoose";
 
-const PORT = env.PORT;
+const PORT = env.PORT || 5000;
 
 mongoose.connect(env.MONGO_URI).then(() => {
   console.log("Database connected successfully");

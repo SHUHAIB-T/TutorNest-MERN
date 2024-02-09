@@ -6,23 +6,14 @@ const notFound = (req: Request, res: Response, next: NextFunction) => {
   next(error);
 };
 
-const errorHandler = (
-  err: Error,
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  let statusCode = res.statusCode === 200 ? 500 : res.statusCode;
-  let message = err.message;
-
-  if (err.name === "CastError") {
-    statusCode = 401;
-    message = "Resource not Found";
-  }
-  res.status(statusCode).json({
-    success: false,
-    message,
-  });
+// eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
+const errorHandler = (err: any, req: Request, res: Response,next: NextFunction) => {
+   const statuscode: number = res.statusCode == 200 ? 500 : res.statusCode;
+   res.status(statuscode);
+   res.json({
+        status: "error",
+        message: err?.message,
+   });
 };
 
 export { errorHandler, notFound };

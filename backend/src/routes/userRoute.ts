@@ -1,8 +1,18 @@
 import { Router } from "express";
-import { sayHai } from "../controller/userController";
+import {
+  verifyMail,
+  verifyOTP,
+  userSignup,
+  userLogin
+} from "../controller/userController";
+import studentRoute from "./studentRoute";
 
 const router: Router = Router();
 
-router.get("/", sayHai);
+router.post("/verify-email", verifyMail);
+router.post("/verify-otp", verifyOTP);
+router.post("/signup", userSignup);
+router.post("/login", userLogin);
 
+router.use("/student", studentRoute);
 export default router;
