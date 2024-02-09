@@ -19,4 +19,5 @@ export type userData = {
   email: string;
   password: string;
   phone: string;
+  role?:string;
 };

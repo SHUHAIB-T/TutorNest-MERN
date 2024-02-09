@@ -1,9 +1,9 @@
 import Signup from "../../components/SignUp/Signup";
 
-export default function StudentSignUp(): JSX.Element {
+export default function TutorSignup(): JSX.Element {
   return (
     <>
-      <Signup role="STUDENT"/>
+      <Signup role="TUTOR"/>
     </>
   );
 }

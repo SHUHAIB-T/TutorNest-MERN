@@ -1,10 +1,11 @@
 import { Schema, model } from "mongoose";
 import bcrypt from "bcryptjs";
 
-interface IOtp {
+export interface IOtp {
   email: string;
   otp: string;
   createdAt: Date;
+  matchOTP(OTP: number): Promise<boolean>;
 }
 
 const otpSchema = new Schema<IOtp>({
@@ -19,15 +20,16 @@ const otpSchema = new Schema<IOtp>({
 
 otpSchema.pre("save", async function (next) {
   if (!this.isModified("otp")) {
+    console.log("============>>>>IWONT")
     next();
   }
+  console.log("IWILLHASSSSSSSSSSSSSSS")
   const salt = await bcrypt.genSalt(10);
   this.otp = await bcrypt.hash(this.otp, salt);
 });
 
-otpSchema.methods.matchOTP = async function (OTP: number) {
-  const OTPString = OTP.toString();
-  return await bcrypt.compare(OTPString, this.otp);
+otpSchema.methods.matchOTP = async function (OTP: string) {
+  return await bcrypt.compare(OTP, this.otp);
 };
 
 const Otp = model<IOtp>("Otp", otpSchema);

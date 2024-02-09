@@ -3,7 +3,6 @@ import bcrypt from "bcryptjs";
 
 interface IUser {
   email: string;
-  phone: string;
   role: string;
   password: string;
   status: boolean;
@@ -12,10 +11,9 @@ interface IUser {
 const userSchema = new Schema<IUser>(
   {
     email: { type: String, required: true },
-    phone: { type: String, required: true },
     role: { type: String, required: true, enum: ["ADMIN", "TUTOR", "STUDENT"] },
     password: { type: String, required: true },
-    status: { type: Boolean, required: true },
+    status: { type: Boolean, required: true, default: true },
   },
   {
     timestamps: true,

@@ -1,13 +1,12 @@
 import express, { Express } from "express";
-import dotenv from "dotenv";
 import morgan from "morgan";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import { notFound, errorHandler } from "./middlewares/errorMiddleware";
+import "dotenv/config"
 
 import userRouter from "./routes/userRoute";
 
-dotenv.config();
 
 const app: Express = express();
 

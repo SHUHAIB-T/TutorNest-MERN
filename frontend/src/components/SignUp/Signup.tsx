@@ -1,16 +1,26 @@
 import { Link } from "react-router-dom";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { validate } from "../util/validateForms";
 import { userData } from "../../types/authTypes";
+import SignupOTPmodal from "../Modal/SignupOTPmodal";
+import api from "../../API/api";
+import { toast } from "react-toastify";
+import { AxiosError } from "axios";
+import { useAppDispatch, useAppSelector } from "../../app/store";
+import Loader from "../Loader/Loader";
+import { signup } from "../../features/auth/authService";
 
 type Props = {
   role: string;
 };
 
 export default function Signup({ role }: Props) {
-  console.log(role);
+  const dispatch = useAppDispatch();
+  const { isLoading } = useAppSelector((state) => state.auth);
+  const [formSubmit, setFormSubmit] = useState(false);
+
   const [isviewPass, setIsviewPass] = useState(false);
   const viewPassword = () => {
     setIsviewPass((pre) => !pre);
@@ -21,6 +31,7 @@ export default function Signup({ role }: Props) {
     email: "",
     phone: "",
     password: "",
+    role: role,
   });
   const [confirmpass, setconfirmpass] = useState<string>("");
   const onchange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -33,6 +44,10 @@ export default function Signup({ role }: Props) {
     password: "",
     phone: "",
   });
+  const [serverError, setServerError] = useState("");
+
+  const [openModal, setOpenModal] = useState(false);
+  const [isSubmit, setisSubmit] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -51,16 +66,62 @@ export default function Signup({ role }: Props) {
       phone: validate("phone", userData.phone),
       password: validate("password", userData.password),
     });
+
     if (formError.password === "" && confirmpass !== userData.password) {
       setFormError({
         ...formError,
         password: "password not matching",
       });
     }
+
+    if (
+      !formError.name &&
+      !formError.email &&
+      !formError.password &&
+      !formError.phone &&
+      userData.email.length > 0 &&
+      userData.password.length > 0 &&
+      userData.phone.length > 0 &&
+      userData.name.length > 0
+    ) {
+      (async function () {
+        try {
+          const response = await api.post("/verify-email", {
+            email: userData.email,
+          });
+          if (response.data.success) {
+            setisSubmit(true);
+            setOpenModal(true);
+          } else {
+            setServerError(response.data.message);
+            setOpenModal(false);
+          }
+        } catch (error) {
+          const message = error as AxiosError;
+          toast.error(message.message);
+        }
+      })();
+    }
   };
 
+  useEffect(() => {
+    if (formSubmit) {
+      dispatch(signup(userData));
+    }
+  }, [dispatch, userData, formSubmit]);
+
+  if (isLoading) {
+    return <Loader />;
+  }
   return (
     <>
+      <SignupOTPmodal
+        openModal={openModal}
+        setOpenModal={setOpenModal}
+        email={userData.email}
+        isSubmit={isSubmit}
+        setFormSubmit={setFormSubmit}
+      />
       <div className="flex justify-center items-center bg-gradient-to-r from-custom-gradient-start to-custom-gradient-end h-[100vh] md:pt-20 md:pb-10 md:px-52 sm:py-5 w-full">
         <div className="w-[100%] relative flex justify-between bg-white h-[100%] rounded-3xl">
           <div className="bg-primary h-[100%] w-80 left-20 hidden md:inline-flex rounded-3xl"></div>
@@ -70,6 +131,11 @@ export default function Signup({ role }: Props) {
               onSubmit={handleSubmit}
               className="flex flex-col items-start w-[70%]"
             >
+              {serverError && (
+                <small className="text-red-600 rounded-sm mt-2 bg-red-100 w-[100%] text-center">
+                  {serverError}
+                </small>
+              )}
               <label htmlFor="name" className="text-primary font-medium mt-2">
                 Name
               </label>
