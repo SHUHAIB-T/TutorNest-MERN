@@ -1,11 +1,14 @@
 import { Schema, model } from "mongoose";
 import bcrypt from "bcryptjs";
+import { ObjectId } from "mongodb";
 
-interface IUser {
+export interface IUser {
+  _id: ObjectId;
   email: string;
   role: string;
   password: string;
   status: boolean;
+  matchPassword(Password: string): Promise<boolean>;
 }
 
 const userSchema = new Schema<IUser>(

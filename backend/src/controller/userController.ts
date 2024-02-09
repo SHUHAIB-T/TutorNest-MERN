@@ -1,9 +1,9 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import asynchandler from "express-async-handler";
 import { transporter } from "../config/mailConfig";
 import Otp from "../model/otpModel";
 import { IOtp } from "../model/otpModel";
-import User from "../model/userModel";
+import User, { IUser } from "../model/userModel";
 import bcrypt from "bcryptjs";
 import { generateTocken } from "../utils/generateTocken";
 import Student from "../model/studentProfile";
@@ -14,48 +14,48 @@ import Teacher from "../model/studentProfile";
  * @route   POST /api/verify-email
  * @access  PUBLIC
  */
-export const verifyMail = asynchandler(async (req: Request, res: Response) => {
-  const { email } = req.body;
-  const isExist = await User.findOne({ email: email });
-  if (isExist) {
-    res.status(402).json({
-      success: false,
-      messaage: "Email already Exist",
+export const verifyMail = asynchandler(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { email } = req.body;
+    const isExist = await User.findOne({ email: email });
+    if (isExist) {
+      res.status(401);
+      return next(Error("Email Already Exist"));
+    }
+
+    // generating random number
+    const otp = Math.floor(100000 + Math.random() * 900000);
+    console.log("OTP============>>>>>>>>>", otp);
+    // saving OTP to db
+    const salt = await bcrypt.genSalt(10);
+    await Otp.findOneAndUpdate(
+      { email: email },
+      { $set: { email, otp: await bcrypt.hash(otp.toString(), salt) } },
+      { upsert: true, new: true }
+    );
+
+    const mailOptions = {
+      from: "hitutornest@gmail.com",
+      to: email,
+      subject: "Welcome to TutorNesrt",
+      text: `This is your OTP for verification ${otp}`,
+    };
+
+    // Send the email
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.error("Error sending email:", error);
+      } else {
+        console.log("Email sent:", info.response);
+      }
+    });
+
+    res.status(200).json({
+      success: true,
+      message: "OTP sent",
     });
   }
-
-  // generating random number
-  const otp = Math.floor(100000 + Math.random() * 900000);
-  console.log("OTP============>>>>>>>>>", otp);
-  // saving OTP to db
-  const salt = await bcrypt.genSalt(10);
-  await Otp.findOneAndUpdate(
-    { email: email },
-    { $set: { email, otp: await bcrypt.hash(otp.toString(), salt) } },
-    { upsert: true, new: true }
-  );
-
-  const mailOptions = {
-    from: "hitutornest@gmail.com",
-    to: email,
-    subject: "Welcome to TutorNesrt",
-    text: `This is your OTP for verification ${otp}`,
-  };
-
-  // Send the email
-  transporter.sendMail(mailOptions, (error, info) => {
-    if (error) {
-      console.error("Error sending email:", error);
-    } else {
-      console.log("Email sent:", info.response);
-    }
-  });
-
-  res.status(200).json({
-    success: true,
-    message: "OTP sent",
-  });
-});
+);
 
 /**
  * @disc    Verifying OTP
@@ -127,3 +127,30 @@ export const userSignup = asynchandler(async (req: Request, res: Response) => {
     throw new Error("Email Already Exist");
   }
 });
+
+/**
+ * @disc    user login
+ * @route   POST /api/login
+ * @access  PUBLIC
+ */
+export const userLogin = asynchandler(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { email, password } = req.body;
+    const user = await User.findOne<IUser>({ email: email });
+    if (user && (await user.matchPassword(password))) {
+      const tocken = generateTocken(user._id);
+      res.status(200).json({
+        success: true,
+        tocken: tocken,
+        user: {
+          _is: user._id,
+          email: user.email,
+          role: user.role,
+        },
+      });
+    } else {
+      res.status(401);
+      return next(Error("Invalid credentials!"));
+    }
+  }
+);

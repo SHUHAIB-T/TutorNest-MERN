@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import { useEffect, useState } from "react";
@@ -6,11 +6,12 @@ import { validate } from "../util/validateForms";
 import { userData } from "../../types/authTypes";
 import SignupOTPmodal from "../Modal/SignupOTPmodal";
 import api from "../../API/api";
-import { toast } from "react-toastify";
 import { AxiosError } from "axios";
 import { useAppDispatch, useAppSelector } from "../../app/store";
 import Loader from "../Loader/Loader";
 import { signup } from "../../features/auth/authService";
+import { reset } from "../../features/auth/authSlice";
+import { toast } from "react-toastify";
 
 type Props = {
   role: string;
@@ -18,7 +19,10 @@ type Props = {
 
 export default function Signup({ role }: Props) {
   const dispatch = useAppDispatch();
-  const { isLoading } = useAppSelector((state) => state.auth);
+  const navigate = useNavigate();
+  const { isLoading, isError, errorMessage, isSuccess } = useAppSelector(
+    (state) => state.auth
+  );
   const [formSubmit, setFormSubmit] = useState(false);
 
   const [isviewPass, setIsviewPass] = useState(false);
@@ -44,6 +48,7 @@ export default function Signup({ role }: Props) {
     password: "",
     phone: "",
   });
+
   const [serverError, setServerError] = useState("");
 
   const [openModal, setOpenModal] = useState(false);
@@ -91,14 +96,14 @@ export default function Signup({ role }: Props) {
           });
           if (response.data.success) {
             setisSubmit(true);
+            setServerError("");
             setOpenModal(true);
-          } else {
-            setServerError(response.data.message);
-            setOpenModal(false);
           }
         } catch (error) {
           const message = error as AxiosError;
-          toast.error(message.message);
+          const Error = (message?.response?.data as { message: string }).message;
+          setServerError(Error);
+          setOpenModal(false);
         }
       })();
     }
@@ -107,8 +112,19 @@ export default function Signup({ role }: Props) {
   useEffect(() => {
     if (formSubmit) {
       dispatch(signup(userData));
+      dispatch(reset());
     }
   }, [dispatch, userData, formSubmit]);
+
+  if (isError) {
+    toast.error(errorMessage);
+  }
+
+  useEffect(() => {
+    if (isSuccess) {
+      navigate("/");
+    }
+  }, [isSuccess, navigate]);
 
   if (isLoading) {
     return <Loader />;
@@ -122,9 +138,9 @@ export default function Signup({ role }: Props) {
         isSubmit={isSubmit}
         setFormSubmit={setFormSubmit}
       />
-      <div className="flex justify-center items-center bg-gradient-to-r from-custom-gradient-start to-custom-gradient-end h-[100vh] md:pt-20 md:pb-10 md:px-52 sm:py-5 w-full">
-        <div className="w-[100%] relative flex justify-between bg-white h-[100%] rounded-3xl">
-          <div className="bg-primary h-[100%] w-80 left-20 hidden md:inline-flex rounded-3xl"></div>
+      <div className="flex justify-center items-center bg-gradient-to-r from-custom-gradient-start to-custom-gradient-end h-[100vh]  md:px-72 px-4 w-full">
+        <div className="w-[100%] relative flex justify-between bg-white rounded-3xl">
+          <div className="bg-primary w-72 left-20 hidden md:inline-flex rounded-3xl"></div>
           <div className="flex flex-col items-center w-[100%]">
             <h1 className="text-primary font-black text-5xl mt-9">SIGNUP</h1>
             <form
@@ -247,13 +263,13 @@ export default function Signup({ role }: Props) {
                   </button>
                 </div>
               </div>
-              <Link to={"/login"} className="text-blue-500 text-sm mt-1">
+              <Link to={"/login"} className="text-blue-500 text-sm mt-1 mb-5">
                 Already have account? login
               </Link>
             </form>
           </div>
           <img
-            className="absolute hidden top-10 left-10 md:inline-flex"
+            className="absolute hidden top-0 left-0 md:inline-flex"
             src="https://lh3.google.com/u/0/d/1ro0qQB_ADXEi2KRwzyxJ-xLjHvYpjHwC"
             alt=""
           />

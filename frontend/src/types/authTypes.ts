@@ -19,5 +19,10 @@ export type userData = {
   email: string;
   password: string;
   phone: string;
-  role?:string;
+  role?: string;
+};
+
+export type LoginCredentials = {
+  email: string;
+  password: string;
 };

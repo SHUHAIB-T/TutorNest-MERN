@@ -12,5 +12,5 @@ const studentProfile = new Schema<IStuednetProfile>({
   phone: { type: Number, required: true },
 });
 
-const teacher = model<IStuednetProfile>("student", studentProfile);
+const teacher = model<IStuednetProfile>("teacher", studentProfile);
 export default teacher;

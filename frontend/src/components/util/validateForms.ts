@@ -16,6 +16,7 @@ export const validate = (name: string, value: unknown): string => {
       return "";
     case "name":
       if (value === "") return "name is required!";
+      if ((value as string).length > 15) return "Maximum 15 charecter!";
       return "";
     case "phone":
       if (value === "" || !value) return "Phone is required!";
@@ -27,6 +28,10 @@ export const validate = (name: string, value: unknown): string => {
       if (!value || value === "") return "Password is required!";
       if ((value as string).length < 6)
         return "Password must contain 6 charecters";
+      if ((value as string).length > 16) return "Maximum 16 charecters!";
+      return "";
+    case "passwordLogin":
+      if (!value || value === "") return "Password is required!";
       return "";
   }
   return "";

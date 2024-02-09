@@ -45,7 +45,6 @@ export default function SignupOTPmodal({
             email: email,
             otp: otp,
           });
-          console.log(response);
           if (response.data.success) {
             toast(response.data.message);
             setServerError("");

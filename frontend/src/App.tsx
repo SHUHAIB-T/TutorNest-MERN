@@ -5,6 +5,7 @@ import { Route, Routes } from "react-router-dom";
 import Loader from "./components/Loader/Loader";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Authenticate from "./components/Auth/Authenticate";
 
 const StudentSignUp = lazy(() => import("./pages/SignupPage/StudentSignUp"));
 const HomPage = lazy(() => import("./pages/HomePage/HomPage"));
@@ -17,9 +18,11 @@ function App() {
       <Suspense fallback={<Loader />}>
         <Routes>
           <Route path="/" element={<HomPage />} />
-          <Route path="/Login" element={<LoginPage />} />
-          <Route path="/student/signup" element={<StudentSignUp />} />
-          <Route path="/tutor/signup" element={<TutorSignup />} />
+          <Route element={<Authenticate />}>
+            <Route path="/Login" element={<LoginPage />} />
+            <Route path="/student/signup" element={<StudentSignUp />} />
+            <Route path="/tutor/signup" element={<TutorSignup />} />
+          </Route>
         </Routes>
       </Suspense>
       <ToastContainer />

@@ -1,4 +1,4 @@
-import { userData } from "../../types/authTypes";
+import { userData, LoginCredentials } from "../../types/authTypes";
 import api from "../../API/api";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { AxiosError } from "axios";
@@ -8,11 +8,25 @@ export const signup = createAsyncThunk(
   async (userdata: userData, thunkAPI) => {
     try {
       const response = await api.post("/signup", userdata);
-      console.log(response);
       return response.data;
     } catch (error) {
       const axiosError = error as AxiosError;
-      return thunkAPI.rejectWithValue(axiosError.message);
+      const Error = (axiosError?.response?.data as { message: string }).message;
+      return thunkAPI.rejectWithValue(Error);
+    }
+  }
+);
+
+export const login = createAsyncThunk(
+  "auth/login",
+  async (formData: LoginCredentials, thunkAPI) => {
+    try {
+      const response = await api.post("/login", formData);
+      return response.data;
+    } catch (error) {
+      const axiosError = error as AxiosError;
+      const Error = (axiosError?.response?.data as { message: string }).message;
+      return thunkAPI.rejectWithValue(Error);
     }
   }
 );
