@@ -26,3 +26,8 @@ export type LoginCredentials = {
   email: string;
   password: string;
 };
+
+export interface Google {
+  accessToken: string;
+  role: string;
+}

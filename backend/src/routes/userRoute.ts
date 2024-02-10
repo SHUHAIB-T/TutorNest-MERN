@@ -3,7 +3,8 @@ import {
   verifyMail,
   verifyOTP,
   userSignup,
-  userLogin
+  userLogin,
+  googleAuth,
 } from "../controller/userController";
 import studentRoute from "./studentRoute";
 
@@ -13,6 +14,7 @@ router.post("/verify-email", verifyMail);
 router.post("/verify-otp", verifyOTP);
 router.post("/signup", userSignup);
 router.post("/login", userLogin);
+router.post("/googleAuth", googleAuth);
 
 router.use("/student", studentRoute);
 export default router;

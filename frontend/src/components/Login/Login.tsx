@@ -6,6 +6,7 @@ import { useAppDispatch, useAppSelector } from "../../app/store";
 import Loader from "../Loader/Loader";
 import { useNavigate } from "react-router-dom";
 import { reset } from "../../features/auth/authSlice";
+import GoogleAuth from "../GoogleAuth/GoogleAuth";
 
 export default function Login() {
   const dispatch = useAppDispatch();
@@ -74,10 +75,13 @@ export default function Login() {
             alt=""
           />
           <div className="flex flex-col items-center w-[100%]">
-            <h1 className="text-primary font-black text-5xl mt-9">LOGIN</h1>
+            <h1 className="text-primary font-black text-5xl mt-9 mb-2">
+              LOGIN
+            </h1>
+            <GoogleAuth method={"Login"} role="PUBLIC" />
             <form
               onSubmit={handleSubmit}
-              className="flex flex-col items-start mt-2 w-[70%]"
+              className="flex flex-col items-start mt-1 w-[70%]"
             >
               {isError && (
                 <small className="text-red-600 rounded-sm mt-2 bg-red-100 w-[100%] text-center">

@@ -1,3 +1,5 @@
+
+
 export default function HomPage() {
-  return <div>HomPage</div>;
+  return <div>HomPage</div>
 }

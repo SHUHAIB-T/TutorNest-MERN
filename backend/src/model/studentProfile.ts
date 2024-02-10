@@ -1,16 +1,18 @@
 import mongoose, { Schema, ObjectId, model } from "mongoose";
 
 interface IStuednetProfile {
-  user: ObjectId;
+  userID: ObjectId;
   name: string;
   phone: number;
+  profile: string;
 }
 
 const studentProfile = new Schema<IStuednetProfile>({
-  user: { type: mongoose.Types.ObjectId, required: true },
+  userID: { type: mongoose.Types.ObjectId, required: true },
   name: { type: String, required: true },
-  phone: { type: Number, required: true },
+  phone: Number,
+  profile: String,
 });
 
-const teacher = model<IStuednetProfile>("teacher", studentProfile);
-export default teacher;
+const student = model<IStuednetProfile>("student", studentProfile);
+export default student;

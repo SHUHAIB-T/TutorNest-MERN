@@ -11,7 +11,7 @@ import { useAppDispatch, useAppSelector } from "../../app/store";
 import Loader from "../Loader/Loader";
 import { signup } from "../../features/auth/authService";
 import { reset } from "../../features/auth/authSlice";
-import { toast } from "react-toastify";
+import GoogleAuth from "../GoogleAuth/GoogleAuth";
 
 type Props = {
   role: string;
@@ -101,7 +101,8 @@ export default function Signup({ role }: Props) {
           }
         } catch (error) {
           const message = error as AxiosError;
-          const Error = (message?.response?.data as { message: string }).message;
+          const Error = (message?.response?.data as { message: string })
+            .message;
           setServerError(Error);
           setOpenModal(false);
         }
@@ -114,11 +115,8 @@ export default function Signup({ role }: Props) {
       dispatch(signup(userData));
       dispatch(reset());
     }
+    setFormSubmit(false)
   }, [dispatch, userData, formSubmit]);
-
-  if (isError) {
-    toast.error(errorMessage);
-  }
 
   useEffect(() => {
     if (isSuccess) {
@@ -142,7 +140,10 @@ export default function Signup({ role }: Props) {
         <div className="w-[100%] relative flex justify-between bg-white rounded-3xl">
           <div className="bg-primary w-72 left-20 hidden md:inline-flex rounded-3xl"></div>
           <div className="flex flex-col items-center w-[100%]">
-            <h1 className="text-primary font-black text-5xl mt-9">SIGNUP</h1>
+            <h1 className="text-primary font-black text-5xl mt-9 mb-2">
+              SIGNUP
+            </h1>
+            <GoogleAuth method="Sign Up" role={role} />
             <form
               onSubmit={handleSubmit}
               className="flex flex-col items-start w-[70%]"
@@ -150,6 +151,11 @@ export default function Signup({ role }: Props) {
               {serverError && (
                 <small className="text-red-600 rounded-sm mt-2 bg-red-100 w-[100%] text-center">
                   {serverError}
+                </small>
+              )}
+              {isError && (
+                <small className="text-red-600 rounded-sm mt-2 bg-red-100 w-[100%] text-center">
+                  {errorMessage}
                 </small>
               )}
               <label htmlFor="name" className="text-primary font-medium mt-2">
