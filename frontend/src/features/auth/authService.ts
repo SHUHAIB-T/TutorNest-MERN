@@ -1,4 +1,4 @@
-import { userData, LoginCredentials } from "../../types/authTypes";
+import { userData, LoginCredentials, Google } from "../../types/authTypes";
 import api from "../../API/api";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { AxiosError } from "axios";
@@ -25,6 +25,21 @@ export const login = createAsyncThunk(
       return response.data;
     } catch (error) {
       const axiosError = error as AxiosError;
+      const Error = (axiosError?.response?.data as { message: string }).message;
+      return thunkAPI.rejectWithValue(Error);
+    }
+  }
+);
+
+export const googleAuth = createAsyncThunk(
+  "auth/googleAuth",
+  async (userData: Google, thunkAPI) => {
+    try {
+      const response = await api.post("/googleAuth", userData);
+      return response.data;
+    } catch (error) {
+      const axiosError = error as AxiosError;
+      console.log(axiosError);
       const Error = (axiosError?.response?.data as { message: string }).message;
       return thunkAPI.rejectWithValue(Error);
     }

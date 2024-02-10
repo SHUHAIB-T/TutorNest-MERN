@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { AuthInterface } from "../../types/authTypes";
-import { signup, login } from "./authService";
+import { signup, login, googleAuth } from "./authService";
 import Cookies from "js-cookie";
 
 const user = localStorage.getItem("user");
@@ -53,6 +53,22 @@ const authSlice = createSlice({
         Cookies.set("token", action.payload.tocken, { expires: 2 });
       })
       .addCase(login.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.errorMessage = action.payload as string;
+      })
+      .addCase(googleAuth.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(googleAuth.fulfilled, (state, action) => {
+        state.isSuccess = true;
+        state.isLoading = false;
+        state.isError = false;
+        state.user = action.payload.user;
+        localStorage.setItem("user", JSON.stringify(action.payload.user));
+        Cookies.set("token", action.payload.tocken, { expires: 2 });
+      })
+      .addCase(googleAuth.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.errorMessage = action.payload as string;

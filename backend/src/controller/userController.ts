@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import asynchandler from "express-async-handler";
+import axios from "axios";
 import { transporter } from "../config/mailConfig";
 import Otp from "../model/otpModel";
 import { IOtp } from "../model/otpModel";
@@ -7,7 +8,7 @@ import User, { IUser } from "../model/userModel";
 import bcrypt from "bcryptjs";
 import { generateTocken } from "../utils/generateTocken";
 import Student from "../model/studentProfile";
-import Teacher from "../model/studentProfile";
+import Teacher from "../model/teacherProfile";
 
 /**
  * @disc    Sending OTP through mail
@@ -96,13 +97,13 @@ export const userSignup = asynchandler(async (req: Request, res: Response) => {
     if (createUser) {
       if (createUser.role === "STUDENT") {
         await Student.create({
-          user: createUser._id,
+          userID: createUser._id,
           phone: phone,
           name: name,
         });
       } else if (createUser.role === "TUTOR") {
         await Teacher.create({
-          user: createUser._id,
+          userID: createUser._id,
           phone: phone,
           name: name,
         });
@@ -151,6 +152,86 @@ export const userLogin = asynchandler(
     } else {
       res.status(401);
       return next(Error("Invalid credentials!"));
+    }
+  }
+);
+
+/**
+ * @disc    Google Auth
+ * @route   POST /api/googleAuth
+ * @access  PUBLIC
+ */
+export const googleAuth = asynchandler(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { accessToken, role } = req.body;
+
+    // Fetch additional user data using the access token
+    const response = await axios.get(
+      "https://www.googleapis.com/oauth2/v3/userinfo",
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    const {
+      name,
+      email,
+      picture,
+    }: { name: string; email: string; picture?: string } = response.data;
+
+    const isExist = await User.findOne({ email: email });
+    if (isExist) {
+      if (isExist.password) {
+        res.status(400);
+        return next(Error("Cannot Login without password"));
+      } else {
+        const tocken = generateTocken(isExist._id);
+
+        res.status(200).json({
+          success: true,
+          user: {
+            _id: isExist._id,
+            email: isExist.email,
+            role: isExist.role,
+          },
+          tocken: tocken,
+        });
+      }
+    } else {
+      if (role !== "PUBLIC") {
+        const user = await User.create({
+          email: email,
+          role: role,
+        });
+
+        if (user.role === "STUDENT") {
+          await Student.create({
+            name: name,
+            userID: user._id,
+            profile: picture,
+          });
+        } else if (user.role === "TUTOR") {
+          await Teacher.create({
+            name: name,
+            userID: user._id,
+            profile: picture,
+          });
+        }
+        const tocken = generateTocken(user._id);
+        res.status(200).json({
+          success: true,
+          user: {
+            _id: user._id,
+            email: user.email,
+            role: user.role,
+          },
+          tocken: tocken,
+        });
+      } else {
+        res.status(400);
+        return next(Error("Signup as Tutor/student"));
+      }
     }
   }
 );
