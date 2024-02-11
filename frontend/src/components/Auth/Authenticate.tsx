@@ -5,7 +5,7 @@ export default function Authenticate() {
   const navigate = useNavigate();
   const user = localStorage.getItem("user");
   useEffect(() => {
-    if (user) {
+    if (user !== null) {
       navigate("/");
     }
   }, [user, navigate]);
