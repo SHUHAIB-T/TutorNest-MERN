@@ -3,11 +3,16 @@ import { Outlet, useNavigate } from "react-router-dom";
 
 export default function Authenticate() {
   const navigate = useNavigate();
+
   const user = localStorage.getItem("user");
+  const parseUser = JSON.parse(user as string);
+  console.log(parseUser)
   useEffect(() => {
-    if (user !== null) {
-      navigate("/");
+    if (parseUser?.role === "STUDENT") {
+      navigate("/student");
+    } else if (parseUser?.role === "TUTOR") {
+      navigate("/tutor");
     }
-  }, [user, navigate]);
+  }, [parseUser, navigate]);
   return <>{!user ? <Outlet /> : null}</>;
 }

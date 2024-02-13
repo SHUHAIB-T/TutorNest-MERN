@@ -138,20 +138,25 @@ export const userLogin = asynchandler(
   async (req: Request, res: Response, next: NextFunction) => {
     const { email, password } = req.body;
     const user = await User.findOne<IUser>({ email: email });
-    if (user && (await user.matchPassword(password))) {
-      const tocken = generateTocken(user._id);
-      res.status(200).json({
-        success: true,
-        tocken: tocken,
-        user: {
-          _is: user._id,
-          email: user.email,
-          role: user.role,
-        },
-      });
+    if (user) {
+      if (user.password && (await user.matchPassword(password))) {
+        const tocken = generateTocken(user._id);
+        res.status(200).json({
+          success: true,
+          tocken: tocken,
+          user: {
+            _is: user._id,
+            email: user.email,
+            role: user.role,
+          },
+        });
+      } else {
+        res.status(401);
+        return next(Error("Invalid Credentials"));
+      }
     } else {
       res.status(401);
-      return next(Error("Invalid credentials!"));
+      return next(Error("User Not Found!"));
     }
   }
 );

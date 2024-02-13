@@ -1,16 +1,19 @@
-type userType = {
+export type userType = {
   _id: string;
   name: string;
   email: string;
-  phone: number;
   role: string;
 };
 
+export type errorMessage = {
+  message: string;
+  status: number | null;
+};
 export interface AuthInterface {
   user: userType | null;
   isLoading: boolean;
   isError: boolean;
-  errorMessage: string;
+  errorMessage: errorMessage;
   isSuccess: boolean;
 }
 

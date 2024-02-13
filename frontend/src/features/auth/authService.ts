@@ -11,8 +11,21 @@ export const signup = createAsyncThunk(
       return response.data;
     } catch (error) {
       const axiosError = error as AxiosError;
-      const Error = (axiosError?.response?.data as { message: string }).message;
-      return thunkAPI.rejectWithValue(Error);
+      let payload;
+      if (axiosError.message === "Network Error") {
+        payload = {
+          message: axiosError.message,
+          status: 404,
+        };
+      } else {
+        const Error = (axiosError?.response?.data as { message: string })
+          .message;
+        payload = {
+          message: Error,
+          status: axiosError.status,
+        };
+      }
+      return thunkAPI.rejectWithValue(payload);
     }
   }
 );
@@ -25,8 +38,21 @@ export const login = createAsyncThunk(
       return response.data;
     } catch (error) {
       const axiosError = error as AxiosError;
-      const Error = (axiosError?.response?.data as { message: string }).message;
-      return thunkAPI.rejectWithValue(Error);
+      let payload;
+      if (axiosError.message === "Network Error") {
+        payload = {
+          message: axiosError.message,
+          status: 404,
+        };
+      } else {
+        const Error = (axiosError?.response?.data as { message: string })
+          .message;
+        payload = {
+          message: Error,
+          status: axiosError.status,
+        };
+      }
+      return thunkAPI.rejectWithValue(payload);
     }
   }
 );
@@ -39,9 +65,21 @@ export const googleAuth = createAsyncThunk(
       return response.data;
     } catch (error) {
       const axiosError = error as AxiosError;
-      console.log(axiosError);
-      const Error = (axiosError?.response?.data as { message: string }).message;
-      return thunkAPI.rejectWithValue(Error);
+      let payload;
+      if (axiosError.message === "Network Error") {
+        payload = {
+          message: axiosError.message,
+          status: 404,
+        };
+      } else {
+        const Error = (axiosError?.response?.data as { message: string })
+          .message;
+        payload = {
+          message: Error,
+          status: axiosError.status,
+        };
+      }
+      return thunkAPI.rejectWithValue(payload);
     }
   }
 );

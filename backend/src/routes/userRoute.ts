@@ -7,6 +7,9 @@ import {
   googleAuth,
 } from "../controller/userController";
 import studentRoute from "./studentRoute";
+import tutorRoute from "../routes/tutorRoute";
+
+import { protect } from "../middlewares/authMiddleware";
 
 const router: Router = Router();
 
@@ -16,5 +19,6 @@ router.post("/signup", userSignup);
 router.post("/login", userLogin);
 router.post("/googleAuth", googleAuth);
 
-router.use("/student", studentRoute);
+router.use("/student", protect, studentRoute);
+router.use("/tutor", protect, tutorRoute);
 export default router;

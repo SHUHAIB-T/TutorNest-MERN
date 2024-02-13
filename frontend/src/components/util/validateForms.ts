@@ -33,6 +33,24 @@ export const validate = (name: string, value: unknown): string => {
     case "passwordLogin":
       if (!value || value === "") return "Password is required!";
       return "";
+    case "dob":
+      if (!value || value === "") return "Dob required!";
+      return "";
+    case "preffered_language":
+      if (!value || value === "") return "* required!";
+      return "";
+    case "gender":
+      if (!value || value === "") return "* required!";
+      return "";
+    case "class":
+      if (!value || value === "") return "* required!";
+      return "";
+    case "intrests":
+      if (!value || (value as string[]).length === 0) return "* required!";
+      return "";
+    case "subjects":
+      if (!value || (value as string[]).length === 0) return "* required!";
+      return "";
   }
   return "";
 };

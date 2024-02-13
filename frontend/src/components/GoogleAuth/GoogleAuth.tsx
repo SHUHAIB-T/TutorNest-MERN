@@ -6,7 +6,6 @@ import { reset } from "../../features/auth/authSlice";
 import Loader from "../Loader/Loader";
 import { useNavigate } from "react-router-dom";
 
-
 type prop = {
   method: string;
   role: string;
@@ -17,7 +16,7 @@ export default function GoogleAuth({ method, role }: prop) {
   const navigate = useNavigate();
   const [isSubmit, setIsSubmit] = useState(false);
 
-  const { isLoading, isError, isSuccess, errorMessage } = useAppSelector(
+  const { isLoading, isError, user, isSuccess, errorMessage } = useAppSelector(
     (state) => state.auth
   );
 
@@ -28,9 +27,14 @@ export default function GoogleAuth({ method, role }: prop) {
 
   useEffect(() => {
     if (isSuccess) {
-      navigate("/");
+      if (user?.role === "STUDENT") {
+        navigate("/student");
+      } else if (user?.role === "TUTOR") {
+        navigate("/teacher");
+      }
+      dispatch(reset());
     }
-  }, [errorMessage, isError, isSuccess, navigate]);
+  }, [errorMessage, isError, isSuccess, navigate, dispatch, user]);
 
   const login = useGoogleLogin({
     onSuccess: async (tokenResponse) => {
@@ -46,7 +50,6 @@ export default function GoogleAuth({ method, role }: prop) {
   useEffect(() => {
     if (isSubmit && data.accessToken && data.role) {
       dispatch(googleAuth(data));
-      dispatch(reset());
     }
     setIsSubmit(false);
   }, [data, dispatch, isSubmit]);
@@ -56,16 +59,16 @@ export default function GoogleAuth({ method, role }: prop) {
   }
 
   return (
-      <button
-        onClick={() => login()}
-        className="flex gap-2 w-[70%] items-center shadow font-medium text-slate-700 border py-1 justify-center rounded-md"
-      >
-        <img
-          width="25"
-          height="25"
-          src="https://img.icons8.com/color/48/google-logo.png"
-        />
-        {method} with Google
-      </button>
+    <button
+      onClick={() => login()}
+      className="flex gap-2 w-[70%] items-center shadow font-medium text-slate-700 border py-1 justify-center rounded-md"
+    >
+      <img
+        width="25"
+        height="25"
+        src="https://img.icons8.com/color/48/google-logo.png"
+      />
+      {method} with Google
+    </button>
   );
 }

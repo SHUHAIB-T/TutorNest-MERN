@@ -12,6 +12,8 @@ import Loader from "../Loader/Loader";
 import { signup } from "../../features/auth/authService";
 import { reset } from "../../features/auth/authSlice";
 import GoogleAuth from "../GoogleAuth/GoogleAuth";
+import SignupSVG from "../../assets/Signup.svg";
+import { toast } from "react-toastify";
 
 type Props = {
   role: string;
@@ -20,7 +22,7 @@ type Props = {
 export default function Signup({ role }: Props) {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const { isLoading, isError, errorMessage, isSuccess } = useAppSelector(
+  const { isLoading, isError, user, errorMessage, isSuccess } = useAppSelector(
     (state) => state.auth
   );
   const [formSubmit, setFormSubmit] = useState(false);
@@ -115,14 +117,26 @@ export default function Signup({ role }: Props) {
       dispatch(signup(userData));
       dispatch(reset());
     }
-    setFormSubmit(false)
+    setFormSubmit(false);
   }, [dispatch, userData, formSubmit]);
 
   useEffect(() => {
     if (isSuccess) {
-      navigate("/");
+      if (user?.role === "STUDENT") {
+        navigate("/student");
+      } else if (user?.role === "TUTOR") {
+        navigate("/tutor");
+      }
+      dispatch(reset());
     }
-  }, [isSuccess, navigate]);
+    if (
+      (isError && (errorMessage.status as number) >= 500) ||
+      errorMessage.status === 404
+    ) {
+      toast.error(errorMessage.message);
+      dispatch(reset());
+    }
+  }, [isSuccess, navigate, isError,user, dispatch, errorMessage]);
 
   if (isLoading) {
     return <Loader />;
@@ -155,7 +169,7 @@ export default function Signup({ role }: Props) {
               )}
               {isError && (
                 <small className="text-red-600 rounded-sm mt-2 bg-red-100 w-[100%] text-center">
-                  {errorMessage}
+                  {errorMessage.message}
                 </small>
               )}
               <label htmlFor="name" className="text-primary font-medium mt-2">
@@ -276,7 +290,7 @@ export default function Signup({ role }: Props) {
           </div>
           <img
             className="absolute hidden top-0 left-0 md:inline-flex"
-            src="https://lh3.google.com/u/0/d/1ro0qQB_ADXEi2KRwzyxJ-xLjHvYpjHwC"
+            src={SignupSVG}
             alt=""
           />
         </div>

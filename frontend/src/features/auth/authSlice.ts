@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { AuthInterface } from "../../types/authTypes";
+import { AuthInterface, errorMessage } from "../../types/authTypes";
 import { signup, login, googleAuth } from "./authService";
 import Cookies from "js-cookie";
 
@@ -7,7 +7,10 @@ const user = localStorage.getItem("user");
 const initialState: AuthInterface = {
   user: user ? JSON.parse(user) : null,
   isError: false,
-  errorMessage: "",
+  errorMessage: {
+    message: "",
+    status: null,
+  },
   isLoading: false,
   isSuccess: false,
 };
@@ -19,13 +22,17 @@ const authSlice = createSlice({
     reset: (state) => {
       state.isError = false;
       state.isLoading = false;
-      state.errorMessage = "";
+      state.errorMessage = {
+        message: "",
+        status: null,
+      };
       state.isSuccess = false;
     },
     logout: (state) => {
       state.user = null;
       localStorage.removeItem("user");
-      Cookies.remove('token')
+      localStorage.removeItem("profile");
+      Cookies.remove("token");
     },
   },
   extraReducers: (builder) => {
@@ -44,7 +51,7 @@ const authSlice = createSlice({
       .addCase(signup.rejected, (state, action) => {
         state.isError = true;
         state.isLoading = false;
-        state.errorMessage = action.payload as string;
+        state.errorMessage = action.payload as errorMessage;
       })
       .addCase(login.pending, (state) => {
         state.isLoading = true;
@@ -60,7 +67,7 @@ const authSlice = createSlice({
       .addCase(login.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
-        state.errorMessage = action.payload as string;
+        state.errorMessage = action.payload as errorMessage;
       })
       .addCase(googleAuth.pending, (state) => {
         state.isLoading = true;
@@ -76,7 +83,7 @@ const authSlice = createSlice({
       .addCase(googleAuth.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
-        state.errorMessage = action.payload as string;
+        state.errorMessage = action.payload as errorMessage;
       });
   },
 });
