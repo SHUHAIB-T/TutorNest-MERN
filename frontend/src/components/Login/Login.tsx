@@ -7,12 +7,14 @@ import Loader from "../Loader/Loader";
 import { useNavigate } from "react-router-dom";
 import { reset } from "../../features/auth/authSlice";
 import GoogleAuth from "../GoogleAuth/GoogleAuth";
+import LoginSVG from "../../assets/LoginSVG.svg";
+import { toast } from "react-toastify";
 
 export default function Login() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const { isLoading, isError, errorMessage, isSuccess } = useAppSelector(
+  const { isLoading, isError, user, errorMessage, isSuccess } = useAppSelector(
     (state) => state.auth
   );
 
@@ -54,11 +56,24 @@ export default function Login() {
       dispatch(reset());
     }
   }, [formError, dispatch, formData, isSubmit]);
+
   useEffect(() => {
     if (isSuccess) {
-      navigate("/");
+      if (user?.role === "TUTOR") {
+        navigate("/tutor");
+      } else if (user?.role === "STUDENT") {
+        navigate("/STUDENT");
+      }
+      dispatch(reset());
     }
-  }, [isSuccess, navigate]);
+    if (
+      (isError && (errorMessage.status as number) > 500) ||
+      errorMessage.status === 404
+    ) {
+      toast.error(errorMessage.message);
+      dispatch(reset());
+    }
+  }, [isSuccess, user, navigate, dispatch, isError, errorMessage]);
 
   if (isLoading) {
     return <Loader />;
@@ -71,7 +86,7 @@ export default function Login() {
         <div className="relative w-full flex justify-between bg-white  rounded-3xl">
           <img
             className="absolute hidden top-0 right-0 w-64 md:inline-flex"
-            src="https://lh3.google.com/u/0/d/1TsasEJL9imQep-h8wqkcIVxB8nCL3sRU"
+            src={LoginSVG}
             alt=""
           />
           <div className="flex flex-col items-center w-[100%]">
@@ -85,7 +100,7 @@ export default function Login() {
             >
               {isError && (
                 <small className="text-red-600 rounded-sm mt-2 bg-red-100 w-[100%] text-center">
-                  {errorMessage}
+                  {errorMessage.message}
                 </small>
               )}
               <label htmlFor="name" className="text-primary font-medium mt-2">
