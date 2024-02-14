@@ -3,6 +3,7 @@ import { useAppDispatch, useAppSelector } from "../../app/store";
 import EditIcon from "@mui/icons-material/Edit";
 import CropModal from "../Modal/CropModal";
 import { uploadProfile } from "../../features/users/userServieces";
+import ResetPasswordModal from "../Modal/ResetPasswordModal";
 
 export default function ProfileCard() {
   const dispatch = useAppDispatch();
@@ -11,6 +12,8 @@ export default function ProfileCard() {
   const [openModal, setOpenModal] = useState(false);
   const [croppedImage, setCroppedImage] = useState<File>();
   const [cropDone, setCropDone] = useState(false);
+  const [openResetModal, setOpenResetModal] = useState(false);
+
   useEffect(() => {
     if (cropDone && croppedImage) {
       dispatch(uploadProfile(croppedImage));
@@ -25,7 +28,11 @@ export default function ProfileCard() {
         setOpenModal={setOpenModal}
         setCropDone={setCropDone}
       />
-      <div className="flex bg-[#302343] shadow-md flex-wrap items-center justify-center w-full h-fit gap-7 ring-1 py-5 ring-[#4d2389] rounded-xl">
+      <ResetPasswordModal
+        setOpenResetModal={setOpenResetModal}
+        openResetModal={openResetModal}
+      />
+      <div className="flex bg-[#302343] shadow-md relative flex-wrap items-center justify-center w-full h-fit gap-7 ring-1 py-5 ring-[#4d2389] rounded-xl">
         <div className="img-wrapper relative">
           <img
             src={
@@ -48,6 +55,12 @@ export default function ProfileCard() {
           <h1>{user?.email}</h1>
           <h1>{profile?.phone}</h1>
         </div>
+        <button
+          className="absolute top-3 right-5 text-blue-600"
+          onClick={() => setOpenResetModal(true)}
+        >
+          Reset Password?
+        </button>
       </div>
     </>
   );
