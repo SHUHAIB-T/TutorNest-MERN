@@ -41,18 +41,20 @@ export default function NavBar({ role }: { role: string }) {
     <>
       <Flowbite theme={{ theme: customTheme }}>
         <Navbar>
-          <Navbar.Brand>
-            <img src={Logo} className="mr-3 h-6 sm:h-9" />
-          </Navbar.Brand>
+          <Link to={"/"}>
+            <Navbar.Brand>
+              <img src={Logo} className="mr-3 h-6 sm:h-9" />
+            </Navbar.Brand>
+          </Link>
           <div className="flex md:order-2">
             <Dropdown
               arrowIcon={false}
               inline
               label={
-                profile ? (
+                profile?.profile ? (
                   <img
                     alt="User settings"
-                    src={profile?.profile}
+                    src={profile.profile}
                     className="w-10 rounded-full border-2 border-violet-700"
                   />
                 ) : (
