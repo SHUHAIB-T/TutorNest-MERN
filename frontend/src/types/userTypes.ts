@@ -14,6 +14,10 @@ export type studentProfile = {
   standard?: string;
   subjects?: string[];
   preffered_language?: string;
+  languages?: string[];
+  bio?: string;
+  qualification?: string[];
+  pricing?: string;
 };
 
 export interface IUserProfileState {

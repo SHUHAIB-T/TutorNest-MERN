@@ -10,10 +10,17 @@ export const getStudentProfile = createAsyncThunk(
   "userProfile/getStudentprofile",
   async (_, thunkAPI) => {
     try {
-      const response = await api.get("/student", {
-        withCredentials: true,
-      });
-      return response.data;
+      if (user.role === "STUDENT") {
+        const response = await api.get("/student", {
+          withCredentials: true,
+        });
+        return response.data;
+      } else if (user.role === "TUTOR") {
+        const response = await api.get("/tutor", {
+          withCredentials: true,
+        });
+        return response.data;
+      }
     } catch (error) {
       const axiosError = error as AxiosError;
       const Error = (axiosError?.response?.data as { message: string }).message;
@@ -42,8 +49,13 @@ export const uploadProfile = createAsyncThunk(
             { url },
             { withCredentials: true }
           );
+        } else if (user.role === "TUTOR") {
+          response = await api.patch(
+            "/tutor/updateProfilePicture",
+            { url },
+            { withCredentials: true }
+          );
         }
-
         return response?.data;
       }
     } catch (error) {
@@ -62,12 +74,21 @@ export const updateProfile = createAsyncThunk(
   "userProfile/updateProfile",
   async (data: studentProfile, thunkAPI) => {
     try {
-      const response = await api.post(
-        "/student",
-        { data },
-        { withCredentials: true }
-      );
-      return response.data;
+      if (user.role === "STUDENT") {
+        const response = await api.post(
+          "/student",
+          { data },
+          { withCredentials: true }
+        );
+        return response.data;
+      } else if (user.role === "TUTOR") {
+        const response = await api.post(
+          "/tutor",
+          { data },
+          { withCredentials: true }
+        );
+        return response.data;
+      }
     } catch (error) {
       const axiosError = error as AxiosError;
       const Error = (axiosError?.response?.data as { message: string }).message;

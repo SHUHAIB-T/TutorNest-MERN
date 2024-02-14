@@ -51,6 +51,19 @@ export const validate = (name: string, value: unknown): string => {
     case "subjects":
       if (!value || (value as string[]).length === 0) return "* required!";
       return "";
+    case "languages":
+      if (!value || (value as string[]).length === 0) return "* required!";
+      return "";
+    case "qualification":
+      if (!value || (value as string[]).length === 0) return "* required!";
+      return "";
+    case "bio":
+      if (!value || value === "") return "* required!";
+      if ((value as string).length > 150) return "Limit Exeeded!";
+      return "";
+    case "pricing":
+      if (!value || value === "") return "* required!";
+      return "";
   }
   return "";
 };

@@ -14,9 +14,12 @@ export type Tintrests = {
 };
 export default function StudentProfile() {
   const dispatch = useAppDispatch();
-  const { profile, isLoading, isError, errorMessage } =
-    useAppSelector((state) => state.userProfile);
-  const intrests: string[] | undefined = profile?.intrests;
+  const { profile, isLoading, isError, errorMessage } = useAppSelector(
+    (state) => state.userProfile
+  );
+  const intrests: string[] = profile?.intrests
+    ? (profile?.intrests as string[])
+    : ([] as string[]);
   const inititalInrest: Tintrests[] | null = [];
   for (let i = 0; i < (intrests as string[]).length; i++) {
     inititalInrest.push({
@@ -24,7 +27,9 @@ export default function StudentProfile() {
       value: (intrests as string[])[i],
     });
   }
-  const subjectss = profile?.subjects;
+  const subjectss: string[] = profile?.subjects
+    ? (profile?.subjects as string[])
+    : ([] as string[]);
   const inititalSubjects: Tintrests[] | null = [];
   for (let i = 0; i < (subjectss as string[]).length; i++) {
     inititalSubjects.push({
@@ -33,7 +38,9 @@ export default function StudentProfile() {
     });
   }
   const [intrest, setIntrest] = useState("");
-  const [Intrests, setIntrests] = useState<Tintrests[]>(inititalInrest);
+  const [Intrests, setIntrests] = useState<Tintrests[]>(
+    inititalInrest ? inititalInrest : []
+  );
   const [subject, setSubject] = useState("");
   const [subjects, setSubjects] = useState<Tintrests[]>(inititalSubjects);
   const [submit, setSubmit] = useState(false);
