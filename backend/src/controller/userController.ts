@@ -240,3 +240,50 @@ export const googleAuth = asynchandler(
     }
   }
 );
+
+/**
+ * @disc    Check current Password
+ * @route   POST /api/resetPassword
+ * @access  PROTECTED
+ */
+export const checkPassword = asynchandler(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const id = req?.user?._id;
+    const { currentPassword } = req.body;
+    const user = await User.findById({ _id: id });
+    if (user && (await user.matchPassword(currentPassword))) {
+      res.status(200).json({
+        success: true,
+        message: "password matching",
+      });
+    } else {
+      res.status(401);
+      next(Error("Invalid Password"));
+    }
+  }
+);
+
+/**
+ * @disc    Check current Password
+ * @route   PAST /api/resetPassword
+ * @access  PROTECTED
+ */
+export const resetPassword = asynchandler(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const id = req?.user?._id;
+    const { newPassworrd } = req.body;
+    const user = await User.findById({ _id: id });
+    if (user) {
+      user.password = newPassworrd;
+      const updated = await user.save();
+      if (updated) {
+        res.status(200).json({
+          success: true,
+          message: "password updated Successfully!",
+        });
+      } else {
+        next(Error("some Error occured"));
+      }
+    }
+  }
+);
