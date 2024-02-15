@@ -20,10 +20,8 @@ const otpSchema = new Schema<IOtp>({
 
 otpSchema.pre("save", async function (next) {
   if (!this.isModified("otp")) {
-    console.log("============>>>>IWONT")
     next();
   }
-  console.log("IWILLHASSSSSSSSSSSSSSS")
   const salt = await bcrypt.genSalt(10);
   this.otp = await bcrypt.hash(this.otp, salt);
 });

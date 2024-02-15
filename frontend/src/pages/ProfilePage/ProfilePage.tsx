@@ -1,7 +1,6 @@
 import { useAppSelector, useAppDispatch } from "../../app/store";
 import { getStudentProfile } from "../../features/users/userServieces";
 import { useEffect } from "react";
-import { toast } from "react-toastify";
 import { reset } from "../../features/users/userSlice";
 
 import StudentNav from "../../components/NavBar/StudentNav";
@@ -22,7 +21,7 @@ export default function ProfilePage() {
 
   useEffect(() => {
     if (isError) {
-      toast.error(errorMessage.message);
+      console.log(errorMessage);
       dispatch(reset());
     }
   }, [errorMessage, isError, dispatch]);

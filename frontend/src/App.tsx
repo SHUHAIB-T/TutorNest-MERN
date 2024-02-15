@@ -15,6 +15,7 @@ const LoginPage = lazy(() => import("./pages/LoginPage/LoginPage"));
 const TutorSignup = lazy(() => import("./pages/SignupPage/TutorSignup"));
 const ProfilePage = lazy(() => import("./pages/ProfilePage/ProfilePage"));
 const TutoProfile = lazy(() => import("./pages/TutorProfile/TuroProfile"));
+const Documents = lazy(() => import("./components/Documents/Documents"));
 
 function App() {
   return (
@@ -34,6 +35,7 @@ function App() {
           <Route element={<Protect role="TUTOR" />}>
             <Route path="/tutor" element={<HomPage role="TUTOR" />} />
             <Route path="/tutor/profile" element={<TutoProfile />} />
+            <Route path="/tutor/documents" element={<Documents />} />
           </Route>
         </Routes>
       </Suspense>

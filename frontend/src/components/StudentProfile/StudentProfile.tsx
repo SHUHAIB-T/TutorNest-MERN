@@ -159,7 +159,7 @@ export default function StudentProfile() {
 
   useEffect(() => {
     if (isError) {
-      toast.error(errorMessage.message);
+      toast.error(errorMessage?.message);
       dispatch(reset());
     }
   }, [isError, errorMessage, dispatch]);
