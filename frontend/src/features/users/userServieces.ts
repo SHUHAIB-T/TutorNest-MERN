@@ -25,8 +25,8 @@ export const getStudentProfile = createAsyncThunk(
       const axiosError = error as AxiosError;
       const Error = (axiosError?.response?.data as { message: string }).message;
       const payload = {
-        error: Error,
-        statusCode: axiosError.status,
+        message: Error || axiosError.message,
+        status: axiosError.status,
       };
       return thunkAPI.rejectWithValue(payload);
     }

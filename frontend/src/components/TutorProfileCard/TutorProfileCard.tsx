@@ -17,15 +17,20 @@ export default function TutorProfileCard() {
   const { profile, isLoading, isError, errorMessage } = useAppSelector(
     (state) => state.userProfile
   );
-  const qualification: string[] | undefined = profile?.qualification;
-  const initialQualification: ElementTyoe[] | null = [];
+
+  const qualification: string[] = profile?.qualification
+    ? (profile?.qualification as string[])
+    : ([] as string[]);
+  const initialQualification: ElementTyoe[] = [];
   for (let i = 0; i < (qualification as string[]).length; i++) {
     initialQualification.push({
       id: i,
       value: (qualification as string[])[i],
     });
   }
-  const languages = profile?.languages;
+  const languages: string[] = profile?.languages
+    ? (profile?.languages as string[])
+    : ([] as string[]);
   const initialLanguages: ElementTyoe[] | null = [];
   for (let i = 0; i < (languages as string[]).length; i++) {
     initialLanguages.push({

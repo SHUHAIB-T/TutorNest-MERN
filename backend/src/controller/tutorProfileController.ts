@@ -62,7 +62,6 @@ export const updateProfilePicture = asyncHandler(
 export const updateTutorProfile = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     const userId = req.user?._id;
-    console.log(userId);
     const { name, phone, bio, qualification, languages, pricing } =
       req.body.data;
     const updatedUser = await Teacher.findOneAndUpdate(
