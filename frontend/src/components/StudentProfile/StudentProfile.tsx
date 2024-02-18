@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import SmallLabel from "../smallComponents/SmallLabel";
 import SubjectsLabel from "../smallComponents/SubjectsLabel";
 import { useAppDispatch, useAppSelector } from "../../app/store";
@@ -12,11 +12,14 @@ export type Tintrests = {
   id: number;
   value: string;
 };
-export default function StudentProfile() {
+type Prop = {
+  submit: boolean;
+  setSubmit: Dispatch<SetStateAction<boolean>>;
+};
+export default function StudentProfile({ submit, setSubmit }: Prop) {
   const dispatch = useAppDispatch();
-  const { profile, isLoading, isError, errorMessage } = useAppSelector(
-    (state) => state.userProfile
-  );
+  const { profile, isLoading, isError, isSuccess, errorMessage } =
+    useAppSelector((state) => state.userProfile);
   const intrests: string[] = profile?.intrests
     ? (profile?.intrests as string[])
     : ([] as string[]);
@@ -43,7 +46,6 @@ export default function StudentProfile() {
   );
   const [subject, setSubject] = useState("");
   const [subjects, setSubjects] = useState<Tintrests[]>(inititalSubjects);
-  const [submit, setSubmit] = useState(false);
   const [isSubmit, setIsSubmit] = useState(false);
 
   const inititalState = {
@@ -144,6 +146,7 @@ export default function StudentProfile() {
   useEffect(() => {
     if (
       isSubmit &&
+      submit &&
       !formErrors.class &&
       !formErrors.dob &&
       !formErrors.gender &&
@@ -153,16 +156,20 @@ export default function StudentProfile() {
       !formErrors.preffered_language &&
       !formErrors.subjects
     ) {
+      console.log("Methoid is dispatching.......");
       dispatch(updateProfile(formData));
     }
-  }, [formData, isSubmit, formErrors, dispatch]);
+  }, [formData, isSubmit, formErrors, submit, dispatch]);
 
   useEffect(() => {
     if (isError) {
       toast.error(errorMessage?.message);
       dispatch(reset());
     }
-  }, [isError, errorMessage, dispatch]);
+    if (isSuccess) {
+      setIsSubmit(false);
+    }
+  }, [isError, errorMessage, setIsSubmit, isSuccess, dispatch]);
 
   if (isLoading) {
     return <Loader />;

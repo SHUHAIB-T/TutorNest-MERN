@@ -30,7 +30,7 @@ export default function GoogleAuth({ method, role }: prop) {
       if (user?.role === "STUDENT") {
         navigate("/student");
       } else if (user?.role === "TUTOR") {
-        navigate("/teacher");
+        navigate("/tutor");
       }
       dispatch(reset());
     }

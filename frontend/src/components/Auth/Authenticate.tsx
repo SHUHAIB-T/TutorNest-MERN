@@ -6,7 +6,6 @@ export default function Authenticate() {
 
   const user = localStorage.getItem("user");
   const parseUser = JSON.parse(user as string);
-  console.log(parseUser)
   useEffect(() => {
     if (parseUser?.role === "STUDENT") {
       navigate("/student");

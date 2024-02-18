@@ -64,6 +64,9 @@ export const validate = (name: string, value: unknown): string => {
     case "pricing":
       if (!value || value === "") return "* required!";
       return "";
+    case "required":
+      if (!value || value === "") return "* required!";
+      return "";
   }
   return "";
 };

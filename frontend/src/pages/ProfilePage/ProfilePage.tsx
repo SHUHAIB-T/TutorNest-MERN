@@ -8,8 +8,10 @@ import ProfileCard from "../../components/ProfileCard/ProfileCard";
 import StudentSideBar from "../../components/StudentSideBar/StudentSideBar";
 import Loader from "../../components/Loader/Loader";
 import StudentProfile from "../../components/StudentProfile/StudentProfile";
+import { useState } from "react";
 
 export default function ProfilePage() {
+  const [submit, setSubmit] = useState(false);
   const dispatch = useAppDispatch();
   const { isLoading, isError, errorMessage, isSuccess } = useAppSelector(
     (state) => state.userProfile
@@ -29,20 +31,24 @@ export default function ProfilePage() {
   useEffect(() => {
     if (isSuccess) {
       dispatch(reset());
+      setSubmit(false);
     }
   }, [isSuccess, dispatch]);
 
-  if (isLoading) {
-    return <Loader />;
-  }
   return (
     <>
       <StudentNav />
       <div className="flex md:p-10 p-4 gap-10 bg-secondary">
         <StudentSideBar />
         <div className="flex w-full flex-col">
-          <ProfileCard />
-          <StudentProfile />
+          {isLoading ? (
+            <Loader />
+          ) : (
+            <>
+              <ProfileCard />
+              <StudentProfile submit={submit} setSubmit={setSubmit} />
+            </>
+          )}
         </div>
       </div>
     </>

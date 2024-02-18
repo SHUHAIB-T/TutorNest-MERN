@@ -1,0 +1,48 @@
+import { useState } from "react";
+
+type props = {
+  title: string;
+  subject: string;
+  language: string;
+  description: string;
+  budget: number | string;
+};
+export default function PostCard({
+  title,
+  subject,
+  budget,
+  description,
+  language,
+}: props) {
+  const [show, setShow] = useState(false);
+  return (
+    <>
+      <div className="ring-1 h-fit shadow-2xl ring-[#4d2389] bg-[#1f172b] text-white max-w-96 relative py-5 pr-10 pl-5 rounded-2xl">
+        <h1
+          onClick={() => setShow((prev) => !prev)}
+          className="font-bold absolute cursor-pointer top-0 right-4 text-3xl"
+        >
+          ...
+        </h1>
+        <h1 className=" font-bold mt-5 text-2xl">{title}</h1>
+        <div className="flex mt-2 justify-between">
+          <small>sub: {subject}</small>
+          <small>{budget} /hr</small>
+        </div>
+        <small>Language: {language}</small>
+        <div className="ring-1 mt-2 rounded-md p-4">{description}</div>
+        {show && (
+          <div className="flex flex-col ring-1 ring-[#4d2389] absolute top-9 right-5 shadow-lg bg-[#1b0f1b] rounded-md p-2">
+            <h1 className="text-blue-600 hover:bg-[#322231] rounded-sm cursor-pointer px-2 font-bold">
+              Edit
+            </h1>
+            <div className="ring-1 my-1"></div>
+            <h1 className="text-red-600  hover:bg-[#322231] rounded-sm cursor-pointer px-2 font-bold">
+              Delete
+            </h1>
+          </div>
+        )}
+      </div>
+    </>
+  );
+}
