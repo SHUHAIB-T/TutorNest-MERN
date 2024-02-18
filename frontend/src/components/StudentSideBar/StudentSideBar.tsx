@@ -16,7 +16,7 @@ export default function StudentSideBar() {
         <AccountCircleIcon /> MY PROFILE
       </Link>
       <Link
-        to={"#"}
+        to={"/student/posts"}
         className="hover:bg-[#3f344e]/80 py-1 w-full rounded px-5 flex items-center justify-start gap-2"
       >
         <EditCalendarIcon /> MY POSTS

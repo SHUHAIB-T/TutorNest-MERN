@@ -10,14 +10,13 @@ import StudentPosts, { IstudentPost } from "../model/studnetPostModet";
 export const createStudentPost = asynchandler(
   async (req: Request, res: Response, next: NextFunction) => {
     const userID = req.user?._id;
-    const { subject, title, description, budjet, language } =
-      req.body as IstudentPost;
+    const { subject, title, description, budget, language } = req.body.formDate;
     const udatedUser = await StudentPosts.create({
       studentId: userID,
       title: title,
       description: description,
       subject: subject,
-      budjet: budjet,
+      budget: parseInt(budget, 10),
       language: language,
     });
     if (udatedUser) {
@@ -28,7 +27,7 @@ export const createStudentPost = asynchandler(
           title: udatedUser.title,
           description: udatedUser.description,
           subject: udatedUser.subject,
-          budjet: udatedUser.budjet,
+          budjet: udatedUser.budget,
           language: udatedUser.language,
         },
       });
@@ -47,7 +46,7 @@ export const updateStudentpost = asynchandler(
   async (req: Request, res: Response, next: NextFunction) => {
     const userID = req.user?._id;
     const postId = req.params.id;
-    const { subject, title, description, budjet, language } =
+    const { subject, title, description, budget, language } =
       req.body as IstudentPost;
     const udatedUser = await StudentPosts.findOneAndUpdate(
       { studentId: userID, _id: postId },
@@ -55,7 +54,7 @@ export const updateStudentpost = asynchandler(
         subject: subject,
         title: title,
         description: description,
-        budjet: budjet,
+        budget: budget,
         language: language,
       },
       { new: true }
@@ -68,7 +67,7 @@ export const updateStudentpost = asynchandler(
           title: udatedUser.title,
           description: udatedUser.description,
           subject: udatedUser.subject,
-          budjet: udatedUser.budjet,
+          budjet: udatedUser.budget,
           language: udatedUser.language,
         },
       });

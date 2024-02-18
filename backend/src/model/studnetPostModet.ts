@@ -5,7 +5,7 @@ export interface IstudentPost {
   title: string;
   description: string;
   subject: string;
-  budjet: number;
+  budget: number;
   isDelete: boolean;
   language: string;
 }
@@ -17,7 +17,7 @@ const sturdentPsotSchema = new Schema<IstudentPost>({
   isDelete: { type: Boolean, required: true, default: false },
   language: { type: String, required: true },
   subject: { type: String, required: true },
-  budjet: { type: Number, required: true },
+  budget: { type: Number, required: true },
 });
 
 const StudentPosts = model("studentPosts", sturdentPsotSchema);
