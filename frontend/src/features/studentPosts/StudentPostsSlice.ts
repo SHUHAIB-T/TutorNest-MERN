@@ -1,6 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { IStudentPost } from "../../types/PostsTypes";
-import { getStudentPosts, createStudentPosts } from "./StudentPostsService";
+import {
+  getStudentPosts,
+  deleteStudentPosts,
+  createStudentPosts,
+  updateStudentPosts,
+} from "./StudentPostsService";
 import { errorMessage } from "../../types/authTypes";
 import { toast } from "react-toastify";
 
@@ -12,6 +17,7 @@ const initialState: IStudentPost = {
   },
   isSuccess: false,
   isError: false,
+  isUpdated: false,
   posts: [],
 };
 
@@ -27,6 +33,7 @@ const studentPostSlice = createSlice({
       state.isError = false;
       state.isLoading = false;
       state.isSuccess = false;
+      state.isUpdated = false;
     },
   },
   extraReducers: (builder) => {
@@ -47,16 +54,41 @@ const studentPostSlice = createSlice({
       .addCase(createStudentPosts.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(createStudentPosts.fulfilled, (state,action) => {
+      .addCase(createStudentPosts.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
         state.posts.push(action.payload.udatedUser);
-        toast.success("Post created successfully!")
+        toast.success("Post created successfully!");
       })
       .addCase(createStudentPosts.rejected, (state, action) => {
         state.isError = true;
         state.isLoading = false;
         state.erroMessage = action.payload as errorMessage;
+      })
+      .addCase(deleteStudentPosts.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(deleteStudentPosts.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.posts = state.posts.filter(
+          (e) => e._id !== action.payload.post._id
+        );
+        toast.success("post deleted successfully!");
+      })
+      .addCase(deleteStudentPosts.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.erroMessage = action.payload as errorMessage;
+      })
+      .addCase(updateStudentPosts.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(updateStudentPosts.fulfilled, (state) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.isUpdated = true;
+        toast.success("Post updated Succesfully!");
       });
   },
 });

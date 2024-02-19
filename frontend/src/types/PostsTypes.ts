@@ -12,6 +12,7 @@ export interface IStudentPost {
   isLoading: boolean;
   isError: boolean;
   isSuccess: boolean;
+  isUpdated: boolean;
   erroMessage: errorMessage | string;
   posts: post[];
 }
