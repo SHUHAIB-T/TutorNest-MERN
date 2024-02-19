@@ -16,7 +16,7 @@ const TutorSignup = lazy(() => import("./pages/SignupPage/TutorSignup"));
 const ProfilePage = lazy(() => import("./pages/ProfilePage/ProfilePage"));
 const TutoProfile = lazy(() => import("./pages/TutorProfile/TuroProfile"));
 const Documents = lazy(() => import("./components/Documents/Documents"));
-const StudentPosts = lazy(() => import("./pages/StudnetPosts/StudentPosts"));
+const StudentPosts = lazy(() => import("./pages/StudentPosts/StudentPosts"));
 
 function App() {
   return (

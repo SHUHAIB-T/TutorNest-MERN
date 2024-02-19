@@ -1,9 +1,9 @@
 import { Modal } from "flowbite-react";
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { post } from "../../types/PostsTypes";
-import { validate } from "../util/validateForms";
-import { useAppDispatch } from "../../app/store";
-import { createStudentPosts } from "../../features/studentPosts/StudentPostsService";
+import { post } from "../../../types/PostsTypes";
+import { validate } from "../../util/validateForms";
+import { useAppDispatch } from "../../../app/store";
+import { createStudentPosts } from "../../../features/studentPosts/StudentPostsService";
 
 type Prop = {
   openModal: boolean;

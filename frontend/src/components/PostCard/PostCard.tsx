@@ -1,4 +1,6 @@
-import { useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { useAppDispatch } from "../../app/store";
+import { deleteStudentPosts } from "../../features/studentPosts/StudentPostsService";
 
 type props = {
   title: string;
@@ -6,6 +8,8 @@ type props = {
   language: string;
   description: string;
   budget: number | string;
+  _id: string | undefined;
+  setEditId: Dispatch<SetStateAction<string | undefined>>;
 };
 export default function PostCard({
   title,
@@ -13,8 +17,21 @@ export default function PostCard({
   budget,
   description,
   language,
+  _id,
+  setEditId,
 }: props) {
   const [show, setShow] = useState(false);
+  const dispatch = useAppDispatch();
+  const [deletes, setDeletes] = useState<string | undefined>("");
+  useEffect(() => {
+    if (deletes) {
+      dispatch(deleteStudentPosts(deletes));
+    }
+  }, [deletes, dispatch]);
+
+  const deletePost = (id: string | undefined) => {
+    setDeletes(id);
+  };
   return (
     <>
       <div className="ring-1 h-fit shadow-2xl ring-[#4d2389] bg-[#1f172b] text-white max-w-96 relative py-5 pr-10 pl-5 rounded-2xl">
@@ -33,11 +50,17 @@ export default function PostCard({
         <div className="ring-1 mt-2 rounded-md p-4">{description}</div>
         {show && (
           <div className="flex flex-col ring-1 ring-[#4d2389] absolute top-9 right-5 shadow-lg bg-[#1b0f1b] rounded-md p-2">
-            <h1 className="text-blue-600 hover:bg-[#322231] rounded-sm cursor-pointer px-2 font-bold">
+            <h1
+              onClick={() => setEditId(_id)}
+              className="text-blue-600 hover:bg-[#322231] rounded-sm cursor-pointer px-2 font-bold"
+            >
               Edit
             </h1>
             <div className="ring-1 my-1"></div>
-            <h1 className="text-red-600  hover:bg-[#322231] rounded-sm cursor-pointer px-2 font-bold">
+            <h1
+              onClick={() => deletePost(_id)}
+              className="text-red-600  hover:bg-[#322231] rounded-sm cursor-pointer px-2 font-bold"
+            >
               Delete
             </h1>
           </div>

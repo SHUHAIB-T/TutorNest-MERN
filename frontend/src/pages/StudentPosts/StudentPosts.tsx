@@ -5,12 +5,53 @@ import StudentSideBar from "../../components/StudentSideBar/StudentSideBar";
 import { getStudentPosts } from "../../features/studentPosts/StudentPostsService";
 import Loader from "../../components/Loader/Loader";
 import PostCard from "../../components/PostCard/PostCard";
-import CreatePostModal from "../../components/Modal/CreatePostModal";
+import CreatePostModal from "../../components/Modal/PostModal/CreatePostModal";
+import EditPostModal from "../../components/Modal/PostModal/EditPostModal";
+import { reset } from "../../features/studentPosts/StudentPostsSlice";
+import { post } from "../../types/PostsTypes";
 
 export default function StudentPosts() {
-  const { isLoading, posts } = useAppSelector((state) => state.studentPosts);
+  const { isLoading, posts, isUpdated } = useAppSelector(
+    (state) => state.studentPosts
+  );
   const [openModal, setOpenModal] = useState(false);
+  const [editOpenModal, setEditOpenModal] = useState(false);
   const dispatch = useAppDispatch();
+  const [editId, setEditId] = useState<string | undefined>("");
+  const [initialState, setInitialState] = useState<post>({
+    title: "",
+    budget: "",
+    description: "",
+    language: "",
+    subject: "",
+  });
+
+  useEffect(() => {
+    if (editId) {
+      setInitialState(posts.find((e) => e._id === editId) as post);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [editId]);
+
+  useEffect(() => {
+    if (initialState.budget && editId) {
+      setEditOpenModal(true);
+    }
+  }, [initialState, editId]);
+
+  useEffect(() => {
+    if (isUpdated) {
+      dispatch(getStudentPosts());
+      setInitialState({
+        title: "",
+        budget: "",
+        description: "",
+        language: "",
+        subject: "",
+      });
+      dispatch(reset());
+    }
+  }, [dispatch, isUpdated]);
 
   useEffect(() => {
     dispatch(getStudentPosts());
@@ -19,6 +60,14 @@ export default function StudentPosts() {
   return (
     <>
       <CreatePostModal openModal={openModal} setOpenModal={setOpenModal} />
+      <EditPostModal
+        editOpenModal={editOpenModal}
+        setEditOpenModal={setEditOpenModal}
+        editId={editId}
+        setEditId={setEditId}
+        initialState={initialState}
+      />
+
       <StudentNav />
       <div className="flex md:px-10 md:pt-10 md:pb-44  p-4 gap-10 bg-secondary">
         <StudentSideBar />
@@ -34,7 +83,7 @@ export default function StudentPosts() {
               <Loader />
             ) : (
               posts.length > 0 &&
-              posts.map((e) => {
+              posts.map((e, i) => {
                 return (
                   <>
                     <PostCard
@@ -43,6 +92,9 @@ export default function StudentPosts() {
                       budget={e.budget}
                       language={e.language}
                       description={e.description}
+                      _id={e._id}
+                      key={i}
+                      setEditId={setEditId}
                     />
                   </>
                 );
