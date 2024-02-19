@@ -6,7 +6,7 @@ import { reset } from "../../features/users/userSlice";
 import StudentNav from "../../components/NavBar/StudentNav";
 import ProfileCard from "../../components/ProfileCard/ProfileCard";
 import StudentSideBar from "../../components/StudentSideBar/StudentSideBar";
-import Loader from "../../components/Loader/Loader";
+import Loader from "../../components/Loader/Loader1/Loader";
 import StudentProfile from "../../components/StudentProfile/StudentProfile";
 import { useState } from "react";
 
@@ -23,7 +23,6 @@ export default function ProfilePage() {
 
   useEffect(() => {
     if (isError) {
-      console.log(errorMessage);
       dispatch(reset());
     }
   }, [errorMessage, isError, dispatch]);

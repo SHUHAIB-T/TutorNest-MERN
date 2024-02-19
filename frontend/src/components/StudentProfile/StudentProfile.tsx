@@ -4,7 +4,7 @@ import SubjectsLabel from "../smallComponents/SubjectsLabel";
 import { useAppDispatch, useAppSelector } from "../../app/store";
 import { validate } from "../util/validateForms";
 import { updateProfile } from "../../features/users/userServieces";
-import Loader from "../Loader/Loader";
+import Loader from "../Loader/Loader1/Loader";
 import { reset } from "../../features/users/userSlice";
 import { toast } from "react-toastify";
 

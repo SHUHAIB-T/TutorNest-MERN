@@ -3,7 +3,7 @@ import ProfileCard from "../../components/ProfileCard/ProfileCard";
 import { useAppDispatch, useAppSelector } from "../../app/store";
 import { useEffect } from "react";
 import { getStudentProfile } from "../../features/users/userServieces";
-import Loader from "../../components/Loader/Loader";
+import Loader from "../../components/Loader/Loader1/Loader";
 import TutorProfileCard from "../../components/TutorProfileCard/TutorProfileCard";
 import { Link } from "react-router-dom";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
