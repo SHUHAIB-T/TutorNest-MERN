@@ -1,9 +1,9 @@
 import Login from "../../components/Login/Login";
 
-export default function LoginPage() {
+export default function LoginPage({ role }: { role: string }) {
   return (
     <>
-      <Login />
+      <Login role={role} />
     </>
   );
 }

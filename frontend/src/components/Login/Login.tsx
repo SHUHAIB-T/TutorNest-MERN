@@ -3,14 +3,15 @@ import { validate } from "../util/validateForms";
 import AskTutorStudent from "../Modal/AskTutorStudent";
 import { login } from "../../features/auth/authService";
 import { useAppDispatch, useAppSelector } from "../../app/store";
-import Loader from "../Loader/Loader";
+import Loader from "../Loader/Loader1/Loader";
 import { useNavigate } from "react-router-dom";
 import { reset } from "../../features/auth/authSlice";
 import GoogleAuth from "../GoogleAuth/GoogleAuth";
 import LoginSVG from "../../assets/LoginSVG.svg";
 import { toast } from "react-toastify";
 
-export default function Login() {
+type roleProp = { role: string };
+export default function Login({ role }: roleProp) {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
@@ -62,7 +63,9 @@ export default function Login() {
       if (user?.role === "TUTOR") {
         navigate("/tutor");
       } else if (user?.role === "STUDENT") {
-        navigate("/STUDENT");
+        navigate("/student");
+      } else if (user?.role === "ADMIN") {
+        navigate("/admin");
       }
       dispatch(reset());
     }
@@ -93,7 +96,7 @@ export default function Login() {
             <h1 className="text-primary font-black text-5xl mt-9 mb-2">
               LOGIN
             </h1>
-            <GoogleAuth method={"Login"} role="PUBLIC" />
+            {role === "PUBLIC" && <GoogleAuth method={"Login"} role="PUBLIC" />}
             <form
               onSubmit={handleSubmit}
               className="flex flex-col items-start mt-1 w-[70%]"

@@ -3,7 +3,7 @@ import { useAppDispatch, useAppSelector } from "../../app/store";
 import StudentNav from "../../components/NavBar/StudentNav";
 import StudentSideBar from "../../components/StudentSideBar/StudentSideBar";
 import { getStudentPosts } from "../../features/studentPosts/StudentPostsService";
-import Loader from "../../components/Loader/Loader";
+import Loader from "../../components/Loader/Loader1/Loader";
 import PostCard from "../../components/PostCard/PostCard";
 import CreatePostModal from "../../components/Modal/PostModal/CreatePostModal";
 import EditPostModal from "../../components/Modal/PostModal/EditPostModal";

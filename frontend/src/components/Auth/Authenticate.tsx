@@ -11,6 +11,8 @@ export default function Authenticate() {
       navigate("/student");
     } else if (parseUser?.role === "TUTOR") {
       navigate("/tutor");
+    } else if (parseUser?.role === "ADMIN") {
+      navigate("/admin");
     }
   }, [parseUser, navigate]);
   return <>{!user ? <Outlet /> : null}</>;

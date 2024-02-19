@@ -20,6 +20,11 @@ export const getStudentProfile = createAsyncThunk(
           withCredentials: true,
         });
         return response.data;
+      } else if (user.role === "ADMIN") {
+        const response = await api.get("/admin", {
+          withCredentials: true,
+        });
+        return response.data;
       }
     } catch (error) {
       const axiosError = error as AxiosError;
@@ -52,6 +57,12 @@ export const uploadProfile = createAsyncThunk(
         } else if (user.role === "TUTOR") {
           response = await api.patch(
             "/tutor/updateProfilePicture",
+            { url },
+            { withCredentials: true }
+          );
+        } else if (user.role === "ADMIN") {
+          response = await api.patch(
+            "/admin/updateProfilePicture",
             { url },
             { withCredentials: true }
           );

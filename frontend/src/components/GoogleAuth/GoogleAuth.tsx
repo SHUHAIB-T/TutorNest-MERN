@@ -3,7 +3,7 @@ import { useAppDispatch, useAppSelector } from "../../app/store";
 import { googleAuth } from "../../features/auth/authService";
 import { useEffect, useState } from "react";
 import { reset } from "../../features/auth/authSlice";
-import Loader from "../Loader/Loader";
+import Loader from "../Loader/Loader1/Loader";
 import { useNavigate } from "react-router-dom";
 
 type prop = {

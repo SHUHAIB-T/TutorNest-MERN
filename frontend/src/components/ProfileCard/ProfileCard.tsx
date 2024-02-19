@@ -5,6 +5,10 @@ import CropModal from "../Modal/CropModal";
 import { uploadProfile } from "../../features/users/userServieces";
 import ResetPasswordModal from "../Modal/ResetPasswordModal";
 
+// firebase
+import { storage } from "../../app/fireabse";
+import { ref, deleteObject } from "firebase/storage";
+
 export default function ProfileCard() {
   const dispatch = useAppDispatch();
   const { profile } = useAppSelector((state) => state.userProfile);
@@ -16,9 +20,19 @@ export default function ProfileCard() {
 
   useEffect(() => {
     if (cropDone && croppedImage) {
+      if (profile?.profile) {
+        const imageRef = ref(storage, profile.profile);
+        deleteObject(imageRef)
+          .then(() => {
+            console.log("old image deleted");
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
       dispatch(uploadProfile(croppedImage));
     }
-  }, [cropDone, croppedImage, dispatch]);
+  }, [cropDone, croppedImage, dispatch, profile?.profile]);
 
   return (
     <>
@@ -33,14 +47,14 @@ export default function ProfileCard() {
         openResetModal={openResetModal}
       />
       <div className="flex bg-[#302343] shadow-md relative flex-wrap items-center justify-center w-full h-fit gap-7 ring-1 py-5 ring-[#4d2389] rounded-xl">
-        <div className="img-wrapper relative">
+        <div className="img-wrapper sm:mt-0 mt-5 relative">
           <img
             src={
               profile?.profile
                 ? profile.profile
                 : "https://www.seekpng.com/png/detail/115-1150456_avatar-generic-avatar.png"
             }
-            className="rounded-full w-40 ring-1 ring-[#9747FF] "
+            className="rounded-full m-0 w-40 ring-1 ring-[#9747FF] "
             alt=""
           />
           <div

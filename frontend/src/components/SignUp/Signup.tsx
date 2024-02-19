@@ -8,7 +8,7 @@ import SignupOTPmodal from "../Modal/SignupOTPmodal";
 import api from "../../API/api";
 import { AxiosError } from "axios";
 import { useAppDispatch, useAppSelector } from "../../app/store";
-import Loader from "../Loader/Loader";
+import Loader from "../Loader/Loader1/Loader";
 import { signup } from "../../features/auth/authService";
 import { reset } from "../../features/auth/authSlice";
 import GoogleAuth from "../GoogleAuth/GoogleAuth";

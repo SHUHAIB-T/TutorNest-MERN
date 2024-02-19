@@ -9,6 +9,7 @@ import bcrypt from "bcryptjs";
 import { generateTocken } from "../utils/generateTocken";
 import Student from "../model/studentProfile";
 import Teacher from "../model/teacherProfile";
+import Admin from "../model/adminProfile";
 
 /**
  * @disc    Sending OTP through mail
@@ -107,8 +108,14 @@ export const userSignup = asynchandler(async (req: Request, res: Response) => {
           phone: phone,
           name: name,
         });
+      } else if (createUser.role === "ADMIN") {
+        await Admin.create({
+          userID: createUser._id,
+          phone: phone,
+          name: name,
+        });
       }
-
+      
       res.status(200).json({
         success: true,
         message: "User creatred successfully",

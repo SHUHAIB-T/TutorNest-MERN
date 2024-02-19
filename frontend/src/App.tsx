@@ -3,7 +3,7 @@ import "react-image-crop/dist/ReactCrop.css";
 import { lazy, Suspense } from "react";
 import { Route, Routes } from "react-router-dom";
 
-import Loader from "./components/Loader/Loader";
+import Loader from "./components/Loader/Loader1/Loader";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Authenticate from "./components/Auth/Authenticate";
@@ -17,6 +17,10 @@ const ProfilePage = lazy(() => import("./pages/ProfilePage/ProfilePage"));
 const TutoProfile = lazy(() => import("./pages/TutorProfile/TuroProfile"));
 const Documents = lazy(() => import("./components/Documents/Documents"));
 const StudentPosts = lazy(() => import("./pages/StudentPosts/StudentPosts"));
+const AdminHome = lazy(() => import("./pages/AdminHome/AdminHome"));
+const AdminProfile = lazy(
+  () => import("./pages/AdminProfilePage/AdminProfile")
+);
 
 function App() {
   return (
@@ -25,7 +29,8 @@ function App() {
         <Routes>
           <Route element={<Authenticate />}>
             <Route path="/" element={<HomPage role="USER" />} />
-            <Route path="/Login" element={<LoginPage />} />
+            <Route path="/Login" element={<LoginPage role="PUBLIC" />} />
+            <Route path="/admin/Login" element={<LoginPage role="ADMIN" />} />
             <Route path="/student/signup" element={<StudentSignUp />} />
             <Route path="/tutor/signup" element={<TutorSignup />} />
           </Route>
@@ -38,6 +43,10 @@ function App() {
             <Route path="/tutor" element={<HomPage role="TUTOR" />} />
             <Route path="/tutor/profile" element={<TutoProfile />} />
             <Route path="/tutor/documents" element={<Documents />} />
+          </Route>
+          <Route element={<Protect role="ADMIN" />}>
+            <Route path="/admin" element={<AdminHome />} />
+            <Route path="/admin/profile" element={<AdminProfile />} />
           </Route>
         </Routes>
       </Suspense>
