@@ -1,4 +1,3 @@
-import "./documets.css";
 import { Table } from "flowbite-react";
 import { DocumentType } from "../Documents/Documents";
 import ShowImage from "../Modal/ShowImage";
@@ -54,7 +53,7 @@ export default function DocumentTable({ documents, setDocuments }: prop) {
   }, [setOpenModal, image]);
 
   return (
-    <div className="overflow-x-auto documents w-[80%] mt-10">
+    <div className="overflow-x-auto mytable w-[80%] mt-10">
       <ShowImage
         setImage={setImage}
         opentModal={openModal}

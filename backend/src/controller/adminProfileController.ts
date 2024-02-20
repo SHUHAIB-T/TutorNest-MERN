@@ -6,7 +6,7 @@ import mongoose from "mongoose";
 /**
  * @desc    Get Admin Profile
  * @route   GET api/admin
- * @access  PROTECTED
+ * @access  private
  */
 export const getAdminProfile = asynchandler(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -26,7 +26,7 @@ export const getAdminProfile = asynchandler(
 /**
  * @disc    Update Profile Picture
  * @route   GET /api/admin/updateProfilePicture
- * @access  PROTECTED
+ * @access  private
  */
 export const updateProfilePicture = asynchandler(
   async (req: Request, res: Response, next: NextFunction) => {

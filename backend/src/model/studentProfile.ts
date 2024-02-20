@@ -26,5 +26,5 @@ const studentProfile = new Schema<IStuednetProfile>({
   preffered_language: String,
 });
 
-const student = model<IStuednetProfile>("student", studentProfile);
-export default student;
+const Student = model<IStuednetProfile>("student", studentProfile);
+export default Student;

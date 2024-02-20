@@ -115,7 +115,7 @@ export const userSignup = asynchandler(async (req: Request, res: Response) => {
           name: name,
         });
       }
-      
+
       res.status(200).json({
         success: true,
         message: "User creatred successfully",
@@ -146,20 +146,25 @@ export const userLogin = asynchandler(
     const { email, password } = req.body;
     const user = await User.findOne<IUser>({ email: email });
     if (user) {
-      if (user.password && (await user.matchPassword(password))) {
-        const tocken = generateTocken(user._id);
-        res.status(200).json({
-          success: true,
-          tocken: tocken,
-          user: {
-            _is: user._id,
-            email: user.email,
-            role: user.role,
-          },
-        });
+      if (user.status) {
+        if (user.password && (await user.matchPassword(password))) {
+          const tocken = generateTocken(user._id);
+          res.status(200).json({
+            success: true,
+            tocken: tocken,
+            user: {
+              _is: user._id,
+              email: user.email,
+              role: user.role,
+            },
+          });
+        } else {
+          res.status(401);
+          return next(Error("Invalid Credentials"));
+        }
       } else {
         res.status(401);
-        return next(Error("Invalid Credentials"));
+        return next(Error("this account has been blocked!"));
       }
     } else {
       res.status(401);
@@ -198,8 +203,10 @@ export const googleAuth = asynchandler(
         res.status(400);
         return next(Error("Cannot Login without password"));
       } else {
+        if (!isExist.status) {
+          next(Error("This account has been blocked!"));
+        }
         const tocken = generateTocken(isExist._id);
-
         res.status(200).json({
           success: true,
           user: {

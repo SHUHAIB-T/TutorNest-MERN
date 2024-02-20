@@ -65,6 +65,7 @@ const authSlice = createSlice({
         Cookies.set("token", action.payload.tocken, { expires: 2 });
       })
       .addCase(login.rejected, (state, action) => {
+        state.isSuccess = false;
         state.isLoading = false;
         state.isError = true;
         state.errorMessage = action.payload as errorMessage;

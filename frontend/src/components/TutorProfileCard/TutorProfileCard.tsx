@@ -5,8 +5,6 @@ import { useAppDispatch, useAppSelector } from "../../app/store";
 import { validate } from "../util/validateForms";
 import { updateProfile } from "../../features/users/userServieces";
 import Loader from "../Loader/Loader1/Loader";
-import { reset } from "../../features/users/userSlice";
-import { toast } from "react-toastify";
 
 export type ElementTyoe = {
   id: number;
@@ -14,9 +12,7 @@ export type ElementTyoe = {
 };
 export default function TutorProfileCard() {
   const dispatch = useAppDispatch();
-  const { profile, isLoading, isError, errorMessage } = useAppSelector(
-    (state) => state.userProfile
-  );
+  const { profile, isLoading } = useAppSelector((state) => state.userProfile);
 
   const qualification: string[] = profile?.qualification
     ? (profile?.qualification as string[])
@@ -134,13 +130,6 @@ export default function TutorProfileCard() {
       setIsSubmit(false);
     }
   }, [formData, isSubmit, formErrors, dispatch]);
-
-  useEffect(() => {
-    if (isError) {
-      toast.error(errorMessage.message);
-      dispatch(reset());
-    }
-  }, [isError, errorMessage, dispatch]);
 
   if (isLoading) {
     return <Loader />;
