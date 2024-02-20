@@ -3,6 +3,7 @@ import Teacher from "../model/teacherProfile";
 import Student from "../model/studentProfile";
 import { Request, Response, NextFunction } from "express";
 import User from "../model/userModel";
+import Document from "../model/documentModel";
 
 /**
  * @disc    Get all tutors
@@ -11,7 +12,13 @@ import User from "../model/userModel";
  */
 export const getAllTutors = asynchandler(
   async (req: Request, res: Response, next: NextFunction) => {
+    const query: { name?: { $regex: RegExp } } = {};
+    if (req.query.search)
+      [(query.name = { $regex: new RegExp(req.query.search as string, "i") })];
     const tachers = await Teacher.aggregate([
+      {
+        $match: query,
+      },
       {
         $lookup: {
           from: "users",
@@ -54,7 +61,14 @@ export const getAllTutors = asynchandler(
  */
 export const getAllstudnets = asynchandler(
   async (req: Request, res: Response, next: NextFunction) => {
+    const query: { name?: { $regex: RegExp } } = {};
+    if (req.query.search)
+      [(query.name = { $regex: new RegExp(req.query.search as string, "i") })];
+
     const students = await Student.aggregate([
+      {
+        $match: query,
+      },
       {
         $lookup: {
           from: "users",
@@ -135,6 +149,71 @@ export const unblockUser = asynchandler(
       });
     } else {
       next(Error("something went wrong!"));
+    }
+  }
+);
+
+/**
+ * @disc    Get Tutor Documents
+ * @route   get /api/admin/document/:id
+ * @access  private
+ */
+export const getTutuorDocument = asynchandler(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const userId = req.params.id;
+    const documents = await Document.find({ userID: userId });
+    if (documents) {
+      res.status(200).json({
+        success: true,
+        documents: documents,
+      });
+    } else {
+      next(Error("something went wrong!"));
+    }
+  }
+);
+
+/**
+ * @disc    Verify doc Documents
+ * @route   PATCH /api/admin/document/:id
+ * @access  private
+ */
+export const toggleVerify = asynchandler(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const docId = req.params.id;
+    const document = await Document.findById({ _id: docId });
+    if (document) {
+      document.isVerified = !document.isVerified;
+      const updated = await document.save();
+      if (updated) {
+        res.status(200).json({
+          success: true,
+        });
+      }
+    } else {
+      res.status(404);
+      next(Error("Document not found"));
+    }
+  }
+);
+
+/**
+ * @disc    Get a single tutor
+ * @route   GET /api/admin/tutor/:id
+ * @access  private
+ */
+export const getSingleTutor = asynchandler(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const userId = req.params.id;
+    const tutor = await Teacher.findOne({ userID: userId }, { name: 1 });
+    if (tutor) {
+      res.status(200).json({
+        success: true,
+        tutor: tutor,
+      });
+    } else {
+      res.status(404);
+      next(Error("No user found!"));
     }
   }
 );

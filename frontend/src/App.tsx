@@ -27,6 +27,9 @@ const AdminTutorPage = lazy(
 const AdminStudentPage = lazy(
   () => import("./pages/AdminStudentPage/AdminStudentPage")
 );
+const AdminTutorDocument = lazy(
+  () => import("./pages/AdminTutorDocument/AdminTutorDocument")
+);
 
 function App() {
   return (
@@ -54,6 +57,7 @@ function App() {
             <Route path="/admin" element={<AdminHome />} />
             <Route path="/admin/profile" element={<AdminProfile />} />
             <Route path="/admin/tutors" element={<AdminTutorPage />} />
+            <Route path="/admin/tutors/:id" element={<AdminTutorDocument />} />
             <Route path="/admin/students" element={<AdminStudentPage />} />
           </Route>
         </Routes>

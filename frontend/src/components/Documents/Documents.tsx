@@ -61,7 +61,7 @@ export default function Documents() {
             Upload Document
           </button>
         </div>
-        <DocumentTable documents={documents} setDocuments={setDocuments} />
+        <DocumentTable role="TUTOR" documents={documents} setDocuments={setDocuments} />
       </div>
     </>
   );
