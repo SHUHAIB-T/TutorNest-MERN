@@ -11,7 +11,13 @@ import User from "../model/userModel";
  */
 export const getAllTutors = asynchandler(
   async (req: Request, res: Response, next: NextFunction) => {
+    const query: { name?: { $regex: RegExp } } = {};
+    if (req.query.search)
+      [(query.name = { $regex: new RegExp(req.query.search as string, "i") })];
     const tachers = await Teacher.aggregate([
+      {
+        $match: query,
+      },
       {
         $lookup: {
           from: "users",
@@ -54,7 +60,14 @@ export const getAllTutors = asynchandler(
  */
 export const getAllstudnets = asynchandler(
   async (req: Request, res: Response, next: NextFunction) => {
+    const query: { name?: { $regex: RegExp } } = {};
+    if (req.query.search)
+      [(query.name = { $regex: new RegExp(req.query.search as string, "i") })];
+
     const students = await Student.aggregate([
+      {
+        $match: query,
+      },
       {
         $lookup: {
           from: "users",

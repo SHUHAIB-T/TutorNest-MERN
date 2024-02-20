@@ -7,16 +7,22 @@ import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import SearchIcon from "@mui/icons-material/Search";
 import { useEffect, useState } from "react";
 import { IAdminStudent } from "../../types/adminUserTypes";
+import { debaunce } from "../../components/util/utilityFuctions";
 
 export default function AdminStudentPage() {
   const [studentData, setStudentData] = useState<IAdminStudent[]>([]);
   const [blockId, setBlockId] = useState<string>("");
   const [unblockId, setunBlockId] = useState<string>("");
+  const [search, setSearch] = useState<string>("");
+
+  const debaunceSearch = debaunce((text: string) => {
+    setSearch(text);
+  }, 500);
 
   useEffect(() => {
     (async function () {
       try {
-        const response = await api.get("/admin/students", {
+        const response = await api.get(`/admin/students?search=${search}`, {
           withCredentials: true,
         });
         setStudentData(response.data.students);
@@ -24,7 +30,7 @@ export default function AdminStudentPage() {
         console.log(err);
       }
     })();
-  }, [blockId, unblockId]);
+  }, [blockId, unblockId, search]);
 
   return (
     <>
@@ -36,7 +42,11 @@ export default function AdminStudentPage() {
             <ChevronLeftIcon className="mb-1" /> Back
           </Link>
           <div className="flex justify-center items-center">
-            <input className="h-8 rounded-lg " type="text" />
+            <input
+              onChange={(e) => debaunceSearch(e.target.value)}
+              className="h-8 rounded-lg "
+              type="text"
+            />
             <SearchIcon fontSize="large" className="text-white" />
           </div>
         </div>
@@ -46,7 +56,7 @@ export default function AdminStudentPage() {
           setunBlockId={setunBlockId}
           studentData={studentData}
           unblockId={unblockId}
-          key={''}
+          key={""}
         />
       </div>
     </>
