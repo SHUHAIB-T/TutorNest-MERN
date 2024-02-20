@@ -7,7 +7,10 @@ import {
   getAllTutors,
   blockUser,
   unblockUser,
-  getAllstudnets
+  getAllstudnets,
+  getTutuorDocument,
+  toggleVerify,
+  getSingleTutor
 } from "../controller/adminUserController";
 
 const router: Router = Router();
@@ -18,5 +21,7 @@ router.get("/tutors", getAllTutors);
 router.get("/students", getAllstudnets);
 router.patch("/user-block/:id", blockUser);
 router.patch("/user-unblock/:id", unblockUser);
+router.route("/document/:id").get(getTutuorDocument).patch(toggleVerify);
+router.get('/tutor/:id',getSingleTutor)
 
 export default router;

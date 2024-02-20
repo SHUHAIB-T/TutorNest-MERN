@@ -3,6 +3,7 @@ import { IAdminTutor } from "../../types/adminUserTypes";
 import { Table } from "flowbite-react";
 import api from "../../API/api";
 import { toast } from "react-toastify";
+import { Link } from "react-router-dom";
 
 type prop = {
   tutorData: IAdminTutor[];
@@ -99,9 +100,11 @@ export default function AdminTutorTable({
                       ))}
                     </Table.Cell>
                     <Table.Cell>
-                      <span className="font-medium cursor-pointer text-cyan-600 hover:underline dark:text-cyan-500">
-                        View
-                      </span>
+                      <Link to={`/admin/tutors/${e.userID}`}>
+                        <span className="font-medium cursor-pointer text-cyan-600 hover:underline dark:text-cyan-500">
+                          View
+                        </span>
+                      </Link>
                     </Table.Cell>
                     <Table.Cell>
                       {e.user.status ? (

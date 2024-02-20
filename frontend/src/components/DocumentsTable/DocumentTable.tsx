@@ -6,22 +6,50 @@ import { Dispatch, SetStateAction } from "react";
 import api from "../../API/api";
 import { AxiosError } from "axios";
 import { toast } from "react-toastify";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import CancelIcon from "@mui/icons-material/Cancel";
+
+// firebase
+import { storage } from "../../app/fireabse";
+import { ref, deleteObject } from "firebase/storage";
 
 type prop = {
   setDocuments: Dispatch<SetStateAction<DocumentType[]>>;
   documents: DocumentType[];
+  role: string;
+  updateStatus?: string;
+  setUpdateStatus?: Dispatch<SetStateAction<string>>;
 };
 
-export default function DocumentTable({ documents, setDocuments }: prop) {
+export default function DocumentTable({
+  documents,
+  setDocuments,
+  role,
+  setUpdateStatus,
+  updateStatus,
+}: prop) {
   const [openModal, setOpenModal] = useState(false);
-  const [image, setImage] = useState("");
-  const [deleteIMG, setDeleteIMG] = useState("");
+  const [image, setImage] = useState<string>("");
+  const [deleteIMG, setDeleteIMG] = useState<string>("");
 
   const viewImage = (img: string) => {
     setImage(img);
   };
-  const deleteDocument = (id: string) => {
+  const deleteDocument = (id: string, url: string) => {
+    const imageRef = ref(storage, url);
+    deleteObject(imageRef)
+      .then(() => {
+        console.log("old image deleted");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
     setDeleteIMG(id);
+  };
+  const changeStatus = (id: string) => {
+    if (role === "ADMIN" && setUpdateStatus) {
+      setUpdateStatus(id);
+    }
   };
 
   useEffect(() => {
@@ -47,6 +75,27 @@ export default function DocumentTable({ documents, setDocuments }: prop) {
   }, [deleteIMG, documents, setDocuments]);
 
   useEffect(() => {
+    (async function () {
+      if (role === "ADMIN" && updateStatus && setUpdateStatus) {
+        try {
+          const response = await api.patch(
+            `/admin/document/${updateStatus}`,
+            {},
+            { withCredentials: true }
+          );
+          if (response.data.success) {
+            setUpdateStatus("");
+            toast.success("status updated!");
+          }
+        } catch (error) {
+          const axioserror = error as AxiosError;
+          toast.error(axioserror.message);
+        }
+      }
+    })();
+  }, [updateStatus, role, setUpdateStatus]);
+
+  useEffect(() => {
     if (image) {
       setOpenModal(true);
     }
@@ -65,8 +114,8 @@ export default function DocumentTable({ documents, setDocuments }: prop) {
           <Table.HeadCell>SL No</Table.HeadCell>
           <Table.HeadCell>Name</Table.HeadCell>
           <Table.HeadCell>Uploaded On</Table.HeadCell>
-          <Table.HeadCell>Document</Table.HeadCell>
           <Table.HeadCell>Status</Table.HeadCell>
+          <Table.HeadCell>Document</Table.HeadCell>
           <Table.HeadCell>
             <span className="sr-only">Eidi/delet</span>
           </Table.HeadCell>
@@ -84,9 +133,9 @@ export default function DocumentTable({ documents, setDocuments }: prop) {
                     <Table.Cell>{e.createdAt}</Table.Cell>
                     <Table.Cell>
                       {e.isVerified ? (
-                        <span>Verified</span>
+                        <span className="text-green-500">Verified</span>
                       ) : (
-                        <span className="text-red-600">not verified</span>
+                        <span className="text-red-600">Not Verified</span>
                       )}
                     </Table.Cell>
                     <Table.Cell>
@@ -98,15 +147,32 @@ export default function DocumentTable({ documents, setDocuments }: prop) {
                       </span>
                     </Table.Cell>
                     <Table.Cell>
-                      <span className="font-medium  cursor-pointer text-cyan-600 hover:underline dark:text-cyan-500">
-                        Edit
-                      </span>
-                      <span
-                        onClick={() => deleteDocument(e._id)}
-                        className="font-medium ms-5 cursor-pointer text-red-600 hover:underline dark:text-red-500"
-                      >
-                        delete
-                      </span>
+                      {role === "TUTOR" ? (
+                        <span
+                          onClick={() => deleteDocument(e._id, e.document)}
+                          className="font-medium ms-5 px-3 py-2 rounded-md cursor-pointer text-white bg-red-600 hover:bg-red-900"
+                        >
+                          delete
+                        </span>
+                      ) : (
+                        <>
+                          {!e.isVerified ? (
+                            <span onClick={() => changeStatus(e._id)}>
+                              <CheckCircleIcon
+                                fontSize="large"
+                                className="text-green-500 hover:text-green-700 cursor-pointer"
+                              />
+                            </span>
+                          ) : (
+                            <span onClick={() => changeStatus(e._id)}>
+                              <CancelIcon
+                                fontSize="large"
+                                className="text-red-500 hover:text-red-700 cursor-pointer"
+                              />
+                            </span>
+                          )}
+                        </>
+                      )}
                     </Table.Cell>
                   </Table.Row>
                 </>
