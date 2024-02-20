@@ -14,13 +14,13 @@ export default function AdminSideBar() {
         <GridViewIcon /> Dasboard
       </Link>
       <Link
-        to={"#"}
+        to={"/admin/tutors"}
         className="hover:bg-[#3f344e]/80 py-1 w-full rounded px-5 flex items-center justify-start gap-2"
       >
         <PeopleIcon /> Manage Tutors
       </Link>
       <Link
-        to={"#"}
+        to={"/admin/students"}
         className="hover:bg-[#3f344e]/80 py-1 w-full rounded px-5 flex items-center justify-start gap-2"
       >
         <PeopleOutlineIcon /> Manage Students

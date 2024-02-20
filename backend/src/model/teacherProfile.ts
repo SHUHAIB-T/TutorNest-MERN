@@ -22,5 +22,5 @@ const teacherProfile = new Schema<ITeacherProfile>({
   pricing: { type: String, default: "" },
 });
 
-const teacher = model<ITeacherProfile>("teacher", teacherProfile);
-export default teacher;
+const Teacher = model<ITeacherProfile>("teacher", teacherProfile);
+export default Teacher;

@@ -21,6 +21,12 @@ const AdminHome = lazy(() => import("./pages/AdminHome/AdminHome"));
 const AdminProfile = lazy(
   () => import("./pages/AdminProfilePage/AdminProfile")
 );
+const AdminTutorPage = lazy(
+  () => import("./pages/AdminTutorPage/AdminTutorPage")
+);
+const AdminStudentPage = lazy(
+  () => import("./pages/AdminStudentPage/AdminStudentPage")
+);
 
 function App() {
   return (
@@ -47,6 +53,8 @@ function App() {
           <Route element={<Protect role="ADMIN" />}>
             <Route path="/admin" element={<AdminHome />} />
             <Route path="/admin/profile" element={<AdminProfile />} />
+            <Route path="/admin/tutors" element={<AdminTutorPage />} />
+            <Route path="/admin/students" element={<AdminStudentPage />} />
           </Route>
         </Routes>
       </Suspense>
