@@ -2,11 +2,13 @@ import asyncHandler from "express-async-handler";
 import { Request, Response, NextFunction } from "express";
 import Teacher from "../model/teacherProfile";
 import mongoose from "mongoose";
+import StudentPosts from "../model/studnetPostModet";
+import Requests from "../model/requestModal";
 
 /**
  * @disc    get tutor profile
  * @route   GET /api/tutor
- * @access  PROTECTED
+ * @access  private
  */
 export const getProfile = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -26,7 +28,7 @@ export const getProfile = asyncHandler(
 /**
  * @disc    get tutor profile
  * @route   GET /api/tutor
- * @access  PROTECTED
+ * @access  private
  */
 export const updateProfilePicture = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -57,7 +59,7 @@ export const updateProfilePicture = asyncHandler(
 /**
  * @disc    Update studnet profile
  * @route   POST /api/student/updateProfile
- * @access  PROTECTED
+ * @access  private
  */
 export const updateTutorProfile = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -85,6 +87,67 @@ export const updateTutorProfile = asyncHandler(
     } else {
       res.status(400);
       return next(Error("Some Error Occured"));
+    }
+  }
+);
+
+/**
+ * @disc    Get Studnets Posts
+ * @route   GET /api/tutor/posts
+ * @access  private
+ */
+export const getStudentsPosts = asyncHandler(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const posts = await StudentPosts.aggregate([
+      { $match: { isDelete: false } },
+      {
+        $lookup: {
+          from: "students",
+          localField: "studentId",
+          foreignField: "userID",
+          as: "profile",
+        },
+      },
+      { $unwind: "$profile" },
+      {
+        $project: {
+          isDelete: 0,
+          __v: 0,
+          "profile._id": 0,
+          "profile.userID": 0,
+          "profile.phone": 0,
+          "profile.dob": 0,
+          "profile.gender": 0,
+          "profile.standard": 0,
+          "profile.subjects": 0,
+          "profile.intrests": 0,
+          "profile.__v": 0,
+          "profile.preffered_language": 0,
+        },
+      },
+    ]);
+
+    const teacherId = req.user?._id;
+
+    for (const post of posts) {
+      const connection = await Requests.findOne({
+        studentId: post.studentId,
+        teacherId,
+      });
+      if (connection) {
+        post.reqStatus = connection.status;
+      } else {
+        post.reqStatus = "NONE";
+      }
+    }
+
+    if (posts) {
+      res.status(200).json({
+        success: true,
+        posts: posts,
+      });
+    } else {
+      next(Error("No Student Posts"));
     }
   }
 );
