@@ -59,7 +59,6 @@ export const updateStudentpost = asynchandler(
       },
       { new: true }
     );
-    console.log(req.body);
     if (udatedUser) {
       res.status(200).json({
         success: true,
