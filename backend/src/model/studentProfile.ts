@@ -11,6 +11,7 @@ export interface IStuednetProfile {
   subjects: string[];
   intrests: string[];
   preffered_language: string;
+  connections?: string[];
 }
 
 const studentProfile = new Schema<IStuednetProfile>({
@@ -24,6 +25,7 @@ const studentProfile = new Schema<IStuednetProfile>({
   subjects: Array,
   intrests: Array,
   preffered_language: String,
+  connections: { type: Array, default: [] },
 });
 
 const Student = model<IStuednetProfile>("student", studentProfile);

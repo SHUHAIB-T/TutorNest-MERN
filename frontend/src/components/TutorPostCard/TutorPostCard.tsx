@@ -77,21 +77,39 @@ export default function TutorPostCard({
   return (
     <>
       <div className="div">
-        <div className="ring-1 h-fit flex items-center gap-5 p-3 ring-[#4d2389] bg-[#311d4e] text-white max-w-96 pr-10 pl-5 rounded-t-2xl">
-          <img
-            src={
-              profile.profile
-                ? profile.profile
-                : "https://www.seekpng.com/png/detail/115-1150456_avatar-generic-avatar.png"
-            }
-            className="w-10 rounded-full border-2 border-violet-700"
-            alt=""
-          />
-          <h1 className="font-bold text-white text-xl md:text-2xl">
-            {profile.name}
-          </h1>
+        <div className="ring-1 h-fit flex w-full items-center justify-between p-3 ring-[#4d2389] bg-[#311d4e] text-white max-w-96 pr-10 pl-5 rounded-t-2xl">
+          <div className="flex items-center gap-3">
+            <img
+              src={
+                profile.profile
+                  ? profile.profile
+                  : "https://www.seekpng.com/png/detail/115-1150456_avatar-generic-avatar.png"
+              }
+              className="w-10 rounded-full border-2 border-violet-700"
+              alt=""
+            />
+            <h1 className="font-bold text-white text-xl md:text-2xl">
+              {profile.name}
+            </h1>
+          </div>
+          {reqStatus === "NONE" && (
+            <button
+              onClick={() => sendConnctionRequest(studentId)}
+              className="bg-primary px-3 text-sm  py-1 rounded-md text-white"
+            >
+              CONNECT
+            </button>
+          )}
+          {reqStatus === "PENDING" && (
+            <button
+              onClick={() => cancelConnectionRequest(studentId)}
+              className="bg-primary px-3 text-sm  py-1 rounded-md text-white"
+            >
+              REQUESTED
+            </button>
+          )}
         </div>
-        <div className="ring-1 flex flex-col items-center h-fit shadow-2xl ring-[#4d2389] bg-[#1f172b] text-white max-w-96 px-5 rounded-b-2xl">
+        <div className="ring-1 flex flex-col items-center pb-5 h-fit shadow-2xl ring-[#4d2389] bg-[#1f172b] text-white max-w-96 px-5 rounded-b-2xl">
           <div className="w-full items-start">
             <h1 className=" font-bold mt-5 text-2xl">{title}</h1>
           </div>
@@ -105,22 +123,6 @@ export default function TutorPostCard({
           <div className="bg-[#26223F] w-full mt-2 rounded-md p-3">
             {description}
           </div>
-          {reqStatus === "NONE" && (
-            <button
-              onClick={() => sendConnctionRequest(studentId)}
-              className="bg-primary px-3 my-4 py-2 rounded-md text-white"
-            >
-              CONNECT
-            </button>
-          )}
-          {reqStatus === "PENDING" && (
-            <button
-              onClick={() => cancelConnectionRequest(studentId)}
-              className="bg-primary px-3 my-4 py-2 rounded-md text-white"
-            >
-              REQUESTED
-            </button>
-          )}
         </div>
       </div>
     </>
