@@ -34,7 +34,7 @@ export default function StudentSideBar() {
         <NotificationsActiveIcon /> NOTIFICATIONS
       </Link>
       <Link
-        to={"#"}
+        to={"/student/requests"}
         className="hover:bg-[#3f344e]/80 py-1 w-full rounded px-5 flex items-center justify-start gap-2"
       >
         <ConnectWithoutContactIcon /> REQUESTS

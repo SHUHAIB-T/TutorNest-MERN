@@ -9,6 +9,7 @@ interface ITeacherProfile {
   qualification?: string[];
   languages?: string[];
   pricing: string;
+  connections?: string[];
 }
 
 const teacherProfile = new Schema<ITeacherProfile>({
@@ -20,6 +21,7 @@ const teacherProfile = new Schema<ITeacherProfile>({
   qualification: { type: Array, default: [] },
   languages: { type: Array, default: [] },
   pricing: { type: String, default: "" },
+  connections: { type: Array, default: [] },
 });
 
 const Teacher = model<ITeacherProfile>("teacher", teacherProfile);

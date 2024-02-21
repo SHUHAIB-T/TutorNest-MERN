@@ -1,4 +1,4 @@
-import { Schema, model } from "mongoose";
+import mongoose, { Schema, model } from "mongoose";
 import bcrypt from "bcryptjs";
 import { ObjectId } from "mongodb";
 
@@ -10,6 +10,11 @@ export interface IUser {
   status: boolean;
   matchPassword(Password: string): Promise<boolean>;
 }
+export type user = mongoose.Document<unknown, IUser> &
+  IUser &
+  Required<{
+    _id: mongoose.mongo.BSON.ObjectId;
+  }>;
 
 const userSchema = new Schema<IUser>(
   {
