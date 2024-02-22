@@ -4,6 +4,7 @@ import { Table } from "flowbite-react";
 import api from "../../API/api";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
+import Swal from "sweetalert2";
 
 type prop = {
   tutorData: IAdminTutor[];
@@ -20,10 +21,30 @@ export default function AdminTutorTable({
   setunBlockId,
 }: prop) {
   const blockUser = (id: string) => {
-    setBlockId(id);
+    Swal.fire({
+      title: "Are you sure?",
+      text:"are you sure want to block",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonText: "Yes Block!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        setBlockId(id);
+      }
+    });
   };
   const unblockUser = (id: string) => {
-    setunBlockId(id);
+    Swal.fire({
+      title: "Are you sure?",
+      text:"are you sure want to unblock",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonText: "Yes Unlock!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        setunBlockId(id);
+      }
+    });
   };
   useEffect(() => {
     (async function () {

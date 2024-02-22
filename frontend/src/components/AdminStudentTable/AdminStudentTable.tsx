@@ -3,6 +3,7 @@ import { IAdminStudent } from "../../types/adminUserTypes";
 import { Table } from "flowbite-react";
 import api from "../../API/api";
 import { toast } from "react-toastify";
+import Swal from "sweetalert2";
 
 type prop = {
   studentData: IAdminStudent[];
@@ -19,10 +20,30 @@ export default function AdminStudentTable({
   setunBlockId,
 }: prop) {
   const blockUser = (id: string) => {
-    setBlockId(id);
+    Swal.fire({
+      title: "Are you sure?",
+      text:"are you sure want to block",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonText: "Yes Block!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        setBlockId(id);
+      }
+    });
   };
   const unblockUser = (id: string) => {
-    setunBlockId(id);
+    Swal.fire({
+      title: "Are you sure?",
+      text:"are you sure want to unblock",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonText: "Yes Unblock!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        setunBlockId(id);
+      }
+    });
   };
   useEffect(() => {
     (async function () {
