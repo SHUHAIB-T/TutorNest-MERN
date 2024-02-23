@@ -34,7 +34,7 @@ export default function PostCard({
   };
   return (
     <>
-      <div className="ring-1 h-fit shadow-2xl ring-[#4d2389] bg-[#1f172b] text-white max-w-96 relative py-5 pr-10 pl-5 rounded-2xl">
+      <div className="ring-1 h-fit shadow-2xl ring-[#4d2389] bg-[#1f172b] text-white w-80 md:w-96 relative py-5 pr-10 pl-5 rounded-2xl">
         <h1
           onClick={() => setShow((prev) => !prev)}
           className="font-bold absolute cursor-pointer top-0 right-4 text-3xl"

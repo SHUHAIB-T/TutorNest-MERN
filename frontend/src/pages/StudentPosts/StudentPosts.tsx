@@ -50,6 +50,7 @@ export default function StudentPosts() {
         subject: "",
       });
       dispatch(reset());
+      setEditId("");
     }
   }, [dispatch, isUpdated]);
 

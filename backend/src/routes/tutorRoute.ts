@@ -4,12 +4,15 @@ import {
   updateProfilePicture,
   updateTutorProfile,
   getStudentsPosts,
+  getMyStudents
 } from "../controller/tutorProfileController";
+
 import {
   uploadDoc,
   getMydocmunts,
   deleteDocument,
 } from "../controller/documentController";
+
 import { createConnection ,CancelConnection} from "../controller/requestController";
 
 const router: Router = Router();
@@ -22,5 +25,6 @@ router.patch("/deletedocument", deleteDocument);
 router.get("/posts", getStudentsPosts);
 router.post("/createRequest", createConnection);
 router.post("/cancelConnection", CancelConnection);
+router.get("/myStudents", getMyStudents);
 
 export default router;

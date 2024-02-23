@@ -8,6 +8,7 @@ import { AxiosError } from "axios";
 import { toast } from "react-toastify";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
+import Swal from "sweetalert2";
 
 // firebase
 import { storage } from "../../app/fireabse";
@@ -36,19 +37,37 @@ export default function DocumentTable({
     setImage(img);
   };
   const deleteDocument = (id: string, url: string) => {
-    const imageRef = ref(storage, url);
-    deleteObject(imageRef)
-      .then(() => {
-        console.log("old image deleted");
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-    setDeleteIMG(id);
+    Swal.fire({
+      title: "Are you sure wan't to delete this?",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonText: "Yes Delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const imageRef = ref(storage, url);
+        deleteObject(imageRef)
+          .then(() => {
+            console.log("old image deleted");
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+        setDeleteIMG(id);
+      }
+    });
   };
   const changeStatus = (id: string) => {
     if (role === "ADMIN" && setUpdateStatus) {
-      setUpdateStatus(id);
+      Swal.fire({
+        title: "Are you sure want to do this?",
+        icon: "question",
+        confirmButtonText: "Okey!",
+        showCancelButton: true,
+      }).then((result) => {
+        if (result.isConfirmed) {
+          setUpdateStatus(id);
+        }
+      });
     }
   };
 

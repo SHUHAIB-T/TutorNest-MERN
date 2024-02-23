@@ -8,12 +8,17 @@ import SearchIcon from "@mui/icons-material/Search";
 import { useEffect, useState } from "react";
 import { IAdminStudent } from "../../types/adminUserTypes";
 import { debaunce } from "../../components/util/utilityFuctions";
+import { Pagination } from "flowbite-react";
 
 export default function AdminStudentPage() {
   const [studentData, setStudentData] = useState<IAdminStudent[]>([]);
   const [blockId, setBlockId] = useState<string>("");
   const [unblockId, setunBlockId] = useState<string>("");
   const [search, setSearch] = useState<string>("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [count, setCount] = useState(0);
+
+  const onPageChange = (page: number) => setCurrentPage(page);
 
   const debaunceSearch = debaunce((text: string) => {
     setSearch(text);
@@ -22,15 +27,19 @@ export default function AdminStudentPage() {
   useEffect(() => {
     (async function () {
       try {
-        const response = await api.get(`/admin/students?search=${search}`, {
-          withCredentials: true,
-        });
+        const response = await api.get(
+          `/admin/students?search=${search}&&page=${currentPage}`,
+          {
+            withCredentials: true,
+          }
+        );
         setStudentData(response.data.students);
+        setCount(response.data.count);
       } catch (err) {
         console.log(err);
       }
     })();
-  }, [blockId, unblockId, search]);
+  }, [blockId, unblockId, search, currentPage]);
 
   return (
     <>
@@ -58,6 +67,13 @@ export default function AdminStudentPage() {
           unblockId={unblockId}
           key={""}
         />
+        <div className="flex mypage overflow-x-auto w-[80%] sm:justify-end">
+          <Pagination
+            currentPage={currentPage}
+            totalPages={count}
+            onPageChange={onPageChange}
+          />
+        </div>
       </div>
     </>
   );

@@ -13,6 +13,8 @@ import Document from "../model/documentModel";
 export const getAllTutors = asynchandler(
   async (req: Request, res: Response, next: NextFunction) => {
     const query: { name?: { $regex: RegExp } } = {};
+    const page: number = parseInt(req.query.page as string, 10) || 1;
+    const pageSize = 5;
     if (req.query.search)
       [(query.name = { $regex: new RegExp(req.query.search as string, "i") })];
     const tachers = await Teacher.aggregate([
@@ -42,11 +44,21 @@ export const getAllTutors = asynchandler(
           pricing: 0,
         },
       },
+      {
+        $skip: (page - 1) * pageSize,
+      },
+      {
+        $limit: pageSize,
+      },
     ]);
+    let count = await Teacher.countDocuments();
+    count = ~~(count / 5);
+
     if (tachers) {
       res.status(200).json({
         success: true,
         teachers: tachers,
+        count: count,
       });
     } else {
       next(Error("No teachers Registered"));
@@ -62,6 +74,8 @@ export const getAllTutors = asynchandler(
 export const getAllstudnets = asynchandler(
   async (req: Request, res: Response, next: NextFunction) => {
     const query: { name?: { $regex: RegExp } } = {};
+    const page: number = parseInt(req.query.page as string, 10) || 1;
+    const pageSize = 5;
     if (req.query.search)
       [(query.name = { $regex: new RegExp(req.query.search as string, "i") })];
 
@@ -93,11 +107,20 @@ export const getAllstudnets = asynchandler(
           dob: 0,
         },
       },
+      {
+        $skip: (page - 1) * pageSize,
+      },
+      {
+        $limit: pageSize,
+      },
     ]);
+    let count = await Student.countDocuments();
+    count = ~~(count / 5);
     if (students) {
       res.status(200).json({
         success: true,
         students: students,
+        count: count,
       });
     } else {
       next(Error("No teachers Registered"));

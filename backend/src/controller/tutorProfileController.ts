@@ -4,6 +4,7 @@ import Teacher from "../model/teacherProfile";
 import mongoose from "mongoose";
 import StudentPosts from "../model/studnetPostModet";
 import Requests from "../model/requestModal";
+import Student from "../model/studentProfile";
 
 /**
  * @disc    get tutor profile
@@ -149,5 +150,35 @@ export const getStudentsPosts = asyncHandler(
     } else {
       next(Error("No Student Posts"));
     }
+  }
+);
+
+/**
+ * @disc    Get My students
+ * @route   GET /api/tutor/myStudents
+ * @access  private
+ */
+export const getMyStudents = asyncHandler(
+  async (req: Request, res: Response) => {
+    const teacherId = req.user?._id;
+    const posts = [];
+    const teacher = await Teacher.findOne(
+      { userID: teacherId },
+      { connections: 1 }
+    );
+    const connections = teacher?.connections ? teacher?.connections : [];
+    for (const student of connections) {
+      const Mystydent = await Student.findOne(
+        { userID: student },
+        { connections: 0, __v: 0, profile: 0, dob: 0 }
+      );
+      if (student) {
+        posts.push(Mystydent);
+      }
+    }
+    res.status(200).json({
+      success: true,
+      students: posts,
+    });
   }
 );

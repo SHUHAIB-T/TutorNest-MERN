@@ -14,6 +14,9 @@ const HomPage = lazy(() => import("./pages/HomePage/HomPage"));
 const LoginPage = lazy(() => import("./pages/LoginPage/LoginPage"));
 const TutorSignup = lazy(() => import("./pages/SignupPage/TutorSignup"));
 const ProfilePage = lazy(() => import("./pages/ProfilePage/ProfilePage"));
+const MyStudentsPage = lazy(
+  () => import("./pages/MyStudentsPage/MyStudentsPage")
+);
 const TutoProfile = lazy(() => import("./pages/TutorProfile/TuroProfile"));
 const Documents = lazy(() => import("./components/Documents/Documents"));
 const StudentPosts = lazy(() => import("./pages/StudentPosts/StudentPosts"));
@@ -57,6 +60,7 @@ function App() {
             <Route path="/tutor" element={<TutorHomePage />} />
             <Route path="/tutor/profile" element={<TutoProfile />} />
             <Route path="/tutor/documents" element={<Documents />} />
+            <Route path="/tutor/my-students" element={<MyStudentsPage />} />
           </Route>
           <Route element={<Protect role="ADMIN" />}>
             <Route path="/admin" element={<AdminHome />} />
