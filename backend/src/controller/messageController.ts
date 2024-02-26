@@ -3,6 +3,7 @@ import { Request, Response, NextFunction, RequestHandler } from "express";
 import { ObjectId } from "mongodb";
 import Chat from "../model/chatModel";
 import Message from "../model/messageModel";
+import { Date } from "mongoose";
 
 /**
  * @disc    Create message
@@ -12,7 +13,7 @@ import Message from "../model/messageModel";
 export const createMessage: RequestHandler = asyncHandler(
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     const chatId = req.body.chatId;
-    const chat = await Chat.findById(chatId);
+    const chat = await Chat.findOne({ _id: new ObjectId(chatId) });
     if (!chat) {
       res.status(400);
       return next(new Error("Chat not found"));
@@ -46,12 +47,12 @@ export const getAllMessages: RequestHandler = asyncHandler(
     }
     const page =
       req.query.page && typeof req.query.page === "string"
-        ? req.query.page
+        ? new Date(req.query.page)
         : null;
     const query = page
       ? {
           chatId: new ObjectId(chat_id),
-          createdAt: { $lt: new Date(page) },
+          createdAt: { $lt: page },
           delivered_to: {
             $elemMatch: {
               $eq: new ObjectId(req.user?._id),
@@ -68,7 +69,7 @@ export const getAllMessages: RequestHandler = asyncHandler(
         };
 
     const messages = await Message.aggregate([
-      { $sort: { createAt: -1 } },
+      { $sort: { createdAt: -1 } },
       { $match: query },
       {
         $limit: 10,

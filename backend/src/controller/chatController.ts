@@ -12,7 +12,7 @@ export const createChat = asynchandler(
   async (req: Request, res: Response, next: NextFunction) => {
     const { userId } = req.body;
     const exist = await Chat.findOne({
-      members: { $all: [new ObjectId(userId), req.user?._id] },
+      members: { $all: [new ObjectId(userId), new ObjectId(req.user?._id)] },
     });
     if (exist) {
       res.status(200).json({
@@ -22,7 +22,7 @@ export const createChat = asynchandler(
       });
     } else {
       const newChat = new Chat({
-        members: [req.user?._id, new ObjectId(userId)],
+        members: [new ObjectId(req.user?._id), new ObjectId(userId)],
       });
       const chat = await newChat.save();
       if (chat) {
@@ -44,8 +44,6 @@ export const createChat = asynchandler(
 export const getMychats = asynchandler(
   async (req: Request, res: Response, next: NextFunction) => {
     const userId = req.user?._id;
-    const role = req.user?.role;
-    const fromField: string = role === "TUTOR" ? "teachers" : "students";
     const myChats = await Chat.aggregate([
       {
         $match: {
@@ -85,7 +83,30 @@ export const getMychats = asynchandler(
       },
       {
         $lookup: {
-          from: fromField,
+          from: "teachers",
+          localField: "latest_message.senderId",
+          foreignField: "userID",
+          as: "latest_message.teacherProfile",
+          pipeline: [
+            {
+              $project: {
+                name: 1,
+                profile: 1,
+                userID: 1,
+              },
+            },
+          ],
+        },
+      },
+      {
+        $unwind: {
+          path: "$latest_message.teacherProfile",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $lookup: {
+          from: "students",
           localField: "latest_message.senderId",
           foreignField: "userID",
           as: "latest_message.userDetails",
@@ -98,6 +119,12 @@ export const getMychats = asynchandler(
               },
             },
           ],
+        },
+      },
+      {
+        $unwind: {
+          path: "$latest_message.userDetails",
+          preserveNullAndEmptyArrays: true,
         },
       },
     ]);

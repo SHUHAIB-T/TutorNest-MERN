@@ -153,7 +153,7 @@ export const userLogin = asynchandler(
             success: true,
             tocken: tocken,
             user: {
-              _is: user._id,
+              _id: user._id,
               email: user.email,
               role: user.role,
             },
@@ -298,6 +298,35 @@ export const resetPassword = asynchandler(
       } else {
         next(Error("some Error occured"));
       }
+    }
+  }
+);
+
+/**
+ * @disc    Check current Password
+ * @route   PAST /api/userProfile/:id
+ * @access  PROTECTED
+ */
+export const getUserProfile = asynchandler(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const id = req.params.id;
+    const user = await User.findById(id);
+    let userProfile;
+    if (user?.role === "TUTOR") {
+      userProfile = await Teacher.findOne(
+        { userID: id },
+        { name: 1, profile: 1, _id: 0 }
+      );
+    } else if (user?.role === "STUDENT") {
+      userProfile = await Student.findOne(
+        { userID: id },
+        { name: 1, profile: 1, _id: 0 }
+      );
+    }
+    if (userProfile) {
+      res.status(200).json({ success: true, userProfile });
+    } else {
+      next(Error("Internal server error"));
     }
   }
 );
