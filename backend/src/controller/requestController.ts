@@ -159,3 +159,36 @@ export const deleteRequest = asyncHandler(
     }
   }
 );
+
+/**
+ * @disc    get My tutors
+ * @route   POST /api/student/mytutors
+ * @access  private
+ */
+export const getAllMyTutors = asyncHandler(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const studentId = req.user?._id;
+    const student = await Student.findOne(
+      { userID: studentId },
+      { connections: 1 }
+    );
+    const connectionsArray = student?.connections;
+    const teachers = await Teacher.find(
+      { userID: { $in: connectionsArray } },
+      {
+        name: 1,
+        profile: 1,
+        userID: 1,
+        bio: 1,
+      }
+    );
+    if (teachers) {
+      res.status(200).json({
+        success: true,
+        teachers,
+      });
+    } else {
+      next(Error("you have no tutors yet"));
+    }
+  }
+);
