@@ -1,13 +1,13 @@
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { Request, Response, NextFunction } from "express";
 import asyncHandler from "express-async-handler";
-import User from "../model/userModel";
+import User, { IUser } from "../model/userModel";
 import { env } from "../utils/envvalid";
-import mongoose, { Document } from "mongoose";
+import mongoose from "mongoose";
 
 declare module "express" {
   interface Request {
-    user?: Document;
+    user?: IUser;
   }
 }
 

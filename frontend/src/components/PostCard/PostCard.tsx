@@ -1,6 +1,7 @@
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useAppDispatch } from "../../app/store";
 import { deleteStudentPosts } from "../../features/studentPosts/StudentPostsService";
+import Swal from "sweetalert2";
 
 type props = {
   title: string;
@@ -30,7 +31,17 @@ export default function PostCard({
   }, [deletes, dispatch]);
 
   const deletePost = (id: string | undefined) => {
-    setDeletes(id);
+    Swal.fire({
+      title: "Are you sure?",
+      text: "Are you sure wan't to delete this post?",
+      icon: "question",
+      confirmButtonText: "Yes delete!",
+      showCancelButton: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        setDeletes(id);
+      }
+    });
   };
   return (
     <>

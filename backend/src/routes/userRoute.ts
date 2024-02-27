@@ -7,10 +7,13 @@ import {
   googleAuth,
   checkPassword,
   resetPassword,
+  getUserProfile,
 } from "../controller/userController";
 import studentRoute from "./studentRoute";
 import tutorRoute from "../routes/tutorRoute";
 import adminRouter from "../routes/adminRouter";
+import chatRoute from "../routes/chatRoute";
+import messageRoute from "../routes/messageRoute";
 
 import { protect } from "../middlewares/authMiddleware";
 
@@ -26,7 +29,10 @@ router
   .post(protect, checkPassword)
   .patch(protect, resetPassword);
 
+router.get("/userProfile/:id", protect, getUserProfile);
 router.use("/student", protect, studentRoute);
 router.use("/tutor", protect, tutorRoute);
 router.use("/admin", protect, adminRouter);
+router.use("/chat", protect, chatRoute);
+router.use("/messages", protect, messageRoute);
 export default router;

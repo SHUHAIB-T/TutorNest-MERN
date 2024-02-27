@@ -37,9 +37,9 @@ export default function ProfilePage() {
   return (
     <>
       <StudentNav />
-      <div className="flex md:p-10 p-4 gap-10 bg-secondary">
+      <div className="flex flex-wrap md:p-10 p-4 gap-10 bg-secondary">
         <StudentSideBar />
-        <div className="flex w-full flex-col">
+        <div className="flex w-full max-w-[50rem] flex-col">
           {isLoading ? (
             <Loader />
           ) : (
