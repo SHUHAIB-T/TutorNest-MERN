@@ -30,9 +30,9 @@ export default function StudentRequests() {
   return (
     <>
       <StudentNav />
-      <div className="flex md:px-10 p-4 gap-10 bg-secondary md:pb-64 md:pt-10">
+      <div className="flex flex-wrap md:px-10 w-full gap-10 p-4 bg-secondary md:pb-64 md:pt-10">
         <StudentSideBar />
-        <div className="flex w-full px-3 items-center min-h-28 flex-col pb-10 pt-5 bg-[#302343] ring-1 ring-[#4d2389] rounded-2xl">
+        <div className="flex w-full max-w-[50rem] px-3 items-center min-h-28 flex-col pb-10 pt-5 bg-[#302343] ring-1 ring-[#4d2389] rounded-2xl">
           <h1 className="font-bold text-gray-400">Requests</h1>
           {requests.map((e, i) => {
             return (

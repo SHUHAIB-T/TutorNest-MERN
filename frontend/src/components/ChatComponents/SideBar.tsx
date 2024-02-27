@@ -1,4 +1,15 @@
-export default function SideBar() {
+import { Dispatch, SetStateAction} from "react";
+import { useAppSelector } from "../../app/store";
+import { Ichat } from "../../types/chatandMessage";
+import ChatCard from "../ChatCard/ChatCard";
+
+interface prop {
+  chat: Ichat[];
+  setCurrentChat: Dispatch<SetStateAction<Ichat>>;
+}
+export default function SideBar({ chat, setCurrentChat }: prop) {
+  const { user } = useAppSelector((state) => state.auth);
+
   return (
     <>
       <div className="flex relative flex-col items-center h-[80vh] overflow-hidden rounded-2xl bg-mycard-body w-72">
@@ -19,71 +30,13 @@ export default function SideBar() {
           id="scrol-y"
           className="grid w-full grid-cols-1 divide-y overflow-y-auto divide-violet-800"
         >
-          <div className="flex w-full gap-4 cursor-pointe p-2 cursor-pointer hover:bg-my-input text-white">
-            <img
-              className="w-10 rounded-full"
-              src="https://profilemagazine.com/wp-content/uploads/2020/04/Ajmere-Dale-Square-thumbnail.jpg"
-              alt=""
-            />
-            <h1 className="font-bold">Amarnath A s</h1>
-          </div>
-
-          <div className="flex w-full gap-4 cursor-pointe p-2 cursor-pointer hover:bg-my-input text-white">
-            <img
-              className="w-10 rounded-full"
-              src="https://profilemagazine.com/wp-content/uploads/2020/04/Ajmere-Dale-Square-thumbnail.jpg"
-              alt=""
-            />
-            <h1 className="font-bold">Amarnath A s</h1>
-          </div>
-          <div className="flex w-full gap-4 cursor-pointe p-2 cursor-pointer hover:bg-my-input text-white">
-            <img
-              className="w-10 rounded-full"
-              src="https://profilemagazine.com/wp-content/uploads/2020/04/Ajmere-Dale-Square-thumbnail.jpg"
-              alt=""
-            />
-            <h1 className="font-bold">Amarnath A s</h1>
-          </div>
-          <div className="flex w-full gap-4 cursor-pointe p-2 cursor-pointer hover:bg-my-input text-white">
-            <img
-              className="w-10 rounded-full"
-              src="https://profilemagazine.com/wp-content/uploads/2020/04/Ajmere-Dale-Square-thumbnail.jpg"
-              alt=""
-            />
-            <h1 className="font-bold">Amarnath A s</h1>
-          </div>
-          <div className="flex w-full gap-4 cursor-pointe p-2 cursor-pointer hover:bg-my-input text-white">
-            <img
-              className="w-10 rounded-full"
-              src="https://profilemagazine.com/wp-content/uploads/2020/04/Ajmere-Dale-Square-thumbnail.jpg"
-              alt=""
-            />
-            <h1 className="font-bold">Amarnath A s</h1>
-          </div>
-          <div className="flex w-full gap-4 cursor-pointe p-2 cursor-pointer hover:bg-my-input text-white">
-            <img
-              className="w-10 rounded-full"
-              src="https://profilemagazine.com/wp-content/uploads/2020/04/Ajmere-Dale-Square-thumbnail.jpg"
-              alt=""
-            />
-            <h1 className="font-bold">Amarnath A s</h1>
-          </div>
-          <div className="flex w-full gap-4 cursor-pointe p-2 cursor-pointer hover:bg-my-input text-white">
-            <img
-              className="w-10 rounded-full"
-              src="https://profilemagazine.com/wp-content/uploads/2020/04/Ajmere-Dale-Square-thumbnail.jpg"
-              alt=""
-            />
-            <h1 className="font-bold">Amarnath A s</h1>
-          </div>
-          <div className="flex w-full gap-4 cursor-pointe p-2 cursor-pointer hover:bg-my-input text-white">
-            <img
-              className="w-10 rounded-full"
-              src="https://profilemagazine.com/wp-content/uploads/2020/04/Ajmere-Dale-Square-thumbnail.jpg"
-              alt=""
-            />
-            <h1 className="font-bold">Amarnath A s</h1>
-          </div>
+          {chat.length > 0 &&
+            user &&
+            chat.map((chat) => (
+              <div onClick={() => setCurrentChat(chat)}>
+                <ChatCard chat={chat} user={user} />
+              </div>
+            ))}
         </div>
       </div>
     </>

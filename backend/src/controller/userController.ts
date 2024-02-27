@@ -315,12 +315,12 @@ export const getUserProfile = asynchandler(
     if (user?.role === "TUTOR") {
       userProfile = await Teacher.findOne(
         { userID: id },
-        { name: 1, profile: 1, _id: 0 }
+        { name: 1, profile: 1, _id: 0, userID: 1 }
       );
     } else if (user?.role === "STUDENT") {
       userProfile = await Student.findOne(
         { userID: id },
-        { name: 1, profile: 1, _id: 0 }
+        { name: 1, profile: 1, _id: 0, userID: 1 }
       );
     }
     if (userProfile) {

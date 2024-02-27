@@ -70,9 +70,9 @@ export default function StudentPosts() {
       />
 
       <StudentNav />
-      <div className="flex md:px-10 md:pt-10 md:pb-44  p-4 gap-10 bg-secondary">
+      <div className="flex flex-wrap md:px-10 md:pt-10 md:pb-44  p-4 gap-10 bg-secondary">
         <StudentSideBar />
-        <div className="flex-flex-col space-y-5">
+        <div className="flex-flex-col w-full max-w-[50rem] space-y-5">
           <button
             onClick={() => setOpenModal(true)}
             className=" bg-primary px-5 py-1 rounded-md font-bold text-white"
