@@ -1,0 +1,6 @@
+.message-box:hover .delete-btn {
+    display: inline-block;
+}
+.delete-btn{
+    display: none;
+}

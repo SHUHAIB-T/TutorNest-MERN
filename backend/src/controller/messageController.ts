@@ -89,3 +89,27 @@ export const getAllMessages: RequestHandler = asyncHandler(
     }
   }
 );
+
+/**
+ * @disc    delelte message
+ * @route   PATCH /api/message/:id
+ * @access  private
+ */
+export const deleteMessage: RequestHandler = asyncHandler(
+  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    const id = req.params.id;
+    const deletedMessage = await Message.findOneAndUpdate(
+      { _id: new ObjectId(id) },
+      { isDelete: true },
+      { new: true }
+    );
+    if (deletedMessage) {
+      res.status(200).json({
+        success: true,
+        deletedMessage,
+      });
+    } else {
+      next(Error("internal server Error"));
+    }
+  }
+);

@@ -23,6 +23,14 @@ export const setUpSocket = (server: HTTPServer) => {
       }
     });
 
+    socket.on("deleteMessage", (data: IMessage) => {
+      const reciverId = data?.delivered_to?.find((e) => e !== data.senderId);
+      const deliverTo = users.find((e) => e.userId === reciverId);
+      if (reciverId && deliverTo) {
+        socket.to(deliverTo.socketId).emit("delete-message", data);
+      }
+    });
+
     socket.on("disconnect", () => {
       userLeft(socket.id);
       io.emit("getUsers", getUsers());

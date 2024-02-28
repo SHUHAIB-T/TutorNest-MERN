@@ -1,5 +1,9 @@
+import "./chatBox.css";
 import SendIcon from "@mui/icons-material/Send";
 import EmojiPicker, { Theme } from "emoji-picker-react";
+import AttachFileIcon from "@mui/icons-material/AttachFile";
+import CloseIcon from "@mui/icons-material/Close";
+import DeleteIcon from "@mui/icons-material/Delete";
 import {
   useRef,
   useState,
@@ -16,10 +20,13 @@ import { IMessage, Ichat, bodydata } from "../../types/chatandMessage";
 import {
   getMyMessages,
   sendMessage,
+  deleteMessage,
 } from "../../features/message/mesageServiece";
 import api from "../../API/api";
 import Logo from "../../assets/Logo.svg";
 import { SocketContext } from "../../contexts/SocketContext";
+import { deleteImageFromFirebase, uploadImage } from "../util/uploadFirebase";
+import Swal from "sweetalert2";
 
 type userDtaType = {
   name: string;
@@ -44,6 +51,9 @@ export default function Chatwindow({
   const [fetchMessage, setFetchMessage] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isScroll, setIsscroll] = useState<boolean>(true);
+  const [uploadedIMG, setUplaodedIMG] = useState<string>("");
+  const [showInput, setShowInput] = useState<boolean>(false);
+  const [deleteMessageId, setDeleteMessageId] = useState<string>("");
   const [bodyData, setBodyData] = useState<bodydata>({
     chatId: currentChat._id,
     content: "",
@@ -53,6 +63,8 @@ export default function Chatwindow({
   const { user } = useAppSelector((state) => state.auth);
   const scroll = useRef<HTMLInputElement>(null);
   const [userData, setUserData] = useState<userDtaType>();
+
+  // fetching messages
   useEffect(() => {
     if (fetchMessage && page && currentChat._id) {
       (async function () {
@@ -70,6 +82,7 @@ export default function Chatwindow({
     }
   }, [fetchMessage, currentChat._id, messages, setMessages]);
 
+  // fetching user details
   useEffect(() => {
     (async function () {
       const userId = currentChat.members?.find((e) => e !== user?._id);
@@ -100,6 +113,7 @@ export default function Chatwindow({
     }
   }, [messages, isScroll]);
 
+  // sending message
   useEffect(() => {
     (async function () {
       if (bodyData.chatId && bodyData.content && bodyData.content_type) {
@@ -113,6 +127,26 @@ export default function Chatwindow({
       }
     })();
   }, [bodyData, socket, messages, setMessages]);
+
+  // deleting messages
+  useEffect(() => {
+    (async function () {
+      if (deleteMessageId) {
+        const data = await deleteMessage(deleteMessageId);
+        socket?.current?.emit("deleteMessage", data.deletedMessage);
+        setMessages(
+          messages.map((item) => {
+            if (item._id === deleteMessageId) {
+              item.isDelete = true;
+            }
+            return item;
+          })
+        );
+        setDeleteMessageId("");
+      }
+    })();
+  }, [socket, deleteMessageId, messages, setMessages]);
+
   const handleSend = () => {
     if (message) {
       setBodyData({
@@ -138,6 +172,40 @@ export default function Chatwindow({
       setIsscroll(true);
     });
   }, [socket, messages, setMessages]);
+
+  useEffect(() => {
+    socket?.current?.on("delete-message", (data: IMessage) => {
+      setMessages(
+        messages.map((item) => {
+          if (item._id === data._id) {
+            item.isDelete = true;
+          }
+          return item;
+        })
+      );
+    });
+  }, [socket, messages, setMessages]);
+
+  const handeletemessage = (type: string, url: string, chatId: string) => {
+    Swal.fire({
+      title: "Are you sure?",
+      icon: "question",
+      text: "are you sure want to delete this message?",
+      showCancelButton: true,
+      confirmButtonText: "yes delete",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        (async function () {
+          if (type === "MEDIA") {
+            await deleteImageFromFirebase(url);
+            setDeleteMessageId(chatId);
+          } else {
+            setDeleteMessageId(chatId);
+          }
+        })();
+      }
+    });
+  };
 
   return (
     <>
@@ -172,8 +240,16 @@ export default function Chatwindow({
                     <div className="flex w-full mt-2 space-x-3 max-w-xs">
                       <div>
                         <div className="bg-my-ring text-gray-200 p-3 rounded-r-2xl rounded-bl-2xl">
-                          {e.content_type === "TEXT" && (
+                          {e.content_type === "TEXT" && !e.isDelete && (
                             <p className="text-sm">{e.content}</p>
+                          )}
+                          {e.content_type === "MEDIA" && !e.isDelete && (
+                            <img className="max-w-50" src={e.content} alt="" />
+                          )}
+                          {e.isDelete && (
+                            <p className="italic text-gray-400">
+                              this message has been deleted
+                            </p>
                           )}
                         </div>
                         <span className="text-xs text-gray-500 leading-none">
@@ -182,16 +258,47 @@ export default function Chatwindow({
                       </div>
                     </div>
                   ) : (
-                    <div className="flex w-full mt-2 space-x-3 max-w-xs ml-auto justify-end">
-                      <div>
-                        <div className="bg-my-bg-dark text-white p-3 rounded-l-2xl rounded-br-2xl">
-                          {e.content_type === "TEXT" && (
-                            <p className="text-sm">{e.content}</p>
-                          )}
+                    <div className="flex w-full mt-2 message-box space-x-3 max-w-xs ml-auto justify-end">
+                      <div className="flex">
+                        {!e.isDelete && (
+                          <button
+                            onClick={() => {
+                              if (e.content_type && e.content && e._id) {
+                                handeletemessage(
+                                  e.content_type,
+                                  e.content,
+                                  e._id
+                                );
+                              }
+                            }}
+                            className="text-my-ring delete-btn hover:text-white mb-5"
+                          >
+                            <DeleteIcon fontSize="small" />
+                          </button>
+                        )}
+                        <div>
+                          <div className="bg-my-bg-dark text-white p-3 rounded-l-2xl rounded-br-2xl">
+                            {e.content_type === "TEXT" && !e.isDelete && (
+                              <p className="text-sm">{e.content}</p>
+                            )}
+                            {e.content_type === "MEDIA" && !e.isDelete && (
+                              <img
+                                className="max-w-50"
+                                src={e.content}
+                                alt=""
+                              />
+                            )}
+                            {e.isDelete && (
+                              <p className="italic text-gray-400">
+                                this message has been deleted
+                              </p>
+                            )}
+                          </div>
+
+                          <span className="text-xs text-gray-500 leading-none">
+                            {format(e.createdAt as string)}
+                          </span>
                         </div>
-                        <span className="text-xs text-gray-500 leading-none">
-                          {format(e.createdAt as string)}
-                        </span>
                       </div>
                     </div>
                   )
@@ -211,15 +318,73 @@ export default function Chatwindow({
                 }}
               />
             </div>
+            {showInput && (
+              <div className="bg-primary">
+                <input
+                  onChange={(e) =>
+                    e.target.files &&
+                    (async function () {
+                      if (e.target.files) {
+                        setUplaodedIMG(await uploadImage(e.target.files[0]));
+                        setShowInput(false);
+                      }
+                    })()
+                  }
+                  type="file"
+                />
+              </div>
+            )}
+            {uploadedIMG && (
+              <div className="max-w-96 p-3 bg-secondary rounded-md">
+                <span className="flex text-white justify-end p-2">
+                  <div
+                    onClick={() => {
+                      (async function () {
+                        await deleteImageFromFirebase(uploadedIMG);
+                        setUplaodedIMG("");
+                      })();
+                    }}
+                    className="hover:bg-primary cursor-pointer rounded-md"
+                  >
+                    <CloseIcon />
+                  </div>
+                </span>
+                <img className="" src={uploadedIMG} alt="" />
+                <span className="flex w-full justify-end items-center p-2">
+                  <p className="text-gray-400 me-3">Send image</p>
+                  <div
+                    onClick={() => {
+                      setBodyData({
+                        ...bodyData,
+                        content_type: "MEDIA",
+                        content: uploadedIMG,
+                      });
+                      setUplaodedIMG("");
+                    }}
+                    className="hover:bg-my-bg-dark cursor-pointer py-1 px-2 rounded-lg"
+                  >
+                    <SendIcon className="text-my-ring cursor-pointer" />
+                  </div>
+                </span>
+              </div>
+            )}
             <div className="bg-my-bg-dark p-4 flex gap-3 items-center">
+              <div
+                onClick={() => setShowInput((prev) => !prev)}
+                className="w-10 h-10 items-center cursor-pointer justify-center flex rounded-full hover:bg-secondary"
+              >
+                <AttachFileIcon className="text-my-ring" />
+              </div>
               <input
                 className="flex items-center text-white ring-1 ring-my-ring border-0 bg-my-input h-10 w-full rounded px-3 text-sm"
                 type="text"
                 placeholder="Type your message…"
                 value={message}
+                disabled={uploadedIMG ? true : false}
                 onChange={(e) => {
                   setMessage(e.target.value);
                   setShowEmoji(false);
+                  setShowInput(false);
                 }}
                 onFocus={() => setShowEmoji(false)}
               />
