@@ -5,6 +5,7 @@ import { Flowbite } from "flowbite-react";
 import Logo from "../../assets/Logo.svg";
 import { Link } from "react-router-dom";
 import { logout } from "../../features/auth/authSlice";
+import InsertCommentIcon from "@mui/icons-material/InsertComment";
 
 export default function NavBar({ role }: { role: string }) {
   const profile = JSON.parse(localStorage.getItem("profile") as string);
@@ -51,7 +52,12 @@ export default function NavBar({ role }: { role: string }) {
                 <img src={Logo} className="mr-3 h-6 sm:h-9" />
               </Navbar.Brand>
             </Link>
-            <div className="flex md:order-2">
+            <div className="flex md:order-2 items-center gap-4">
+              {role === "TUTOR" && (
+                <Link to={"/tutor/chat"}>
+                  <InsertCommentIcon className="text-white" />
+                </Link>
+              )}
               <Dropdown
                 arrowIcon={false}
                 inline

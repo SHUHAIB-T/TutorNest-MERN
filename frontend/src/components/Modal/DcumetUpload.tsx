@@ -55,7 +55,7 @@ export default function DcumetUpload({
         try {
           if (image) {
             const filename = new Date().getTime() + image.name;
-            const storageRef = ref(storage, "profile/" + filename);
+            const storageRef = ref(storage, "documets/" + filename);
             const snapshot = await uploadBytes(storageRef, image);
             if (snapshot) {
               const url = await getDownloadURL(storageRef);

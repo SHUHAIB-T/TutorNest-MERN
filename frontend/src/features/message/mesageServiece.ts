@@ -28,3 +28,17 @@ export const sendMessage = async (bodydata: bodydata) => {
     return axiosError;
   }
 };
+
+export const deleteMessage = async (chat_id: string) => {
+  try {
+    const { data } = await api.patch(
+      `/messages/${chat_id}`,
+      {},
+      { withCredentials: true }
+    );
+    return data;
+  } catch (error) {
+    const axiosError = error as AxiosError;
+    return axiosError;
+  }
+};

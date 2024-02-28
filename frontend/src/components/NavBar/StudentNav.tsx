@@ -5,6 +5,7 @@ import { Flowbite } from "flowbite-react";
 import { logout } from "../../features/auth/authSlice";
 import Logo from "../../assets/Logo.svg";
 import { Link } from "react-router-dom";
+import InsertCommentIcon from "@mui/icons-material/InsertComment";
 
 export default function StudentNav() {
   const { user } = useAppSelector((state) => state.auth);
@@ -21,7 +22,10 @@ export default function StudentNav() {
                 <img src={Logo} className="mr-3 h-6 sm:h-9" />
               </Link>
             </Navbar.Brand>
-            <div className="flex md:order-2">
+            <div className="flex items-center md:order-2">
+            <Link to={"/student/chat"}>
+                  <InsertCommentIcon className="text-white me-3"/>
+                </Link>
               <Dropdown
                 arrowIcon={false}
                 inline

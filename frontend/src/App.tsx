@@ -60,7 +60,7 @@ function App() {
     return () => {
       socket.current?.disconnect();
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
   return (
@@ -106,7 +106,7 @@ function App() {
           </Routes>
         </SocketContext.Provider>
       </Suspense>
-      <ToastContainer />
+      <ToastContainer stacked />
     </>
   );
 }
