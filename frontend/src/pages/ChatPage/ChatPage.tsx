@@ -30,7 +30,6 @@ export default function ChatPage({ role }: Prop) {
     if (currentChat._id) {
       (async function () {
         try {
-          console.log("messages fetching");
           const messages = await getMyMessages(currentChat._id, null);
           setMessages(messages.messages);
         } catch (err) {
@@ -51,6 +50,7 @@ export default function ChatPage({ role }: Prop) {
             messages={messages}
             setMessages={setMessages}
             currentChat={currentChat}
+            role={role}
           />
         </div>
       </div>

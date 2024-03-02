@@ -4,6 +4,7 @@ import EmojiPicker, { Theme } from "emoji-picker-react";
 import AttachFileIcon from "@mui/icons-material/AttachFile";
 import CloseIcon from "@mui/icons-material/Close";
 import DeleteIcon from "@mui/icons-material/Delete";
+import DuoIcon from "@mui/icons-material/Duo";
 import {
   useRef,
   useState,
@@ -27,6 +28,7 @@ import Logo from "../../assets/Logo.svg";
 import { SocketContext } from "../../contexts/SocketContext";
 import { deleteImageFromFirebase, uploadImage } from "../util/uploadFirebase";
 import Swal from "sweetalert2";
+import { Link } from "react-router-dom";
 
 type userDtaType = {
   name: string;
@@ -38,11 +40,13 @@ type Prop = {
   currentChat: Ichat;
   messages: IMessage[];
   setMessages: Dispatch<SetStateAction<IMessage[]>>;
+  role: string;
 };
 export default function Chatwindow({
   currentChat,
   messages,
   setMessages,
+  role,
 }: Prop) {
   const socket = useContext(SocketContext);
   const [showEmoji, setShowEmoji] = useState<boolean>(false);
@@ -212,7 +216,7 @@ export default function Chatwindow({
       <div className="flex relative flex-col flex-grow max-w-5xl bg-mycard-body shadow-xl rounded-lg overflow-hidden">
         {currentChat._id ? (
           <>
-            <div className="flex sticky top justify-between w-full bg-my-bg-dark p-2">
+            <div className="flex sticky top justify-between items-center w-full bg-my-bg-dark p-2">
               <div className="flex gap-3 text-white">
                 <img
                   className="w-10 rounded-full"
@@ -225,6 +229,16 @@ export default function Chatwindow({
                 />
                 <h1 className="font-bold">{userData?.name}</h1>
               </div>
+              <Link
+                to={
+                  role === "STUDENT"
+                    ? `/student/video-chat/${currentChat._id}`
+                    : `/tutor/video-chat/${currentChat._id}`
+                }
+                className="text-white"
+              >
+                <DuoIcon fontSize="large" />
+              </Link>
             </div>
             <div className="w-full items-center justify-center flex">
               {isLoading && <Loader />}
