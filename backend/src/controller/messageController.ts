@@ -3,7 +3,6 @@ import { Request, Response, NextFunction, RequestHandler } from "express";
 import { ObjectId } from "mongodb";
 import Chat from "../model/chatModel";
 import Message from "../model/messageModel";
-import { Date } from "mongoose";
 
 /**
  * @disc    Create message
