@@ -29,6 +29,9 @@ const StudentRequests = lazy(
   () => import("./pages/StudentRequests/StudentRequests")
 );
 const TutorHomePage = lazy(() => import("./pages/TutorHomePage/TutorHomePage"));
+const TutorCoursePage = lazy(
+  () => import("./pages/TutorCoursePage/TutorCoursePage")
+);
 const ChatPage = lazy(() => import("./pages/ChatPage/ChatPage"));
 
 const AdminHome = lazy(() => import("./pages/AdminHome/AdminHome"));
@@ -95,6 +98,7 @@ function App() {
               <Route path="/tutor/profile" element={<TutoProfile />} />
               <Route path="/tutor/documents" element={<Documents />} />
               <Route path="/tutor/my-students" element={<MyStudentsPage />} />
+              <Route path="/tutor/courses" element={<TutorCoursePage />} />
             </Route>
             <Route element={<Protect role="ADMIN" />}>
               <Route path="/admin" element={<AdminHome />} />

@@ -43,20 +43,26 @@ export default function TutorHomePage() {
       </div>
       <div className="w-full pb-12 gap-3 flex justify-center flex-wrap bg-secondary">
         <div className="card w-72 py-10 grid items-center justify-center relative rounded-md h-fit bg-[#372450]">
-          <h1 className="font-bold text-4xl text-white">MY Profile</h1>
+          <h1 className="font-bold text-4xl text-white">My Profile</h1>
           <Link to={"/tutor/profile"}>
             <h1 className="absolute top-3 right-5  text-[#9747FF]">View</h1>
           </Link>
         </div>
         <div className="card w-72 py-10 grid items-center justify-center relative rounded-md h-fit bg-[#372450]">
-          <h1 className="font-bold text-4xl text-white">MY Students</h1>
+          <h1 className="font-bold text-4xl text-white">My Students</h1>
           <Link to={"/tutor/my-students"}>
             <h1 className="absolute top-3 right-5  text-[#9747FF]">View</h1>
           </Link>
         </div>
         <div className="card w-72 py-10 grid items-center justify-center relative rounded-md h-fit bg-[#372450]">
-          <h1 className="font-bold text-4xl text-white">MY documents</h1>
+          <h1 className="font-bold text-4xl text-white">My documents</h1>
           <Link to={"/tutor/documents"}>
+            <h1 className="absolute top-3 right-5  text-[#9747FF]">View</h1>
+          </Link>
+        </div>
+        <div className="card w-72 py-10 grid items-center justify-center relative rounded-md h-fit bg-[#372450]">
+          <h1 className="font-bold text-4xl text-white">My Courses</h1>
+          <Link to={"/tutor/courses"}>
             <h1 className="absolute top-3 right-5  text-[#9747FF]">View</h1>
           </Link>
         </div>
