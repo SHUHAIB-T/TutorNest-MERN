@@ -3,12 +3,60 @@ import CourseCard from "../../components/CourseCard/CourseCard";
 import NavBar from "../../components/NavBar/NavBar";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import CreateCourseModal from "../../components/Modal/CreateCorseModal/CreateCourseModal";
-import { useState } from "react";
+import EditCourseModal from "../../components/Modal/CreateCorseModal/EditCourseModal";
+import { useEffect, useState } from "react";
+import { ICourse } from "../../types/courseType";
+import api from "../../API/api";
 
 export default function TutorCoursePage() {
   const [openModal, setOpenModal] = useState(false);
+  const [editOpenModal, setEditOpenModal] = useState<boolean>(false);
+  const [updatd, setUpdated] = useState<boolean>(false);
+  const [courses, setCourses] = useState<ICourse[]>([]);
+  const [editCourseId, setEditCourseId] = useState<string>("");
+  const [initialState, setInitialState] = useState<ICourse>({
+    coverIMG: "",
+    description: "",
+    price: "",
+    title: "",
+  });
+  useEffect(() => {
+    (async function () {
+      try {
+        const { data } = await api.get("/tutor/my_courses", {
+          withCredentials: true,
+        });
+        // console.log("my courses", data);
+        setCourses(data.courses);
+      } catch (err) {
+        console.log(err);
+      }
+    })();
+  }, [updatd]);
+
+  useEffect(() => {
+    if (editCourseId) {
+      setInitialState(courses.find((e) => e._id === editCourseId) as ICourse);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [editCourseId]);
+
+  useEffect(() => {
+    if (initialState.title && editCourseId) {
+      setEditOpenModal(true);
+    }
+  }, [editCourseId, initialState.title]);
+
   return (
     <>
+      <EditCourseModal
+        initialstate={initialState}
+        openModal={editOpenModal}
+        setOpenModal={setEditOpenModal}
+        setEditCourseId={setEditCourseId}
+        setUpdated={setUpdated}
+        setInitialState={setInitialState}
+      />
       <CreateCourseModal openModal={openModal} setOpenModal={setOpenModal} />
       <NavBar role="TUTOR" />
       <div className="flex w-full flex-col h-[100vh] items-center bg-secondary">
@@ -26,10 +74,19 @@ export default function TutorCoursePage() {
             Create Course
           </button>
         </div>
-        <div className="flex flex-wrap gap-4 mt-10">
-          <CourseCard />
-          <CourseCard />
-          <CourseCard />
+        <div className="flex flex-wrap mt-10">
+          {courses.map((e, i) => (
+            <CourseCard
+              coverIMG={e.coverIMG}
+              description={e.description}
+              price={e.price}
+              title={e.title}
+              key={i}
+              setUpdated={setUpdated}
+              _id={e._id}
+              setEditCourseId={setEditCourseId}
+            />
+          ))}
         </div>
       </div>
     </>

@@ -14,6 +14,7 @@ import tutorRoute from "../routes/tutorRoute";
 import adminRouter from "../routes/adminRouter";
 import chatRoute from "../routes/chatRoute";
 import messageRoute from "../routes/messageRoute";
+import courseRoute from "../routes/courseRoute";
 
 import { protect } from "../middlewares/authMiddleware";
 
@@ -35,4 +36,5 @@ router.use("/tutor", protect, tutorRoute);
 router.use("/admin", protect, adminRouter);
 router.use("/chat", protect, chatRoute);
 router.use("/messages", protect, messageRoute);
+router.use("/course", courseRoute);
 export default router;

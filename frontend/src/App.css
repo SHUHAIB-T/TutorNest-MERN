@@ -44,3 +44,9 @@
   background: #573174;
   border-radius: 20px;
 }
+.options {
+  display: none;
+}
+.course-card:hover .options {
+  display: inline-block;
+}
