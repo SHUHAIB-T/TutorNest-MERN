@@ -11,6 +11,8 @@ import Course from "../model/courseModel";
 export const createCourse: RequestHandler = asyncHandler(
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     const { coverIMG, description, price, teacherId, title } = req.body;
+    console.log(req.body);
+
     const newCorse = await Course.create({
       title,
       coverIMG,
@@ -30,13 +32,37 @@ export const createCourse: RequestHandler = asyncHandler(
   }
 );
 /**
- * @disc    Create course
+ * @disc    get course
  * @route   GET /api/course
  * @access  private
  */
 export const getCourses: RequestHandler = asyncHandler(
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     const courses = await Course.find({ isDelete: false });
+    if (courses) {
+      res.status(200).json({
+        success: true,
+        courses,
+      });
+    } else {
+      res.status(500);
+      next(Error("Internal server Error"));
+    }
+  }
+);
+
+/*
+ * @disc    get my course
+ * @route   GET /api/tutor/my_course
+ * @access  private
+ */
+export const getMyCourses: RequestHandler = asyncHandler(
+  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    const teacherId = req.user?._id;
+    const courses = await Course.find({
+      teacherId: teacherId,
+      isDelete: false,
+    });
     if (courses) {
       res.status(200).json({
         success: true,
@@ -57,7 +83,7 @@ export const getCourses: RequestHandler = asyncHandler(
 export const editCourse: RequestHandler = asyncHandler(
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     const courseId = req.params.id;
-    const { coverIMG, description, price, title } = req.body;
+    const { coverIMG, description, price, title } = req.body
     const updatedCourse = await Course.findOneAndUpdate(
       { _id: courseId },
       {

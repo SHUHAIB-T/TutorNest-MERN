@@ -7,23 +7,32 @@ import { storage } from "../../../app/fireabse";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { useAppSelector } from "../../../app/store";
 import { toast } from "react-toastify";
+import { deleteImageFromFirebase } from "../../util/uploadFirebase";
 
 type Prop = {
   setOpenModal: Dispatch<SetStateAction<boolean>>;
   openModal: boolean;
+  initialstate: ICourse;
+  setEditCourseId: Dispatch<SetStateAction<string>>;
+  setInitialState: Dispatch<SetStateAction<ICourse>>;
+  setUpdated: Dispatch<SetStateAction<boolean>>;
 };
-export default function CreateCourseModal({ openModal, setOpenModal }: Prop) {
+export default function EditCourseModal({
+  openModal,
+  setOpenModal,
+  initialstate,
+  setEditCourseId,
+  setUpdated,
+  setInitialState,
+}: Prop) {
   const { user } = useAppSelector((state) => state.auth);
-  const initialState: ICourse = {
-    title: "",
-    coverIMG: "",
-    description: "",
-    price: "",
-  };
-  const [formData, setFormData] = useState<ICourse>(initialState);
-  const [formError, setFormError] = useState<ICourse>(initialState);
+  const [formData, setFormData] = useState<ICourse>(initialstate);
+  const [formError, setFormError] = useState<ICourse>(initialstate);
   const [image, setImage] = useState<File | null>(null);
   const [submit, setSubmit] = useState<boolean>(false);
+  useEffect(() => {
+    setFormData(initialstate);
+  }, [initialstate]);
 
   const onchange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -44,7 +53,7 @@ export default function CreateCourseModal({ openModal, setOpenModal }: Prop) {
       description: validate("required", formData.description),
       price: validate("required", formData.price),
       title: validate("required", formData.title),
-      coverIMG: validate("required", image),
+      coverIMG: validate("required", formData.coverIMG),
     });
     setSubmit(true);
   };
@@ -55,45 +64,89 @@ export default function CreateCourseModal({ openModal, setOpenModal }: Prop) {
         !formError.description &&
         !formError.price &&
         !formError.title &&
-        image &&
         formData.description &&
         formData.price &&
         formData.title &&
         submit
       ) {
         try {
-          const filename = new Date().getTime() + image.name;
-          const storageRef = ref(storage, "converIMG/" + filename);
-          const snapshot = await uploadBytes(storageRef, image);
-          if (snapshot) {
-            const url = await getDownloadURL(storageRef);
-            const { data } = await api.post(
-              "/course",
+          if (image) {
+            await deleteImageFromFirebase(initialstate.coverIMG);
+            const filename = new Date().getTime() + image.name;
+            const storageRef = ref(storage, "converIMG/" + filename);
+            const snapshot = await uploadBytes(storageRef, image);
+            if (snapshot) {
+              const url = await getDownloadURL(storageRef);
+              await api.put(
+                `/course/${initialstate._id}`,
+                {
+                  coverIMG: url,
+                  title: formData.title,
+                  description: formData.description,
+                  price: formData.price,
+                  teacherId: user?._id,
+                },
+                { withCredentials: true }
+              );
+              setOpenModal(false);
+              toast.success("Course updated!");
+              setUpdated((e) => !e);
+              setSubmit(false);
+              setEditCourseId("");
+              setInitialState({
+                title: "",
+                coverIMG: "",
+                description: "",
+                price: "",
+              });
+            }
+          } else {
+            await api.put(
+              `/course/${initialstate._id}`,
               {
-                coverIMG: url,
                 title: formData.title,
                 description: formData.description,
                 price: formData.price,
                 teacherId: user?._id,
+                coverIMG: initialstate.coverIMG,
               },
               { withCredentials: true }
             );
-            console.log(data);
             setOpenModal(false);
-            toast.success("Course Created!");
-            setFormData(initialState);
+            toast.success("Course updated!");
+            setEditCourseId("");
+            setInitialState({
+              title: "",
+              coverIMG: "",
+              description: "",
+              price: "",
+            });
+            setUpdated((e) => !e);
+            setSubmit(false);
           }
         } catch (err) {
           console.log(err);
         }
       }
     })();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formError, image, formData, submit, user, setOpenModal]);
 
   return (
     <div>
-      <Modal show={openModal} onClose={() => setOpenModal(false)}>
+      <Modal
+        show={openModal}
+        onClose={() => {
+          setOpenModal(false);
+          setEditCourseId("");
+          setInitialState({
+            title: "",
+            coverIMG: "",
+            description: "",
+            price: "",
+          });
+        }}
+      >
         <Modal.Header className="ring-1 ring-[#4d2389] bg-[#110d17] rounded-t-md">
           <h1 className="text-white font-bold">Create Course</h1>
         </Modal.Header>
@@ -170,10 +223,10 @@ export default function CreateCourseModal({ openModal, setOpenModal }: Prop) {
               SUBMIT
             </button>
             <button
-              onClick={() => setFormData(initialState)}
+              onClick={() => setFormData(initialstate)}
               className="font-bold text-white px-4 py-2 bg-[#3f3b3b] rounded-lg"
             >
-              CLEAR
+              Reset
             </button>
           </div>
         </Modal.Body>

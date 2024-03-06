@@ -4,7 +4,7 @@ import {
   updateProfilePicture,
   updateTutorProfile,
   getStudentsPosts,
-  getMyStudents
+  getMyStudents,
 } from "../controller/tutorProfileController";
 
 import {
@@ -13,7 +13,11 @@ import {
   deleteDocument,
 } from "../controller/documentController";
 
-import { createConnection ,CancelConnection} from "../controller/requestController";
+import {
+  createConnection,
+  CancelConnection,
+} from "../controller/requestController";
+import { getMyCourses } from "../controller/courseController";
 
 const router: Router = Router();
 
@@ -26,5 +30,6 @@ router.get("/posts", getStudentsPosts);
 router.post("/createRequest", createConnection);
 router.post("/cancelConnection", CancelConnection);
 router.get("/myStudents", getMyStudents);
+router.get("/my_courses", getMyCourses);
 
 export default router;
