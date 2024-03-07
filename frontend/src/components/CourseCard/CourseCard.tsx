@@ -5,6 +5,7 @@ import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import api from "../../API/api";
 import { toast } from "react-toastify";
+import { Link } from "react-router-dom";
 
 interface Prop extends ICourse {
   setUpdated: Dispatch<SetStateAction<boolean>>;
@@ -65,9 +66,11 @@ export default function CourseCard({
             </div>
             <small className="text-white leading-none">{description}</small>
           </div>
-          <button className="font-bold text-white w-full bg-primary hover:bg-my-ring py-2 rounded-b-2xl">
-            view
-          </button>
+          <Link to={`/tutor/lessons/${_id}`}>
+            <button className="font-bold text-white w-full bg-primary hover:bg-my-ring py-2 rounded-b-2xl">
+              view
+            </button>
+          </Link>
         </div>
         <div className="absolute options right-4 top-0 flex flex-col items-center justify-center">
           <div onClick={() => deleteCourse(_id as string)}>

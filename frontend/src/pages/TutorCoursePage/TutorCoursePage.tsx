@@ -59,7 +59,7 @@ export default function TutorCoursePage() {
       />
       <CreateCourseModal openModal={openModal} setOpenModal={setOpenModal} />
       <NavBar role="TUTOR" />
-      <div className="flex w-full flex-col h-[100vh] items-center bg-secondary">
+      <div className="flex w-full flex-col pb-96 items-center bg-secondary">
         <h1 className="font-bold text-5xl text-white mt-10">My Courses</h1>
         <div className="w-[80%] mt-3 flex justify-between">
           <div className="flex items-center">

@@ -12,6 +12,7 @@ import { SocketContext } from "./contexts/SocketContext";
 import { io, Socket } from "socket.io-client";
 import { useAppDispatch, useAppSelector } from "./app/store";
 import { setOnlineUsers } from "./features/Socket/SocketSlice";
+import { getStudentProfile } from "./features/users/userServieces";
 
 const StudentSignUp = lazy(() => import("./pages/SignupPage/StudentSignUp"));
 const HomPage = lazy(() => import("./pages/HomePage/HomPage"));
@@ -32,6 +33,7 @@ const TutorHomePage = lazy(() => import("./pages/TutorHomePage/TutorHomePage"));
 const TutorCoursePage = lazy(
   () => import("./pages/TutorCoursePage/TutorCoursePage")
 );
+const LessonsPage = lazy(() => import("./pages/LessonsPage/LessonsPage"));
 const ChatPage = lazy(() => import("./pages/ChatPage/ChatPage"));
 
 const AdminHome = lazy(() => import("./pages/AdminHome/AdminHome"));
@@ -67,6 +69,10 @@ function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
+  useEffect(() => {
+    dispatch(getStudentProfile());
+  }, [dispatch]);
+
   return (
     <>
       <Suspense fallback={<Loader />}>
@@ -99,6 +105,7 @@ function App() {
               <Route path="/tutor/documents" element={<Documents />} />
               <Route path="/tutor/my-students" element={<MyStudentsPage />} />
               <Route path="/tutor/courses" element={<TutorCoursePage />} />
+              <Route path="/tutor/lessons/:id" element={<LessonsPage />} />
             </Route>
             <Route element={<Protect role="ADMIN" />}>
               <Route path="/admin" element={<AdminHome />} />
