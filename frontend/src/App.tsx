@@ -12,7 +12,6 @@ import { SocketContext } from "./contexts/SocketContext";
 import { io, Socket } from "socket.io-client";
 import { useAppDispatch, useAppSelector } from "./app/store";
 import { setOnlineUsers } from "./features/Socket/SocketSlice";
-import { getStudentProfile } from "./features/users/userServieces";
 
 const StudentSignUp = lazy(() => import("./pages/SignupPage/StudentSignUp"));
 const HomPage = lazy(() => import("./pages/HomePage/HomPage"));
@@ -59,7 +58,6 @@ function App() {
     socket.current = io("http://localhost:5000");
     socket.current.emit("setUser", user?._id);
     socket.current.on("getUsers", (data) => {
-      console.log("get user fetching", data);
       dispatch(setOnlineUsers(data));
     });
 
@@ -69,9 +67,7 @@ function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
-  useEffect(() => {
-    dispatch(getStudentProfile());
-  }, [dispatch]);
+
 
   return (
     <>
