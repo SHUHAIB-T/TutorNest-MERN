@@ -6,6 +6,18 @@ export interface ICourse {
   price: string;
   createdAt?: string;
   updatedAt?: string;
-  __v?: string;
   teacherId?: string;
+  __v?: string;
+}
+
+export interface ILesson {
+  title: string;
+  courseId: string;
+  duration: string;
+  video: string;
+  _id?: string;
+  description: string;
+  createdAt?: string;
+  updatedAt?: string;
+  __v?: string;
 }

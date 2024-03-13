@@ -1,11 +1,37 @@
 import { Table } from "flowbite-react";
 import { IMyStudents } from "../../types/tutorTypes";
+import { useEffect, useState } from "react";
+import api from "../../API/api";
+import { useNavigate } from "react-router-dom";
 
 interface PROP {
   students: IMyStudents[];
 }
 
 export default function MyStudentTable({ students }: PROP) {
+  const [userId, setUserId] = useState<string>("");
+  const navigate = useNavigate();
+  const createChat = (id: string) => {
+    setUserId(id);
+  };
+  useEffect(() => {
+    (async function () {
+      if (userId) {
+        try {
+          await api.post(
+            "/chat",
+            { userId: userId },
+            { withCredentials: true }
+          );
+          setUserId("");
+          navigate("/tutor/chat");
+        } catch (err) {
+          console.log(err);
+        }
+      }
+    })();
+  }, [userId, navigate]);
+
   return (
     <div className="overflow-x-auto mytable w-[80%] mt-10">
       <Table>
@@ -44,7 +70,10 @@ export default function MyStudentTable({ students }: PROP) {
                   </Table.Cell>
                   <Table.Cell>{e.preffered_language}</Table.Cell>
                   <Table.Cell>
-                    <button className="py-1 px-3 bg-primary text-white rounded-md">
+                    <button
+                      onClick={() => createChat(e.userID as string)}
+                      className="py-1 px-3 bg-primary text-white rounded-md"
+                    >
                       CHAT
                     </button>
                   </Table.Cell>

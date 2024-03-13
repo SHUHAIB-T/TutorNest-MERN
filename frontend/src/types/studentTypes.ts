@@ -11,3 +11,11 @@ export interface IRequests {
     bio: string;
   };
 }
+
+export interface IMyTutor {
+  _id?: string;
+  userID?: string;
+  bio?: string;
+  name?: string;
+  profile?: string;
+}

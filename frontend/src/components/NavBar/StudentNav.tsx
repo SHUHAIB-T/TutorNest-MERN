@@ -6,11 +6,17 @@ import { logout } from "../../features/auth/authSlice";
 import Logo from "../../assets/Logo.svg";
 import { Link } from "react-router-dom";
 import InsertCommentIcon from "@mui/icons-material/InsertComment";
+import { useEffect } from "react";
+import { getStudentProfile } from "../../features/users/userServieces";
 
 export default function StudentNav() {
   const { user } = useAppSelector((state) => state.auth);
   const { profile } = useAppSelector((state) => state.userProfile);
   const dispatch = useAppDispatch();
+  
+  useEffect(() => {
+    dispatch(getStudentProfile());
+  }, [dispatch]);
 
   return (
     <>
@@ -23,9 +29,9 @@ export default function StudentNav() {
               </Link>
             </Navbar.Brand>
             <div className="flex items-center md:order-2">
-            <Link to={"/student/chat"}>
-                  <InsertCommentIcon className="text-white me-3"/>
-                </Link>
+              <Link to={"/student/chat"}>
+                <InsertCommentIcon className="text-white me-3" />
+              </Link>
               <Dropdown
                 arrowIcon={false}
                 inline
@@ -72,7 +78,6 @@ export default function StudentNav() {
               <Navbar.Link href="#" active>
                 Home
               </Navbar.Link>
-              <Navbar.Link href="#">Community</Navbar.Link>
               <Navbar.Link href="#">Courses</Navbar.Link>
               <Navbar.Link href="#">Tutors</Navbar.Link>
               <Navbar.Link href="#">About</Navbar.Link>

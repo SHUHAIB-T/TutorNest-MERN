@@ -18,13 +18,13 @@ export default function SideBar({ chat, setCurrentChat }: prop) {
             <h1 className="text-white mt-2 font-bold">CHATS</h1>
             <span className="font-bold cursor-pointer">...</span>
           </div>
-          <input
+          {/* <input
             type="text"
             className="bg-[#261538] border-0 rounded-full w-full pr-3 ring-my-ring ring-1 h-8 my-2 text-white"
             placeholder="search..."
             name=""
             id=""
-          />
+          /> */}
         </div>
         <div
           id="scrol-y"

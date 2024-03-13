@@ -32,6 +32,7 @@ const TutorHomePage = lazy(() => import("./pages/TutorHomePage/TutorHomePage"));
 const TutorCoursePage = lazy(
   () => import("./pages/TutorCoursePage/TutorCoursePage")
 );
+const LessonsPage = lazy(() => import("./pages/LessonsPage/LessonsPage"));
 const ChatPage = lazy(() => import("./pages/ChatPage/ChatPage"));
 
 const AdminHome = lazy(() => import("./pages/AdminHome/AdminHome"));
@@ -57,7 +58,6 @@ function App() {
     socket.current = io("http://localhost:5000");
     socket.current.emit("setUser", user?._id);
     socket.current.on("getUsers", (data) => {
-      console.log("get user fetching", data);
       dispatch(setOnlineUsers(data));
     });
 
@@ -66,6 +66,8 @@ function App() {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
+
+
 
   return (
     <>
@@ -99,6 +101,7 @@ function App() {
               <Route path="/tutor/documents" element={<Documents />} />
               <Route path="/tutor/my-students" element={<MyStudentsPage />} />
               <Route path="/tutor/courses" element={<TutorCoursePage />} />
+              <Route path="/tutor/lessons/:id" element={<LessonsPage />} />
             </Route>
             <Route element={<Protect role="ADMIN" />}>
               <Route path="/admin" element={<AdminHome />} />
