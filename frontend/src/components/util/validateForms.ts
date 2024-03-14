@@ -67,6 +67,10 @@ export const validate = (name: string, value: unknown): string => {
     case "required":
       if (!value || value === "") return "* required!";
       return "";
+    case "review":
+      if (!value || value === "") return "* required!";
+      if ((value as string).length > 70) return "limit exeeded";
+      return "";
   }
   return "";
 };
