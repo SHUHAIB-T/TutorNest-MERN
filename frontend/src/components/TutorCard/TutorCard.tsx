@@ -1,11 +1,24 @@
 // import VerifiedIcon from "@mui/icons-material/Verified";
 import { useNavigate } from "react-router-dom";
 import { IMyTutor } from "../../types/studentTypes";
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import api from "../../API/api";
+import { Irating } from "../../types/ratingTypes";
 
-interface prop extends IMyTutor {}
-export default function TutorCard({ name, bio, profile, userID }: prop) {
+interface prop extends IMyTutor {
+  tutorRatings: Irating[];
+  setCurrentRating: Dispatch<SetStateAction<Irating | undefined>>;
+  setRateTutuorId: Dispatch<SetStateAction<string>>;
+}
+export default function TutorCard({
+  name,
+  bio,
+  profile,
+  userID,
+  tutorRatings,
+  setCurrentRating,
+  setRateTutuorId,
+}: prop) {
   const [userId, setUserId] = useState<string>("");
 
   const navigate = useNavigate();
@@ -29,6 +42,7 @@ export default function TutorCard({ name, bio, profile, userID }: prop) {
       }
     })();
   }, [userId, navigate]);
+
   return (
     <>
       <div className="w-64 flex flex-col relative text-center items-center justify-center h-fit ring-my-ring ring-1 rounded-lg p-3 bg-my-bg-dark text-white">
@@ -52,7 +66,13 @@ export default function TutorCard({ name, bio, profile, userID }: prop) {
         >
           CHAT
         </button>
-        <span className="text-blue-600 cursor-pointer hover:underline absolute top-2 right-4">
+        <span
+          onClick={() => {
+            setCurrentRating(tutorRatings.find((e) => e.tutorId === userID));
+            setRateTutuorId(userID as string);
+          }}
+          className="text-blue-600 cursor-pointer hover:underline absolute top-2 right-4"
+        >
           Rate?
         </span>
       </div>
