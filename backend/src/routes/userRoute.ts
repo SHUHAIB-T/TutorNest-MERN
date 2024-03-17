@@ -18,6 +18,7 @@ import courseRoute from "../routes/courseRoute";
 import lessonRoute from "../routes/lessonRoute";
 import ratingRoute from "../routes/ratingRoute";
 import assesmentRoute from "../routes/assessmentRoute";
+import enrollmentRoute from "../routes/enrollmentRoute";
 
 import { protect } from "../middlewares/authMiddleware";
 
@@ -43,5 +44,6 @@ router.use("/course", courseRoute);
 router.use("/lesson", lessonRoute);
 router.use("/rating", protect, ratingRoute);
 router.use("/assessment", protect, assesmentRoute);
+router.use("/enrollment", protect, enrollmentRoute);
 
 export default router;

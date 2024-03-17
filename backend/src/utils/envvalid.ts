@@ -5,6 +5,6 @@ export const env = cleanEnv(process.env, {
   PORT: port(),
   MONGO_URI: str(),
   JWT_SECRET: str(),
+  RAZ_KEY_ID: str(),
+  RAZ_SECRET_KEY: str(),
 });
-
-

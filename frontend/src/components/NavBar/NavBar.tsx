@@ -6,16 +6,10 @@ import Logo from "../../assets/Logo.svg";
 import { Link } from "react-router-dom";
 import { logout } from "../../features/auth/authSlice";
 import InsertCommentIcon from "@mui/icons-material/InsertComment";
-import { useEffect } from "react";
-import { getStudentProfile } from "../../features/users/userServieces";
 
 export default function NavBar({ role }: { role: string }) {
   const profile = JSON.parse(localStorage.getItem("profile") as string);
   const dispatch = useAppDispatch();
-  
-  useEffect(() => {
-    dispatch(getStudentProfile());
-  }, [dispatch]);
 
   const drop = () => {
     if (role === "TUTOR") {

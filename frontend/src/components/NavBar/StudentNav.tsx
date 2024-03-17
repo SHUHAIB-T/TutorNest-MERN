@@ -8,12 +8,14 @@ import { Link } from "react-router-dom";
 import InsertCommentIcon from "@mui/icons-material/InsertComment";
 import { useEffect } from "react";
 import { getStudentProfile } from "../../features/users/userServieces";
+import { useLocation } from "react-router-dom";
 
 export default function StudentNav() {
   const { user } = useAppSelector((state) => state.auth);
   const { profile } = useAppSelector((state) => state.userProfile);
   const dispatch = useAppDispatch();
-  
+  const location = useLocation();
+
   useEffect(() => {
     dispatch(getStudentProfile());
   }, [dispatch]);
@@ -75,10 +77,12 @@ export default function StudentNav() {
               <Navbar.Toggle />
             </div>
             <Navbar.Collapse>
-              <Navbar.Link href="#" active>
-                Home
-              </Navbar.Link>
-              <Navbar.Link href="#">Courses</Navbar.Link>
+              <Link to={"/student"}>
+                <Navbar.Link active={location.pathname === "/student"}>Home</Navbar.Link>
+              </Link>
+              <Link to={"/courses"}>
+                <Navbar.Link active={location.pathname === "/courses"}>Courses</Navbar.Link>
+              </Link>
               <Navbar.Link href="#">Tutors</Navbar.Link>
               <Navbar.Link href="#">About</Navbar.Link>
             </Navbar.Collapse>
