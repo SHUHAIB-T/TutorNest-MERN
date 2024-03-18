@@ -2,7 +2,6 @@ import asyncHandler from "express-async-handler";
 import { Request, Response, NextFunction, RequestHandler } from "express";
 import { ObjectId } from "mongodb";
 import Course from "../model/courseModel";
-import { IQuery } from "../utils/types";
 
 /**
  * @disc    Create course
@@ -47,17 +46,15 @@ export const createCourse: RequestHandler = asyncHandler(
  */
 export const getCourses: RequestHandler = asyncHandler(
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-    const query: IQuery = {
-      isDelete: false,
-    };
     const page: number = parseInt(req.query.page as string, 10) || 1;
-
     const pageSize = 12;
-    if (req.query.search)
-      [(query.title = { $regex: new RegExp(req.query.search as string, "i") })];
     const userId = req.user?._id;
     let courses = await Course.aggregate([
-      { $match: query },
+      {
+        $match: {
+          isDelete: false,
+        },
+      },
       {
         $lookup: {
           from: "ratings",
@@ -113,6 +110,9 @@ export const getCourses: RequestHandler = asyncHandler(
           "course.description": 1,
           "course.price": 1,
           "course.coverIMG": 1,
+          "course.category": 1,
+          "course.language": 1,
+          "course.createdAt": 1,
           isEnrolled: { $eq: [{ $size: "$enrollment" }, 1] },
           averageRating: { $ifNull: ["$averageRating", 0] },
         },
@@ -125,12 +125,73 @@ export const getCourses: RequestHandler = asyncHandler(
       },
     ]);
 
-    if (req.query.category) {
-      courses = courses.filter(
-        (e) => e.course.category_name === req.query.category
-      );
+    if (req.query.search) {
+      const query = (req.query.search as string)
+        .toLowerCase()
+        .replace(/\s/g, "");
+      courses = courses.filter((e) => {
+        const title = e.course.title.toLowerCase().replace(/\s/g, "");
+        if (title.includes(query)) {
+          return true;
+        } else if (query.includes(title)) {
+          return true;
+        }
+        const language = e.course.language.toLowerCase().replace(/\s/g, "");
+        if (language.includes(query)) {
+          return true;
+        } else if (query.includes(language)) {
+          return true;
+        }
+        const category = e.course.category.toLowerCase().replace(/\s/g, "");
+
+        if (category.includes(query)) {
+          return true;
+        } else if (query.includes(category)) {
+          return true;
+        }
+      });
     }
 
+    if (req.query.category) {
+      courses = courses.filter((e) => e.course.category === req.query.category);
+    }
+    if (req.query.language) {
+      courses = courses.filter((e) => e.course.language === req.query.language);
+    }
+
+    const sortQuery = req.query.sort;
+    switch (sortQuery) {
+      case "low-high":
+        courses.sort((a, b) => {
+          const priceA = parseFloat(a.course.price);
+          const priceB = parseFloat(b.course.price);
+          return priceA - priceB;
+        });
+        break;
+      case "high-low":
+        courses.sort((a, b) => {
+          const priceA = parseFloat(a.course.price);
+          const priceB = parseFloat(b.course.price);
+          return priceB - priceA;
+        });
+        break;
+      case "new-first":
+        courses.sort((a, b) => {
+          const createdAtA = new Date(a.course.createdAt);
+          const createdAtB = new Date(b.course.createdAt);
+          return createdAtB.getTime() - createdAtA.getTime();
+        });
+        break;
+      case "popular":
+        courses.sort((a, b) => {
+          const ratingA = parseFloat(a.averageRating);
+          const ratingB = parseFloat(b.averageRating);
+          return ratingB - ratingA;
+        });
+        break;
+      default:
+        break;
+    }
     let count = await Course.countDocuments();
     count = ~~(count / 12);
     if (courses) {
