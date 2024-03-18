@@ -7,6 +7,8 @@ export interface ICourse {
   price: number;
   coverIMG: string;
   isDelete: boolean;
+  category: string;
+  language: string;
 }
 
 const CourseSchema = new Schema<ICourse>(
@@ -16,6 +18,8 @@ const CourseSchema = new Schema<ICourse>(
     description: { type: String, required: true },
     price: { type: Number, required: true },
     coverIMG: { type: String, required: true },
+    category: { type: String, required: true },
+    language: { type: String, required: true },
     isDelete: { type: Boolean, required: true, default: false },
   },
   {
