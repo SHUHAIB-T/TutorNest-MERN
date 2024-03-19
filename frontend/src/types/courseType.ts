@@ -12,11 +12,19 @@ export interface ICourse {
   language?: string;
 }
 
+export interface ICouresUser {
+  _id?: string;
+  course: ICourse;
+  isEnrolled: boolean;
+  averageRating: number;
+}
+
 export interface initialState {
   isLoading: boolean;
   isError: boolean;
   isSuccess: boolean;
-  courses: ICourse[];
+  courses: ICouresUser[];
+  count: number;
   errorMessage: {
     status: number | null;
     message: string;

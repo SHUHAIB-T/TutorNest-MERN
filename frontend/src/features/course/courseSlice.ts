@@ -10,6 +10,7 @@ const initialState: initialState = {
     status: null,
     message: "",
   },
+  count: 0,
   courses: [],
 };
 
@@ -36,6 +37,7 @@ const courseSlice = createSlice({
         state.isLoading = false;
         state.isSuccess = true;
         state.courses = action.payload.courses;
+        state.count = action.payload.count;
       });
   },
 });
