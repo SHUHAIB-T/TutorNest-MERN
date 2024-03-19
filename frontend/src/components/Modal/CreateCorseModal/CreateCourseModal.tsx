@@ -19,6 +19,8 @@ export default function CreateCourseModal({ openModal, setOpenModal }: Prop) {
     coverIMG: "",
     description: "",
     price: "",
+    category: "",
+    language: "",
   };
   const [formData, setFormData] = useState<ICourse>(initialState);
   const [formError, setFormError] = useState<ICourse>(initialState);
@@ -26,9 +28,11 @@ export default function CreateCourseModal({ openModal, setOpenModal }: Prop) {
   const [submit, setSubmit] = useState<boolean>(false);
 
   const onchange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
   ) => {
-    const { name, value } = e.target;
+    const { name, value } = e.currentTarget;
     setFormData({
       ...formData,
       [name]: value,
@@ -45,6 +49,8 @@ export default function CreateCourseModal({ openModal, setOpenModal }: Prop) {
       price: validate("required", formData.price),
       title: validate("required", formData.title),
       coverIMG: validate("required", image),
+      category: validate("required", formData.category),
+      language: validate("required", formData.language),
     });
     setSubmit(true);
   };
@@ -55,10 +61,14 @@ export default function CreateCourseModal({ openModal, setOpenModal }: Prop) {
         !formError.description &&
         !formError.price &&
         !formError.title &&
+        !formError.category &&
+        !formError.language &&
         image &&
         formData.description &&
         formData.price &&
         formData.title &&
+        formData.category &&
+        formData.language &&
         submit
       ) {
         try {
@@ -74,6 +84,8 @@ export default function CreateCourseModal({ openModal, setOpenModal }: Prop) {
                 title: formData.title,
                 description: formData.description,
                 price: formData.price,
+                language: formData.language,
+                category: formData.category,
                 teacherId: user?._id,
               },
               { withCredentials: true }
@@ -88,7 +100,7 @@ export default function CreateCourseModal({ openModal, setOpenModal }: Prop) {
         }
       }
     })();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formError, image, formData, submit, user, setOpenModal]);
 
   return (
@@ -130,6 +142,49 @@ export default function CreateCourseModal({ openModal, setOpenModal }: Prop) {
                 placeholder="Enter the price of the course"
                 onChange={onchange}
               />
+            </div>
+            <div className="flex flex-col   md:col-span-1 col-span-2">
+              <label htmlFor="title" className="py-2 text-white">
+                Category
+              </label>
+              {formError.category && (
+                <small className="text-red-600">{formError.category}</small>
+              )}
+              <select
+                className="bg-[#251c32] text-white border-0 rounded-md"
+                name="category"
+                value={formData.category}
+                onChange={onchange}
+                id=""
+              >
+                <option value=""></option>
+                <option value="IT and Software">IT and Software</option>
+                <option value="Design">Design</option>
+                <option value="Art">Art</option>
+                <option value="Music">Music</option>
+                <option value="Business">Business</option>
+                <option value="Health and Fitness">Health and Fitness</option>
+              </select>
+            </div>
+            <div className="flex flex-col   md:col-span-1 col-span-2">
+              <label htmlFor="title" className="py-2 text-white">
+                Language
+              </label>
+              {formError.language && (
+                <small className="text-red-600">{formError.language}</small>
+              )}
+              <select
+                className="bg-[#251c32] text-white border-0 rounded-md"
+                name="language"
+                value={formData.language}
+                onChange={onchange}
+                id=""
+              >
+                <option value=""></option>
+                <option value="English">English</option>
+                <option value="Malayalam">Malayalam</option>
+                <option value="Hindi">Hindi</option>
+              </select>
             </div>
             <div className="flex flex-col col-span-2">
               <label htmlFor="title" className="py-2 text-white">

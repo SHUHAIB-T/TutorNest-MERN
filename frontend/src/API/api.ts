@@ -1,10 +1,14 @@
 import axios from "axios";
 import Cookies from "js-cookie";
 
-const baseURL = "http://localhost:5000/api";
+const baseURL = import.meta.env.VITE_BASE_URL;
 
 const axios_instance = axios.create({
   baseURL,
+  withCredentials: true,
+  headers: {
+    "Content-Type": "application/json",
+  },
 });
 
 axios_instance.interceptors.response.use(
