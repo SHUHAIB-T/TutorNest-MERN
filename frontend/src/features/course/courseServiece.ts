@@ -8,7 +8,7 @@ export const getAllCourses = createAsyncThunk(
   async ({ search, category, language, sort, page }: ISearch, thunkAPI) => {
     try {
       const { data } = await api.get(
-        `/course?page=${page}&&search=${search}&&sort=${sort}&&category${category}&&language=${language}`
+        `/course?page=${page}&&search=${search}&&sort=${sort}&&category=${category}&&language=${language}`
       );
       return data;
     } catch (error) {

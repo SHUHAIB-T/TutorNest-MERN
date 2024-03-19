@@ -49,6 +49,7 @@ const AdminTutorDocument = lazy(
   () => import("./pages/AdminTutorDocument/AdminTutorDocument")
 );
 const VideoChat = lazy(() => import("./components/VideoRoom/VideoRoom"));
+const CoursesPage = lazy(() => import("./pages/CoursesPage/CoursesPage"));
 
 function App() {
   const socket = useRef<Socket | null>(null);
@@ -67,8 +68,6 @@ function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
-
-
   return (
     <>
       <Suspense fallback={<Loader />}>
@@ -83,6 +82,7 @@ function App() {
             </Route>
             <Route element={<Protect role="STUDENT" />}>
               <Route path="/student" element={<HomPage role="STUDENT" />} />
+              <Route path="/courses" element={<CoursesPage />} />
               <Route path="/student/profile" element={<ProfilePage />} />
               <Route path="/student/posts" element={<StudentPosts />} />
               <Route path="/student/requests" element={<StudentRequests />} />

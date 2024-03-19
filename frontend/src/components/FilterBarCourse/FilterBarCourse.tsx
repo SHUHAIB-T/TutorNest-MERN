@@ -1,10 +1,36 @@
-export default function FilterBarCourse() {
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { ISearch } from "../../types/courseType";
+import { useAppDispatch } from "../../app/store";
+import { getAllCourses } from "../../features/course/courseServiece";
+
+type prop = {
+  search: ISearch;
+  setSearch: Dispatch<SetStateAction<ISearch>>;
+};
+
+export default function FilterBarCourse({ search, setSearch }: prop) {
+  const [searchText, setSearchText] = useState<string>("");
+
+  const dispatch = useAppDispatch();
+  useEffect(() => {
+    dispatch(getAllCourses(search));
+  }, [search, dispatch]);
+
+  const onchange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const { name, value } = e.currentTarget;
+    setSearch({
+      ...search,
+      [name]: value,
+    });
+  };
+
   return (
     <>
       <div className="flex flex-wrap space-y-2 md:justify-between items-center justify-center flex-shrink px-3 py-3 bg-my-bg-dark h-fit w-full ">
         <div className="h-fit w-[500px] flex gap-x-2">
           <select
             name="category"
+            onChange={onchange}
             className="md:w-1/3 w-28 py-1 cursor-pointer text-sm bg-gray-900 rounded-full pl-4 text-gray-200"
           >
             <option value="">All Categories</option>
@@ -16,7 +42,8 @@ export default function FilterBarCourse() {
             <option value="Health and Fitness">Health and Fitness</option>
           </select>
           <select
-            name="category"
+            name="language"
+            onChange={onchange}
             className="md:w-1/3 w-28 py-1 cursor-pointer text-sm bg-gray-900 rounded-full pl-4 text-gray-200"
           >
             <option value="">All Languages</option>
@@ -25,7 +52,8 @@ export default function FilterBarCourse() {
             <option value="Hindi">Hindi</option>
           </select>
           <select
-            name="category"
+            name="sort"
+            onChange={onchange}
             className="md:w-1/3 w-28 py-1 cursor-pointer text-sm bg-gray-900 rounded-full pl-4 text-gray-200"
           >
             <option value="">Sort</option>
@@ -39,7 +67,10 @@ export default function FilterBarCourse() {
           <form
             onSubmit={(e) => {
               e.preventDefault();
-              console.log("Clicked");
+              setSearch({
+                ...search,
+                search: searchText,
+              });
             }}
           >
             <div className="relative text-gray-600 focus-within:text-gray-400">
@@ -64,6 +95,8 @@ export default function FilterBarCourse() {
               <input
                 type="search"
                 name="q"
+                value={searchText}
+                onChange={(e) => setSearchText(e.target.value)}
                 className="py-1 text-sm text-white bg-gray-900 rounded-full pl-10 focus:border-0 focus:outline-none  focus:text-gray-200"
                 placeholder="Search..."
               />
