@@ -156,7 +156,6 @@ export default function StudentProfile({ submit, setSubmit }: Prop) {
       !formErrors.preffered_language &&
       !formErrors.subjects
     ) {
-      console.log("Methoid is dispatching.......");
       dispatch(updateProfile(formData));
     }
   }, [formData, isSubmit, formErrors, submit, dispatch]);
