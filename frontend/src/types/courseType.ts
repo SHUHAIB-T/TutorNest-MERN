@@ -8,6 +8,19 @@ export interface ICourse {
   updatedAt?: string;
   teacherId?: string;
   __v?: string;
+  category?: string;
+  language?: string;
+}
+
+export interface initialState {
+  isLoading: boolean;
+  isError: boolean;
+  isSuccess: boolean;
+  courses: ICourse[];
+  errorMessage: {
+    status: number | null;
+    message: string;
+  };
 }
 
 export interface ILesson {
@@ -20,4 +33,12 @@ export interface ILesson {
   createdAt?: string;
   updatedAt?: string;
   __v?: string;
+}
+
+export interface ISearch {
+  search: string;
+  category: string;
+  sort: string;
+  language: string;
+  page: string;
 }
