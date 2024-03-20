@@ -7,6 +7,7 @@ import studentPosts from "../features/studentPosts/StudentPostsSlice";
 import chatSlice from "../features/chat/chatSlice";
 import socketSlice from "../features/Socket/SocketSlice";
 import courseSlice from "../features/course/courseSlice";
+import courseDetailSlice from "../features/course/courseDetails/CourseDetails";
 
 export const store = configureStore({
   reducer: {
@@ -16,6 +17,7 @@ export const store = configureStore({
     chat: chatSlice,
     socket: socketSlice,
     course: courseSlice,
+    courseDetail: courseDetailSlice,
   },
 });
 

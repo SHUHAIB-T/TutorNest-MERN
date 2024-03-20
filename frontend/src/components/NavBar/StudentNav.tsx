@@ -78,10 +78,14 @@ export default function StudentNav() {
             </div>
             <Navbar.Collapse>
               <Link to={"/student"}>
-                <Navbar.Link active={location.pathname === "/student"}>Home</Navbar.Link>
+                <Navbar.Link active={location.pathname === "/student"}>
+                  Home
+                </Navbar.Link>
               </Link>
               <Link to={"/courses"}>
-                <Navbar.Link active={location.pathname === "/courses"}>Courses</Navbar.Link>
+                <Navbar.Link active={location.pathname.includes("/courses")}>
+                  Courses
+                </Navbar.Link>
               </Link>
               <Navbar.Link href="#">Tutors</Navbar.Link>
               <Navbar.Link href="#">About</Navbar.Link>

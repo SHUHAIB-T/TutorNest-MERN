@@ -50,6 +50,9 @@ const AdminTutorDocument = lazy(
 );
 const VideoChat = lazy(() => import("./components/VideoRoom/VideoRoom"));
 const CoursesPage = lazy(() => import("./pages/CoursesPage/CoursesPage"));
+const CourseDetailPage = lazy(
+  () => import("./pages/CourseDetailPage/CourseDetailPage")
+);
 
 function App() {
   const socket = useRef<Socket | null>(null);
@@ -83,6 +86,7 @@ function App() {
             <Route element={<Protect role="STUDENT" />}>
               <Route path="/student" element={<HomPage role="STUDENT" />} />
               <Route path="/courses" element={<CoursesPage />} />
+              <Route path="/courses/:id" element={<CourseDetailPage />} />
               <Route path="/student/profile" element={<ProfilePage />} />
               <Route path="/student/posts" element={<StudentPosts />} />
               <Route path="/student/requests" element={<StudentRequests />} />

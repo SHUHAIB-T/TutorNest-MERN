@@ -1,6 +1,7 @@
 import Rating from "@mui/material/Rating";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { ICouresUser } from "../../types/courseType";
+import { useNavigate } from "react-router-dom";
 
 const darkTheme = createTheme({
   palette: {
@@ -14,7 +15,9 @@ export default function CoruseCardUser({
   course,
   isEnrolled,
   averageRating,
+  _id,
 }: prop) {
+  const navigate = useNavigate();
   return (
     <>
       <div className="w-60">
@@ -48,7 +51,10 @@ export default function CoruseCardUser({
             </div>
           </div>
           {!isEnrolled && (
-            <button className="font-bold text-white w-full bg-primary hover:bg-my-ring py-2 rounded-b-2xl">
+            <button
+              onClick={() => navigate(`/courses/${_id}`)}
+              className="font-bold text-white w-full bg-primary hover:bg-my-ring py-2 rounded-b-2xl"
+            >
               view
             </button>
           )}

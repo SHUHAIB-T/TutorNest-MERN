@@ -33,9 +33,9 @@ export interface initialState {
 
 export interface ILesson {
   title: string;
-  courseId: string;
-  duration: string;
-  video: string;
+  courseId?: string;
+  duration?: string;
+  video?: string;
   _id?: string;
   description: string;
   createdAt?: string;
@@ -49,4 +49,45 @@ export interface ISearch {
   sort: string;
   language: string;
   page: string;
+}
+
+export interface ICourseDetails {
+  isLoading: boolean;
+  isSuccess: boolean;
+  isError: boolean;
+  course: ICourseDetail | null;
+  errorMessage: {
+    status: number | null;
+    message: string;
+  };
+}
+
+export interface ICourseDetail {
+  _id?: string;
+  course?: {
+    title?: string;
+    description?: string;
+    price?: number;
+    coverIMG?: string;
+    category?: string;
+    language: string;
+    author?: {
+      name?: string;
+      profile?: string;
+      bio?: string;
+    };
+  };
+  lessons: ILesson[];
+  ratings: IRating[];
+  isEnrolled: boolean;
+  averageRating: number;
+}
+
+export interface IRating {
+  rating: number;
+  review: string;
+  student: {
+    name: string;
+    profile: string;
+  };
 }

@@ -2,6 +2,7 @@ import asyncHandler from "express-async-handler";
 import { Request, Response, NextFunction, RequestHandler } from "express";
 import { ObjectId } from "mongodb";
 import Course from "../model/courseModel";
+import mongoose from "mongoose";
 
 /**
  * @disc    Create course
@@ -101,7 +102,9 @@ export const getCourses: RequestHandler = asyncHandler(
           localField: "_id",
           foreignField: "courseId",
           as: "enrollment",
-          pipeline: [{ $match: { studentId: userId } }],
+          pipeline: [
+            { $match: { studentId: userId, payment_status: "completed" } },
+          ],
         },
       },
       {
@@ -285,6 +288,173 @@ export const deleteCourse: RequestHandler = asyncHandler(
       res.status(200).json({
         success: true,
         message: "course deleted successfully",
+      });
+    } else {
+      res.status(500);
+      next(Error("Internal server Error"));
+    }
+  }
+);
+
+/**
+ * @disc    view all details course
+ * @route   GET /api/course/:id
+ * @access  private
+ */
+export const viewCourse: RequestHandler = asyncHandler(
+  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    const userId = req.user?._id;
+    const coursId = req.params.id;
+    const course = await Course.aggregate([
+      {
+        $match: {
+          isDelete: false,
+          _id: new mongoose.Types.ObjectId(coursId),
+        },
+      },
+      {
+        $lookup: {
+          from: "ratings",
+          localField: "_id",
+          foreignField: "courseId",
+          as: "ratings",
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $and: [{ $gte: ["$rating", 1] }, { $lte: ["$rating", 5] }],
+                },
+              },
+            },
+          ],
+        },
+      },
+      {
+        $unwind: { path: "$ratings", preserveNullAndEmptyArrays: true },
+      },
+      {
+        $group: {
+          _id: "$_id",
+          averageRating: { $avg: "$ratings.rating" },
+        },
+      },
+      {
+        $lookup: {
+          from: "courses",
+          localField: "_id",
+          foreignField: "_id",
+          as: "course",
+          pipeline: [
+            {
+              $lookup: {
+                from: "teachers",
+                localField: "teacherId",
+                foreignField: "userID",
+                as: "author",
+              },
+            },
+            {
+              $unwind: { path: "$author", preserveNullAndEmptyArrays: true },
+            },
+            {
+              $project: {
+                _id: 0,
+                title: 1,
+                description: 1,
+                category: 1,
+                language: 1,
+                price: 1,
+                coverIMG: 1,
+                "author.name": 1,
+                "author.bio": 1,
+                "author.profile": 1,
+                "author.languages": 1,
+                "author.qualification": 1,
+              },
+            },
+          ],
+        },
+      },
+      {
+        $unwind: {
+          path: "$course",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $lookup: {
+          from: "enrollments",
+          localField: "_id",
+          foreignField: "courseId",
+          as: "enrollment",
+          pipeline: [
+            { $match: { studentId: userId, payment_status: "completed" } },
+          ],
+        },
+      },
+      {
+        $lookup: {
+          from: "lessons",
+          foreignField: "courseId",
+          localField: "_id",
+          as: "lessons",
+        },
+      },
+      {
+        $lookup: {
+          from: "ratings",
+          localField: "_id",
+          foreignField: "courseId",
+          as: "ratings",
+          pipeline: [
+            {
+              $lookup: {
+                from: "students",
+                localField: "userId",
+                foreignField: "userID",
+                as: "student",
+              },
+            },
+            {
+              $unwind: {
+                path: "$student",
+                preserveNullAndEmptyArrays: true,
+              },
+            },
+            {
+              $project: {
+                rating: 1,
+                review: 1,
+                "student.name": 1,
+                "student.profile": 1,
+              },
+            },
+          ],
+        },
+      },
+      {
+        $project: {
+          course: 1,
+          isEnrolled: { $eq: [{ $size: "$enrollment" }, 1] },
+          averageRating: { $ifNull: ["$averageRating", 0] },
+          "lessons._id": 1,
+          "lessons.title": 1,
+          "lessons.duration": 1,
+          "lessons.video": 1,
+          "lessons.description": 1,
+          ratings: 1,
+          "author.name": 1,
+          "author.profile": 1,
+          "author.bio": 1,
+          "author.qualification": 1,
+          "author.languages": 1,
+        },
+      },
+    ]);
+    if (course) {
+      res.status(200).json({
+        success: true,
+        course: course[0],
       });
     } else {
       res.status(500);
