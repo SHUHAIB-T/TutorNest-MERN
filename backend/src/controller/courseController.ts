@@ -102,7 +102,9 @@ export const getCourses: RequestHandler = asyncHandler(
           localField: "_id",
           foreignField: "courseId",
           as: "enrollment",
-          pipeline: [{ $match: { studentId: userId } }],
+          pipeline: [
+            { $match: { studentId: userId, payment_status: "completed" } },
+          ],
         },
       },
       {
@@ -385,7 +387,9 @@ export const viewCourse: RequestHandler = asyncHandler(
           localField: "_id",
           foreignField: "courseId",
           as: "enrollment",
-          pipeline: [{ $match: { studentId: userId } }],
+          pipeline: [
+            { $match: { studentId: userId, payment_status: "completed" } },
+          ],
         },
       },
       {

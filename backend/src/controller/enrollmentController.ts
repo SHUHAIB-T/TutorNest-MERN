@@ -18,6 +18,7 @@ import Course from "../model/courseModel";
 export const createEnrollment: RequestHandler = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     const { courseId } = req.body;
+    console.log(req.body);
     const studentId = req.user?._id;
     const course = await Course.findOne(
       { _id: courseId },
@@ -113,7 +114,7 @@ export const verifyPayment: RequestHandler = asyncHandler(
 
         await Enrollment.findOneAndUpdate(
           { _id: enrollmentId },
-          { $set: { payment_status: "completed" } }
+          { payment_status: "completed" }
         );
 
         res.json({

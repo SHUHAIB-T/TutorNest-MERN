@@ -59,11 +59,12 @@ export default function CoursesPage() {
                     course={e.course}
                     isEnrolled={e.isEnrolled}
                     key={i}
+                    _id={e._id}
                   />
                 </>
               );
             })}
-          {courses.length === 0 && (
+          {courses.length === 0 && !isLoading && (
             <div className="">
               <h1>No courses</h1>
             </div>
