@@ -36,7 +36,7 @@ router
 
 router.get("/userProfile/:id", protect, getUserProfile);
 router.use("/student", protect, studentRoute);
-router.use("/tutor", protect, tutorRoute);
+router.use("/tutor", tutorRoute);
 router.use("/admin", protect, adminRouter);
 router.use("/chat", protect, chatRoute);
 router.use("/messages", protect, messageRoute);
