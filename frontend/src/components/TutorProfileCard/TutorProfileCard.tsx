@@ -5,6 +5,7 @@ import { useAppDispatch, useAppSelector } from "../../app/store";
 import { validate } from "../util/validateForms";
 import { updateProfile } from "../../features/users/userServieces";
 import Loader from "../Loader/Loader1/Loader";
+import { teacherQualifications, indianLanguages } from "../../utils";
 
 export type ElementTyoe = {
   id: number;
@@ -34,10 +35,9 @@ export default function TutorProfileCard() {
       value: (languages as string[])[i],
     });
   }
-  const [Qualification, setQualification] = useState("");
+
   const [Qualifications, setQualifications] =
     useState<ElementTyoe[]>(initialQualification);
-  const [Language, setLanguage] = useState("");
   const [Languages, setLanguages] = useState<ElementTyoe[]>(initialLanguages);
   const [submit, setSubmit] = useState(false);
   const [isSubmit, setIsSubmit] = useState(false);
@@ -70,31 +70,6 @@ export default function TutorProfileCard() {
     setSubmit(true);
   };
 
-  const addValue = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    e.preventDefault();
-    if (Language) {
-      setLanguages([
-        ...Languages,
-        {
-          id: Languages.length + 1,
-          value: Language,
-        },
-      ]);
-      setLanguage("");
-      setSubmit(true);
-    } else if (Qualification) {
-      setQualifications([
-        ...Qualifications,
-        {
-          id: Qualifications.length + 1,
-          value: Qualification,
-        },
-      ]);
-      setQualification("");
-      setSubmit(true);
-    }
-  };
-
   const submitForm = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
     if (Qualifications.length >= 0 || Languages.length >= 0) {
@@ -124,7 +99,12 @@ export default function TutorProfileCard() {
       !formErrors.languages &&
       !formErrors.qualification &&
       !formErrors.pricing &&
-      !formErrors.bio
+      !formErrors.bio &&
+      formData.languages &&
+      formData.name &&
+      formData.bio &&
+      formData.phone &&
+      formData.qualification
     ) {
       dispatch(updateProfile(formData));
       setIsSubmit(false);
@@ -222,18 +202,35 @@ export default function TutorProfileCard() {
               })}
             </div>
             <div className="relative">
-              <input
-                value={Qualification}
-                onChange={(e) => setQualification(e.target.value)}
-                className="bg-secondary  w-full rounded-md text-white"
-                type="text"
-              />
-              <button
-                onClick={addValue}
-                className="absolute right-5 top-2 bg-black px-3 rounded-md "
+              <select
+                onChange={(e) => {
+                  if (
+                    !Qualifications.find((q) => q.value === e.target.value) &&
+                    e.target.value
+                  ) {
+                    setQualifications([
+                      ...Qualifications,
+                      {
+                        id: Qualifications.length + 1,
+                        value: e.target.value,
+                      },
+                    ]);
+                    setSubmit(true);
+                  } else {
+                    setQualifications(
+                      Qualifications.filter((q) => q.value !== e.target.value)
+                    );
+                    setSubmit(true);
+                  }
+                }}
+                name="qualification"
+                className="bg-secondary  w-full rounded-md text-gray-200"
               >
-                ADD
-              </button>
+                <option value="">-select qualification-</option>
+                {teacherQualifications.map((e) => (
+                  <option value={e}>{e}</option>
+                ))}
+              </select>
             </div>
           </div>
           <div className="md:col-span-1 relative text-white space-y-1 w-full col-span-3">
@@ -258,18 +255,35 @@ export default function TutorProfileCard() {
               })}
             </div>
             <div className="relative">
-              <input
-                value={Language}
-                onChange={(e) => setLanguage(e.target.value)}
-                className="bg-secondary  w-full rounded-md text-white"
-                type="text"
-              />
-              <button
-                onClick={addValue}
-                className="absolute right-5 top-2 bg-black px-3 rounded-md "
+              <select
+                onChange={(e) => {
+                  if (
+                    !Languages.find((q) => q.value === e.target.value) &&
+                    e.target.value
+                  ) {
+                    setLanguages([
+                      ...Languages,
+                      {
+                        id: Languages.length + 1,
+                        value: e.target.value,
+                      },
+                    ]);
+                    setSubmit(true);
+                  } else {
+                    setLanguages(
+                      Languages.filter((q) => q.value !== e.target.value)
+                    );
+                    setSubmit(true);
+                  }
+                }}
+                name="language"
+                className="bg-secondary  w-full rounded-md text-gray-200"
               >
-                ADD
-              </button>
+                <option value="">-select language-</option>
+                {indianLanguages.map((e) => (
+                  <option value={e}>{e}</option>
+                ))}
+              </select>
             </div>
           </div>
         </div>

@@ -7,6 +7,7 @@ import { storage } from "../../../app/fireabse";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { useAppSelector } from "../../../app/store";
 import { toast } from "react-toastify";
+import { caetgories, indianLanguages } from "../../../utils";
 
 type Prop = {
   setOpenModal: Dispatch<SetStateAction<boolean>>;
@@ -157,13 +158,10 @@ export default function CreateCourseModal({ openModal, setOpenModal }: Prop) {
                 onChange={onchange}
                 id=""
               >
-                <option value=""></option>
-                <option value="IT and Software">IT and Software</option>
-                <option value="Design">Design</option>
-                <option value="Art">Art</option>
-                <option value="Music">Music</option>
-                <option value="Business">Business</option>
-                <option value="Health and Fitness">Health and Fitness</option>
+                <option value="">-select category-</option>
+                {caetgories.map((e) => (
+                  <option value={e}>{e}</option>
+                ))}
               </select>
             </div>
             <div className="flex flex-col   md:col-span-1 col-span-2">
@@ -180,10 +178,10 @@ export default function CreateCourseModal({ openModal, setOpenModal }: Prop) {
                 onChange={onchange}
                 id=""
               >
-                <option value=""></option>
-                <option value="English">English</option>
-                <option value="Malayalam">Malayalam</option>
-                <option value="Hindi">Hindi</option>
+                <option value="">-select language-</option>
+                {indianLanguages.map((e) => (
+                  <option value={e}>{e}</option>
+                ))}
               </select>
             </div>
             <div className="flex flex-col col-span-2">

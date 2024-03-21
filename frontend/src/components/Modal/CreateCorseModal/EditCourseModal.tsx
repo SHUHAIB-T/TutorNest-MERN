@@ -8,6 +8,7 @@ import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { useAppSelector } from "../../../app/store";
 import { toast } from "react-toastify";
 import { deleteImageFromFirebase } from "../../util/uploadFirebase";
+import { caetgories, indianLanguages } from "../../../utils";
 
 type Prop = {
   setOpenModal: Dispatch<SetStateAction<boolean>>;
@@ -209,24 +210,11 @@ export default function EditCourseModal({
                 {formData.category && (
                   <option value={formData.category}>{formData.category}</option>
                 )}
-                {formData.category !== "IT and Software" && (
-                  <option value="IT and Software">IT and Software</option>
-                )}
-                {formData.category !== "Design" && (
-                  <option value="Design">Design</option>
-                )}
-                {formData.category !== "Art" && (
-                  <option value="Art">Art</option>
-                )}
-                {formData.category !== "Music" && (
-                  <option value="Music">Music</option>
-                )}
-                {formData.category !== "Business" && (
-                  <option value="Business">Business</option>
-                )}
-                {formData.category !== "Health and Fitness" && (
-                  <option value="Health and Fitness">Health and Fitness</option>
-                )}
+                {caetgories.map((e) => (
+                  <>
+                    {formData.category !== e && <option value={e}>{e}</option>}
+                  </>
+                ))}
               </select>
             </div>
             <div className="flex flex-col   md:col-span-1 col-span-2">
@@ -246,15 +234,11 @@ export default function EditCourseModal({
                 {formData.language && (
                   <option value={formData.language}>{formData.language}</option>
                 )}
-                {formData.language !== "English" && (
-                  <option value="English">English</option>
-                )}
-                {formData.language !== "Malayalam" && (
-                  <option value="Malayalam">Malayalam</option>
-                )}
-                {formData.language !== "Hindi" && (
-                  <option value="Hindi">Hindi</option>
-                )}
+                {indianLanguages.map((e) => (
+                  <>
+                    {formData.language !== e && <option value={e}>{e}</option>}
+                  </>
+                ))}
               </select>
             </div>
             <div className="flex flex-col col-span-2">

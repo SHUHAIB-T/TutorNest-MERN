@@ -2,6 +2,7 @@ import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { ISearch } from "../../types/courseType";
 import { useAppDispatch } from "../../app/store";
 import { getAllCourses } from "../../features/course/courseServiece";
+import { indianLanguages, caetgories } from "../../utils";
 
 type prop = {
   search: ISearch;
@@ -34,12 +35,9 @@ export default function FilterBarCourse({ search, setSearch }: prop) {
             className="md:w-1/3 w-28 py-1 cursor-pointer text-sm bg-gray-900 rounded-full pl-4 text-gray-200"
           >
             <option value="">All Categories</option>
-            <option value="IT and Software">IT and Software</option>
-            <option value="Design">Design</option>
-            <option value="Art">Art</option>
-            <option value="Music">Music</option>
-            <option value="Business">Business</option>
-            <option value="Health and Fitness">Health and Fitness</option>
+            {caetgories.map((e) => (
+              <option value={e}>{e}</option>
+            ))}
           </select>
           <select
             name="language"
@@ -47,9 +45,9 @@ export default function FilterBarCourse({ search, setSearch }: prop) {
             className="md:w-1/3 w-28 py-1 cursor-pointer text-sm bg-gray-900 rounded-full pl-4 text-gray-200"
           >
             <option value="">All Languages</option>
-            <option value="English">English</option>
-            <option value="Malayalam">Malayalam</option>
-            <option value="Hindi">Hindi</option>
+            {indianLanguages.map((e) => (
+              <option value={e}>{e}</option>
+            ))}
           </select>
           <select
             name="sort"
