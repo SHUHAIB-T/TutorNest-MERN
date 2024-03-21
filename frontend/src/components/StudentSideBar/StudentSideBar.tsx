@@ -42,9 +42,9 @@ export default function StudentSideBar() {
           <EditCalendarIcon /> MY POSTS
         </Link>
         <Link
-          to={"#"}
+          to={"/student/my-course"}
           className={`hover:bg-[#3f344e]/80 ${
-            location.pathname === "/student/courses" ? "bg-[#3f344e]/80" : ""
+            location.pathname === "/student/my-course" ? "bg-[#3f344e]/80" : ""
           }  py-1 w-full rounded px-5 flex items-center justify-start gap-2`}
         >
           <ArticleIcon /> MY COURSES

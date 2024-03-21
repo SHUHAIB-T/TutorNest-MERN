@@ -8,6 +8,7 @@ import chatSlice from "../features/chat/chatSlice";
 import socketSlice from "../features/Socket/SocketSlice";
 import courseSlice from "../features/course/courseSlice";
 import courseDetailSlice from "../features/course/courseDetails/CourseDetails";
+import enrollmentSlice from "../features/enrollments/entollmentSlice";
 
 export const store = configureStore({
   reducer: {
@@ -18,6 +19,7 @@ export const store = configureStore({
     socket: socketSlice,
     course: courseSlice,
     courseDetail: courseDetailSlice,
+    enrollments: enrollmentSlice,
   },
 });
 

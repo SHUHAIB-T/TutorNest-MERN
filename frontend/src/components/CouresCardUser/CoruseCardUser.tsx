@@ -13,7 +13,6 @@ interface prop extends ICouresUser {}
 
 export default function CoruseCardUser({
   course,
-  isEnrolled,
   averageRating,
   _id,
 }: prop) {
@@ -50,14 +49,12 @@ export default function CoruseCardUser({
               </small>
             </div>
           </div>
-          {!isEnrolled && (
-            <button
-              onClick={() => navigate(`/courses/${_id}`)}
-              className="font-bold text-white w-full bg-primary hover:bg-my-ring py-2 rounded-b-2xl"
-            >
-              view
-            </button>
-          )}
+          <button
+            onClick={() => navigate(`/courses/${_id}`)}
+            className="font-bold text-white w-full bg-primary hover:bg-my-ring py-2 rounded-b-2xl"
+          >
+            view
+          </button>
         </div>
       </div>
     </>

@@ -9,6 +9,7 @@ import InsertCommentIcon from "@mui/icons-material/InsertComment";
 import { useEffect } from "react";
 import { getStudentProfile } from "../../features/users/userServieces";
 import { useLocation } from "react-router-dom";
+import { Tooltip } from "flowbite-react";
 
 export default function StudentNav() {
   const { user } = useAppSelector((state) => state.auth);
@@ -32,7 +33,9 @@ export default function StudentNav() {
             </Navbar.Brand>
             <div className="flex items-center md:order-2">
               <Link to={"/student/chat"}>
-                <InsertCommentIcon className="text-white me-3" />
+                <Tooltip content="messages" style="dark">
+                  <InsertCommentIcon className="text-white me-3" />
+                </Tooltip>
               </Link>
               <Dropdown
                 arrowIcon={false}
@@ -66,7 +69,9 @@ export default function StudentNav() {
                   <Link to={"/student/posts"}>
                     <Dropdown.Item>My Posts</Dropdown.Item>
                   </Link>
-                  <Dropdown.Item>My Courses</Dropdown.Item>
+                  <Link to={"/student/my-course"}>
+                    <Dropdown.Item>My Courses</Dropdown.Item>
+                  </Link>
                   <Dropdown.Divider />
 
                   <Dropdown.Item onClick={() => dispatch(logout())}>

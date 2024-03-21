@@ -45,7 +45,7 @@ export default function CoureseBanner() {
             icon: "success",
             title: "Payment success",
           }).then(() => {
-            navigate("/student");
+            navigate("/student/my-course");
           });
         }
       } catch (err) {
@@ -179,7 +179,7 @@ export default function CoureseBanner() {
                       <Skeleton variant="rounded" width={350} height={100} />
                     </>
                   )}
-                  {!course?.isEnrolled && (
+                  {!course?.isEnrolled ? (
                     <>
                       {loading ? (
                         <>
@@ -197,6 +197,17 @@ export default function CoureseBanner() {
                           </button>
                         </>
                       )}
+                    </>
+                  ) : (
+                    <>
+                      <button
+                        onClick={() =>
+                          navigate(`/student/my-course/${course._id}`)
+                        }
+                        className="font-bold text-md hover:bg-[#9263b8] bg-primary rounded-md w-28 h-10"
+                      >
+                        watch now
+                      </button>
                     </>
                   )}
                 </>
