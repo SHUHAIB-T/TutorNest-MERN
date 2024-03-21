@@ -55,11 +55,13 @@ export default function WatchCourse() {
 
   useEffect(() => {
     setCurrentCoures(enrollments.find((e) => e.courseId === id));
-    setCurrentVideo({
-      id: currentCoures?.course.lessons[0]._id as string,
-      video: currentCoures?.course.lessons[0].video as string,
-    });
-  }, [enrollments, id, currentCoures?.course.lessons]);
+    if (currentCoures && currentCoures?.course.lessons.length > 0) {
+      setCurrentVideo({
+        id: currentCoures?.course.lessons[0]._id as string,
+        video: currentCoures?.course.lessons[0].video as string,
+      });
+    }
+  }, [enrollments, id, currentCoures]);
 
   useEffect(() => {
     dispatch(getEntollments());

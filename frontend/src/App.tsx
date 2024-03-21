@@ -78,17 +78,17 @@ function App() {
       <Suspense fallback={<Loader />}>
         <SocketContext.Provider value={socket}>
           <Routes>
+            <Route path="/courses" element={<CoursesPage />} />
+            <Route path="/courses/:id" element={<CourseDetailPage />} />
             <Route element={<Authenticate />}>
-              <Route path="/" element={<HomPage role="USER" />} />
+              <Route path="/" element={<HomPage />} />
               <Route path="/Login" element={<LoginPage role="PUBLIC" />} />
               <Route path="/admin/Login" element={<LoginPage role="ADMIN" />} />
               <Route path="/student/signup" element={<StudentSignUp />} />
               <Route path="/tutor/signup" element={<TutorSignup />} />
             </Route>
             <Route element={<Protect role="STUDENT" />}>
-              <Route path="/student" element={<HomPage role="STUDENT" />} />
-              <Route path="/courses" element={<CoursesPage />} />
-              <Route path="/courses/:id" element={<CourseDetailPage />} />
+              <Route path="/student" element={<HomPage />} />
               <Route path="/student/profile" element={<ProfilePage />} />
               <Route path="/student/posts" element={<StudentPosts />} />
               <Route path="/student/requests" element={<StudentRequests />} />
