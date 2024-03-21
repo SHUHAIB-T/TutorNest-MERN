@@ -8,9 +8,10 @@ import {
   getAllmyRequests,
   acceptRequest,
   deleteRequest,
-  getAllMyTutors
+  getAllMyTutors,
 } from "../controller/requestController";
 import postRoutes from "./studentPosts";
+import { getAllMycourse } from "../controller/enrollmentController";
 
 const router: Router = Router();
 
@@ -20,6 +21,7 @@ router.get("/requests", getAllmyRequests);
 router.post("/acceptRequest/:id", acceptRequest);
 router.delete("/deleteRequest/:id", deleteRequest);
 router.get("/mytutors", getAllMyTutors);
+router.get("/my-coures", getAllMycourse);
 
 router.use("/posts", postRoutes);
 
