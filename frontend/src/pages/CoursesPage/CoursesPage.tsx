@@ -6,15 +6,18 @@ import StudentNav from "../../components/NavBar/StudentNav";
 import CouresCardSkeleton from "../../components/Skelitons/CouresCardSkeleton";
 import { Pagination } from "flowbite-react";
 import { ISearch } from "../../types/courseType";
+import { useSearchParams } from "react-router-dom";
 
 export default function CoursesPage() {
+  const [searchParams] = useSearchParams();
+  const searchQuery = searchParams.get("search");
   const { isLoading, courses, count } = useAppSelector((state) => state.course);
   const [currentPage, setCurrentPage] = useState(1);
   const [search, setSearch] = useState<ISearch>({
     category: "",
     language: "",
     page: "",
-    search: "",
+    search: searchQuery ? searchQuery : "",
     sort: "",
   });
   const onPageChange = (page: number) => setCurrentPage(page);
@@ -36,10 +39,6 @@ export default function CoursesPage() {
         <div className="flex md:p-10 gap-6 p-3 items-center justify-center w-full flex-wrap">
           {isLoading && (
             <>
-              <CouresCardSkeleton />
-              <CouresCardSkeleton />
-              <CouresCardSkeleton />
-              <CouresCardSkeleton />
               <CouresCardSkeleton />
               <CouresCardSkeleton />
               <CouresCardSkeleton />

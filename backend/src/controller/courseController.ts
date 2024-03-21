@@ -48,7 +48,7 @@ export const createCourse: RequestHandler = asyncHandler(
 export const getCourses: RequestHandler = asyncHandler(
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     const page: number = parseInt(req.query.page as string, 10) || 1;
-    const pageSize = 12;
+    const pageSize = 8;
     const userId = req.user?._id;
     let courses = await Course.aggregate([
       {

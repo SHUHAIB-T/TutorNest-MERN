@@ -3,6 +3,7 @@ import { ISearch } from "../../types/courseType";
 import { useAppDispatch } from "../../app/store";
 import { getAllCourses } from "../../features/course/courseServiece";
 import { indianLanguages, caetgories } from "../../utils";
+import { useSearchParams } from "react-router-dom";
 
 type prop = {
   search: ISearch;
@@ -10,8 +11,11 @@ type prop = {
 };
 
 export default function FilterBarCourse({ search, setSearch }: prop) {
-  const [searchText, setSearchText] = useState<string>("");
-
+  const [searchParams] = useSearchParams();
+  const searchQuery = searchParams.get("search");
+  const [searchText, setSearchText] = useState<string>(
+    searchQuery ? searchQuery : ""
+  );
   const dispatch = useAppDispatch();
   useEffect(() => {
     dispatch(getAllCourses(search));
