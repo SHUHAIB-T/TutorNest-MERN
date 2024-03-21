@@ -9,6 +9,7 @@ import {
 import Student from "../model/studentProfile";
 import Payment from "../model/paymentModel";
 import Course from "../model/courseModel";
+import Lesson from "../model/lessonModel";
 
 /**
  * @desc     create Enrollment
@@ -125,6 +126,114 @@ export const verifyPayment: RequestHandler = asyncHandler(
     } else {
       res.status(500);
       next(Error("Internal Server Error"));
+    }
+  }
+);
+
+/**
+ * @desc     update Progress
+ * @route    POST  api/enrollment/update-progress
+ * @access   private
+ */
+export const updateProgress: RequestHandler = asyncHandler(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { lessonId, courseId } = req.body;
+    const userId = req.user?._id;
+    const enrollement = await Enrollment.findOne({
+      courseId: courseId,
+      studentId: userId,
+    });
+    const lessons = await Lesson.find({ courseId: courseId });
+    const progress = await Enrollment.findOneAndUpdate(
+      {
+        courseId: courseId,
+        studentId: userId,
+      },
+      {
+        $addToSet: {
+          completed: lessonId,
+        },
+        isComplete:
+          enrollement?.completed?.length === lessons.length - 1 ||
+          enrollement?.completed?.length === lessons.length
+            ? true
+            : false,
+      },
+      {
+        new: true,
+      }
+    );
+    if (progress) {
+      res.status(200).json({
+        success: true,
+        progress: progress.completed,
+        isComplete: progress.isComplete,
+      });
+    } else {
+      res.status(500);
+      next(Error("Internal Server Error"));
+    }
+  }
+);
+
+/**
+ * @desc     get All my courses
+ * @route    POST  api/student/my-courses
+ * @access   private
+ */
+export const getAllMycourse: RequestHandler = asyncHandler(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const studentId = req.user?._id;
+    const enrollments = await Enrollment.aggregate([
+      { $match: { payment_status: "completed", studentId: studentId } },
+      {
+        $lookup: {
+          from: "courses",
+          localField: "courseId",
+          foreignField: "_id",
+          as: "course",
+          pipeline: [
+            {
+              $lookup: {
+                from: "lessons",
+                localField: "_id",
+                foreignField: "courseId",
+                as: "lessons",
+              },
+            },
+          ],
+        },
+      },
+      {
+        $unwind: { path: "$course", preserveNullAndEmptyArrays: true },
+      },
+      {
+        $project: {
+          _id: 1,
+          courseId: 1,
+          completed: 1,
+          isComplete: 1,
+          "course.title": 1,
+          "course.description": 1,
+          "course.coverIMG": 1,
+          "course.price": 1,
+          "course.language": 1,
+          "course.lessons.title": 1,
+          "course.lessons._id": 1,
+          "course.lessons.description": 1,
+          "course.lessons.video": 1,
+          "course.lessons.duration": 1,
+        },
+      },
+    ]);
+    if (enrollments) {
+      res.status(200).json({
+        success: true,
+        enrollments,
+      });
+    } else {
+      res.status(500);
+      next(Error("Internal server Error"));
     }
   }
 );
