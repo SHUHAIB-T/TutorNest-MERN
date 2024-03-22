@@ -243,12 +243,7 @@ export const getAllTutors = asyncHandler(
       },
       {
         $project: {
-          "profile.name": 1,
-          "profile.profile": 1,
-          "profile.bio": 1,
-          "profile.pricing": 1,
-          "profile.languages": 1,
-          "profile.qualification": 1,
+          profile: 1,
           isInConnection: {
             $cond: {
               if: { $isArray: "$profile.connections" },
@@ -262,6 +257,44 @@ export const getAllTutors = asyncHandler(
       {
         $match: {
           profile: { $exists: true },
+        },
+      },
+      {
+        $lookup: {
+          from: "requests",
+          let: { teacherId: "$profile.userID", studentId: userId },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $and: [
+                    {
+                      $or: [
+                        { $eq: ["$teacherId", "$$teacherId"] },
+                        { $eq: ["$studentId", "$$studentId"] },
+                      ],
+                    },
+                    { $eq: ["$status", "PENDING"] },
+                  ],
+                },
+              },
+            },
+          ],
+          as: "requests",
+        },
+      },
+      {
+        $project: {
+          profile: 1,
+          isInConnection: 1,
+          averageRating: 1,
+          isRequested: {
+            $cond: {
+              if: { $gt: [{ $size: "$requests" }, 0] },
+              then: true,
+              else: false,
+            },
+          },
         },
       },
       {
@@ -365,10 +398,13 @@ export const getAllTutors = asyncHandler(
       default:
         break;
     }
+    let count = await Teacher.countDocuments();
+    count = ~~(count / 8);
     if (tutors) {
       res.status(200).json({
         success: true,
         tutors,
+        count,
       });
     }
   }

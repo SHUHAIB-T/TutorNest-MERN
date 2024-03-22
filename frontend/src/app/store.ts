@@ -9,6 +9,7 @@ import socketSlice from "../features/Socket/SocketSlice";
 import courseSlice from "../features/course/courseSlice";
 import courseDetailSlice from "../features/course/courseDetails/CourseDetails";
 import enrollmentSlice from "../features/enrollments/entollmentSlice";
+import tutorReducer from "../features/tutors/tutorSlice";
 
 export const store = configureStore({
   reducer: {
@@ -20,6 +21,7 @@ export const store = configureStore({
     course: courseSlice,
     courseDetail: courseDetailSlice,
     enrollments: enrollmentSlice,
+    tutors: tutorReducer,
   },
 });
 

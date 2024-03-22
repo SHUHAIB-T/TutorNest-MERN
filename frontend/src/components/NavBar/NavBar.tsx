@@ -6,10 +6,15 @@ import Logo from "../../assets/Logo.svg";
 import { Link } from "react-router-dom";
 import { logout } from "../../features/auth/authSlice";
 import InsertCommentIcon from "@mui/icons-material/InsertComment";
+import { Tooltip } from "flowbite-react";
+import ConnectWithoutContactIcon from "@mui/icons-material/ConnectWithoutContact";
+import { useState } from "react";
+import ConnectionsDrawer from "../ConnectionsDrawer/ConnectionsDrawer";
 
 export default function NavBar({ role }: { role: string }) {
   const profile = JSON.parse(localStorage.getItem("profile") as string);
   const dispatch = useAppDispatch();
+  const [open, setOpen] = useState<boolean>(false);
 
   const drop = () => {
     if (role === "TUTOR") {
@@ -44,6 +49,7 @@ export default function NavBar({ role }: { role: string }) {
 
   return (
     <>
+      <ConnectionsDrawer open={open} setOpen={setOpen} />
       <div className="sticky top-0 z-10">
         <Flowbite theme={{ theme: customTheme }}>
           <Navbar>
@@ -54,9 +60,18 @@ export default function NavBar({ role }: { role: string }) {
             </Link>
             <div className="flex md:order-2 items-center gap-4">
               {role === "TUTOR" && (
-                <Link to={"/tutor/chat"}>
-                  <InsertCommentIcon className="text-white" />
-                </Link>
+                <Tooltip style="dark" content="messages">
+                  <Link to={"/tutor/chat"}>
+                    <InsertCommentIcon className="text-white" />
+                  </Link>
+                </Tooltip>
+              )}
+              {role === "TUTOR" && (
+                <Tooltip style="dark" content="requests">
+                  <button onClick={() => setOpen(!open)}>
+                    <ConnectWithoutContactIcon className="text-white" />
+                  </button>
+                </Tooltip>
               )}
               <Dropdown
                 arrowIcon={false}

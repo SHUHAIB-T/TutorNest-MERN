@@ -17,6 +17,9 @@ import {
 import {
   createConnection,
   CancelConnection,
+  getAllmyRequests,
+  acceptRequest,
+  deleteRequest,
 } from "../controller/requestController";
 import { getMyCourses } from "../controller/courseController";
 import { isLoggedIn, protect } from "../middlewares/authMiddleware";
@@ -29,6 +32,9 @@ router.post("/uploadDoc", protect, uploadDoc);
 router.get("/documents", protect, getMydocmunts);
 router.patch("/deletedocument", protect, deleteDocument);
 router.get("/posts", protect, getStudentsPosts);
+router.get("/requests", protect, getAllmyRequests);
+router.post("/acceptRequest/:id", protect, acceptRequest);
+router.delete("/deleteRequest/:id", protect, deleteRequest);
 router.post("/createRequest", protect, createConnection);
 router.post("/cancelConnection", protect, CancelConnection);
 router.get("/myStudents", protect, getMyStudents);

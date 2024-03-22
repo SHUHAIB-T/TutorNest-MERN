@@ -55,6 +55,7 @@ const CoursesPage = lazy(() => import("./pages/CoursesPage/CoursesPage"));
 const CourseDetailPage = lazy(
   () => import("./pages/CourseDetailPage/CourseDetailPage")
 );
+const AllTutorsPage = lazy(() => import("./pages/AllTutotsPage/AllTutorsPage"));
 
 function App() {
   const socket = useRef<Socket | null>(null);
@@ -79,6 +80,7 @@ function App() {
         <SocketContext.Provider value={socket}>
           <Routes>
             <Route path="/courses" element={<CoursesPage />} />
+            <Route path="/tutors" element={<AllTutorsPage />} />
             <Route path="/courses/:id" element={<CourseDetailPage />} />
             <Route element={<Authenticate />}>
               <Route path="/" element={<HomPage />} />

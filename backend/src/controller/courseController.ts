@@ -196,7 +196,7 @@ export const getCourses: RequestHandler = asyncHandler(
         break;
     }
     let count = await Course.countDocuments();
-    count = ~~(count / 12);
+    count = ~~(count / 8);
     if (courses) {
       res.status(200).json({
         success: true,
