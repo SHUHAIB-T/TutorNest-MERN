@@ -17,11 +17,16 @@ const darkTheme = createTheme({
 export default function CoureseBanner() {
   const navigate = useNavigate();
   const { isLoading, course } = useAppSelector((state) => state.courseDetail);
+  const { user } = useAppSelector((state) => state.auth);
   const [loading, setLoading] = useState<boolean>(false);
 
   const handleClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
-    setLoading(true);
+    if (user) {
+      setLoading(true);
+    } else {
+      navigate("/login");
+    }
   };
 
   const verifyPayment = async (response: {

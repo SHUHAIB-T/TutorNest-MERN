@@ -32,11 +32,13 @@ export default function StudentNav() {
               </Link>
             </Navbar.Brand>
             <div className="flex items-center md:order-2">
-              <Link to={"/student/chat"}>
-                <Tooltip content="messages" style="dark">
-                  <InsertCommentIcon className="text-white me-3" />
-                </Tooltip>
-              </Link>
+              {user && (
+                <Link to={"/student/chat"}>
+                  <Tooltip content="messages" style="dark">
+                    <InsertCommentIcon className="text-white me-3" />
+                  </Tooltip>
+                </Link>
+              )}
               <Dropdown
                 arrowIcon={false}
                 inline
@@ -57,33 +59,57 @@ export default function StudentNav() {
                 }
               >
                 <>
-                  <Dropdown.Header>
-                    <span className="font-bold">{profile?.name}</span>
-                    <span className="block truncate text-sm font-medium">
-                      {user?.email}
-                    </span>
-                  </Dropdown.Header>
-                  <Link to={"/student/profile"}>
-                    <Dropdown.Item>My Profile</Dropdown.Item>
-                  </Link>
-                  <Link to={"/student/posts"}>
-                    <Dropdown.Item>My Posts</Dropdown.Item>
-                  </Link>
-                  <Link to={"/student/my-course"}>
-                    <Dropdown.Item>My Courses</Dropdown.Item>
-                  </Link>
-                  <Dropdown.Divider />
+                  {user ? (
+                    <>
+                      <Dropdown.Header>
+                        <span className="font-bold">{profile?.name}</span>
+                        <span className="block truncate text-sm font-medium">
+                          {user?.email}
+                        </span>
+                      </Dropdown.Header>
+                      <Link to={"/student/profile"}>
+                        <Dropdown.Item>My Profile</Dropdown.Item>
+                      </Link>
+                      <Link to={"/student/posts"}>
+                        <Dropdown.Item>My Posts</Dropdown.Item>
+                      </Link>
+                      <Link to={"/student/my-course"}>
+                        <Dropdown.Item>My Courses</Dropdown.Item>
+                      </Link>
+                      <Dropdown.Divider />
 
-                  <Dropdown.Item onClick={() => dispatch(logout())}>
-                    Sign out
-                  </Dropdown.Item>
+                      <Dropdown.Item onClick={() => dispatch(logout())}>
+                        Sign out
+                      </Dropdown.Item>
+                    </>
+                  ) : (
+                    <>
+                      <div className="sticky top-0 z-10">
+                        <Link to={"/login"}>
+                          <Dropdown.Item>LOGIN</Dropdown.Item>
+                        </Link>
+                        <Dropdown.Divider />
+                        <Link to={"/tutor/signup"}>
+                          <Dropdown.Item>SIGNUP As Tutor</Dropdown.Item>
+                        </Link>
+                        <Link to={"/student/signup"}>
+                          <Dropdown.Item>SIGNUP As Student</Dropdown.Item>
+                        </Link>
+                      </div>
+                    </>
+                  )}
                 </>
               </Dropdown>
               <Navbar.Toggle />
             </div>
             <Navbar.Collapse>
               <Link to={"/student"}>
-                <Navbar.Link active={location.pathname === "/student"}>
+                <Navbar.Link
+                  active={
+                    location.pathname === "/student" ||
+                    location.pathname === "/"
+                  }
+                >
                   Home
                 </Navbar.Link>
               </Link>
@@ -92,7 +118,11 @@ export default function StudentNav() {
                   Courses
                 </Navbar.Link>
               </Link>
-              <Navbar.Link href="#">Tutors</Navbar.Link>
+              <Link to={"/tutors"}>
+                <Navbar.Link active={location.pathname.includes("/tutors")}>
+                  Tutors
+                </Navbar.Link>
+              </Link>
               <Navbar.Link href="#">About</Navbar.Link>
             </Navbar.Collapse>
           </Navbar>

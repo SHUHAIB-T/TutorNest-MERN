@@ -1,26 +1,21 @@
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { ISearch } from "../../types/courseType";
+import { ItutorSearch } from "../../types/tutorTypes";
+import { indianLanguages, teacherQualifications } from "../../utils";
 import { useAppDispatch } from "../../app/store";
-import { getAllCourses } from "../../features/course/courseServiece";
-import { indianLanguages, caetgories } from "../../utils";
-import { useSearchParams } from "react-router-dom";
+import { getAllTutors } from "../../features/tutors/tutorServiece";
 
 type prop = {
-  search: ISearch;
-  setSearch: Dispatch<SetStateAction<ISearch>>;
+  search: ItutorSearch;
+  setSearch: Dispatch<SetStateAction<ItutorSearch>>;
 };
 
-export default function FilterBarCourse({ search, setSearch }: prop) {
-  const [searchParams] = useSearchParams();
-  const searchQuery = searchParams.get("search");
-  const [searchText, setSearchText] = useState<string>(
-    searchQuery ? searchQuery : ""
-  );
+export default function FilterBarTutor({ search, setSearch }: prop) {
   const dispatch = useAppDispatch();
   useEffect(() => {
-    dispatch(getAllCourses(search));
+    dispatch(getAllTutors(search));
   }, [search, dispatch]);
 
+  const [searchText, setSearchText] = useState<string>("");
   const onchange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const { name, value } = e.currentTarget;
     setSearch({
@@ -28,18 +23,17 @@ export default function FilterBarCourse({ search, setSearch }: prop) {
       [name]: value,
     });
   };
-
   return (
     <>
       <div className="flex flex-wrap space-y-2 md:justify-between items-center justify-center flex-shrink px-3 py-3 bg-my-bg-dark h-fit w-full ">
         <div className="h-fit w-[500px] flex gap-x-2">
           <select
-            name="category"
+            name="qualification"
             onChange={onchange}
             className="md:w-1/3 w-28 py-1 cursor-pointer text-sm bg-gray-900 rounded-full pl-4 text-gray-200"
           >
-            <option value="">All Categories</option>
-            {caetgories.map((e) => (
+            <option value="">All Qualifications</option>
+            {teacherQualifications.map((e) => (
               <option value={e}>{e}</option>
             ))}
           </select>
@@ -61,7 +55,6 @@ export default function FilterBarCourse({ search, setSearch }: prop) {
             <option value="">Sort</option>
             <option value="low-high">low-high</option>
             <option value="high-low">high-low</option>
-            <option value="new-first">new first</option>
             <option value="popular">most popular</option>
           </select>
         </div>

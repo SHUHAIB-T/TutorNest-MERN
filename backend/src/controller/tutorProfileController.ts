@@ -5,6 +5,7 @@ import mongoose from "mongoose";
 import StudentPosts from "../model/studnetPostModet";
 import Requests from "../model/requestModal";
 import Student from "../model/studentProfile";
+import User from "../model/userModel";
 
 /**
  * @disc    get tutor profile
@@ -180,5 +181,231 @@ export const getMyStudents = asyncHandler(
       success: true,
       students: posts,
     });
+  }
+);
+
+/**
+ * @disc    Get all tuttos
+ * @route   GET /api/tutor/all
+ * @access  public
+ */
+export const getAllTutors = asyncHandler(
+  async (req: Request, res: Response) => {
+    const page: number = parseInt(req.query.page as string, 10) || 1;
+    const pageSize = 8;
+    const userId = req.user?._id;
+    let tutors = await User.aggregate([
+      { $match: { status: true } },
+      {
+        $project: {
+          _id: 1,
+        },
+      },
+      {
+        $lookup: {
+          from: "ratings",
+          localField: "_id",
+          foreignField: "tutorId",
+          as: "ratings",
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $and: [{ $gte: ["$rating", 1] }, { $lte: ["$rating", 5] }],
+                },
+              },
+            },
+          ],
+        },
+      },
+      {
+        $unwind: { path: "$ratings", preserveNullAndEmptyArrays: true },
+      },
+      {
+        $group: {
+          _id: "$_id",
+          averageRating: { $avg: "$ratings.rating" },
+        },
+      },
+      {
+        $lookup: {
+          from: "teachers",
+          localField: "_id",
+          foreignField: "userID",
+          as: "profile",
+        },
+      },
+      {
+        $unwind: {
+          path: "$profile",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $project: {
+          profile: 1,
+          isInConnection: {
+            $cond: {
+              if: { $isArray: "$profile.connections" },
+              then: { $in: [userId, "$profile.connections"] },
+              else: false,
+            },
+          },
+          averageRating: 1,
+        },
+      },
+      {
+        $match: {
+          profile: { $exists: true },
+        },
+      },
+      {
+        $lookup: {
+          from: "requests",
+          let: { teacherId: "$profile.userID", studentId: userId },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $and: [
+                    {
+                      $or: [
+                        { $eq: ["$teacherId", "$$teacherId"] },
+                        { $eq: ["$studentId", "$$studentId"] },
+                      ],
+                    },
+                    { $eq: ["$status", "PENDING"] },
+                  ],
+                },
+              },
+            },
+          ],
+          as: "requests",
+        },
+      },
+      {
+        $project: {
+          profile: 1,
+          isInConnection: 1,
+          averageRating: 1,
+          isRequested: {
+            $cond: {
+              if: { $gt: [{ $size: "$requests" }, 0] },
+              then: true,
+              else: false,
+            },
+          },
+        },
+      },
+      {
+        $skip: (page - 1) * pageSize,
+      },
+      {
+        $limit: pageSize,
+      },
+    ]);
+
+    if (req.query.search) {
+      const query = (req.query.search as string)
+        .toLowerCase()
+        .replace(/\s/g, "");
+      tutors = tutors.filter((e) => {
+        const language = e.profile.languages
+          .join(",")
+          .toLowerCase()
+          .replace(/\s/g, "");
+        if (language.includes(query)) {
+          return true;
+        } else if (query.includes(language)) {
+          return true;
+        }
+
+        const qualification = e.profile.qualification
+          .join(",")
+          .toLowerCase()
+          .replace(/\s/g, "");
+        if (qualification.includes(query)) {
+          return true;
+        } else if (query.includes(qualification)) {
+          return true;
+        }
+        const name = e.profile.name.toLowerCase().replace(/\s/g, "");
+        if (name.includes(query)) {
+          return true;
+        } else if (query.includes(name)) {
+          return true;
+        }
+      });
+    }
+
+    if (req.query.language) {
+      const query = (req.query.language as string)
+        .toLowerCase()
+        .replace(/\s/g, "");
+      tutors = tutors.filter((e) => {
+        const language = e.profile.languages
+          .join(",")
+          .toLowerCase()
+          .replace(/\s/g, "");
+        if (language.includes(query)) {
+          return true;
+        } else if (query.includes(language)) {
+          return true;
+        }
+      });
+    }
+
+    if (req.query.qualification) {
+      const query = (req.query.qualification as string)
+        .toLowerCase()
+        .replace(/\s/g, "");
+      tutors = tutors.filter((e) => {
+        const qualification = e.profile.qualification
+          .join(",")
+          .toLowerCase()
+          .replace(/\s/g, "");
+        if (qualification.includes(query)) {
+          return true;
+        } else if (query.includes(qualification)) {
+          return true;
+        }
+      });
+    }
+
+    const sortQuery = req.query.sort;
+    switch (sortQuery) {
+      case "low-high":
+        tutors.sort((a, b) => {
+          const priceA = parseFloat(a.profile.pricing);
+          const priceB = parseFloat(b.profile.pricing);
+          return priceA - priceB;
+        });
+        break;
+      case "high-low":
+        tutors.sort((a, b) => {
+          const priceA = parseFloat(a.profile.pricing);
+          const priceB = parseFloat(b.profile.pricing);
+          return priceB - priceA;
+        });
+        break;
+      case "popular":
+        tutors.sort((a, b) => {
+          const ratingA = parseFloat(a.averageRating);
+          const ratingB = parseFloat(b.averageRating);
+          return ratingB - ratingA;
+        });
+        break;
+      default:
+        break;
+    }
+    let count = await Teacher.countDocuments();
+    count = ~~(count / 8);
+    if (tutors) {
+      res.status(200).json({
+        success: true,
+        tutors,
+        count,
+      });
+    }
   }
 );

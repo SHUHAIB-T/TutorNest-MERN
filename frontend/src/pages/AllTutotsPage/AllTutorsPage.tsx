@@ -1,24 +1,21 @@
 import { useEffect, useState } from "react";
-import { useAppSelector } from "../../app/store";
-import CoruseCardUser from "../../components/CouresCardUser/CoruseCardUser";
-import FilterBarCourse from "../../components/FilterBarCourse/FilterBarCourse";
 import StudentNav from "../../components/NavBar/StudentNav";
+import { ItutorSearch } from "../../types/tutorTypes";
+import FilterBarTutor from "../../components/FilterBarTutor/FilterBarTutor";
+import { useAppSelector } from "../../app/store";
 import CouresCardSkeleton from "../../components/Skelitons/CouresCardSkeleton";
 import { Pagination } from "flowbite-react";
-import { ISearch } from "../../types/courseType";
-import { useSearchParams } from "react-router-dom";
+import TutorDetailCard from "../../components/TutorDetailCard/TutorDetailCard";
 
-export default function CoursesPage() {
-  const [searchParams] = useSearchParams();
-  const searchQuery = searchParams.get("search");
-  const { isLoading, courses, count } = useAppSelector((state) => state.course);
+export default function AllTutorsPage() {
+  const { isLoading, tutors, count } = useAppSelector((state) => state.tutors);
   const [currentPage, setCurrentPage] = useState(1);
-  const [search, setSearch] = useState<ISearch>({
-    category: "",
+  const [search, setSearch] = useState<ItutorSearch>({
     language: "",
     page: "",
-    search: searchQuery ? searchQuery : "",
+    search: "",
     sort: "",
+    qualification: "",
   });
   const onPageChange = (page: number) => setCurrentPage(page);
   useEffect(() => {
@@ -30,12 +27,11 @@ export default function CoursesPage() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage]);
-
   return (
     <>
       <StudentNav />
       <div className="flex flex-wrap bg-secondary flex-col w-full min-h-screen text-gray-200">
-        <FilterBarCourse search={search} setSearch={setSearch} />
+        <FilterBarTutor search={search} setSearch={setSearch} />
         <div className="flex md:p-10 gap-6 p-3 items-center justify-center w-full flex-wrap">
           {isLoading && (
             <>
@@ -49,23 +45,29 @@ export default function CoursesPage() {
               <CouresCardSkeleton />
             </>
           )}
-          {courses.length > 0 &&
-            courses.map((e, i) => {
+          {tutors.length > 0 &&
+            tutors.map((e, i) => {
               return (
                 <>
-                  <CoruseCardUser
-                    averageRating={e.averageRating}
-                    course={e.course}
-                    isEnrolled={e.isEnrolled}
-                    key={i}
+                  <TutorDetailCard
                     _id={e._id}
+                    isRequested={e.isRequested}
+                    isInConnection={e.isInConnection}
+                    averageRating={e.averageRating}
+                    bio={e.profile?.bio}
+                    key={i}
+                    languages={e.profile?.languages}
+                    name={e.profile?.name}
+                    pricing={e.profile?.pricing}
+                    profile={e.profile?.profile}
+                    qualification={e.profile?.qualification}
                   />
                 </>
               );
             })}
-          {courses.length === 0 && !isLoading && (
+          {tutors.length === 0 && !isLoading && (
             <div className="">
-              <h1>No courses</h1>
+              <h1>No tutors</h1>
             </div>
           )}
           {count > 0 && (

@@ -48,7 +48,7 @@ export const createCourse: RequestHandler = asyncHandler(
 export const getCourses: RequestHandler = asyncHandler(
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     const page: number = parseInt(req.query.page as string, 10) || 1;
-    const pageSize = 12;
+    const pageSize = 8;
     const userId = req.user?._id;
     let courses = await Course.aggregate([
       {
@@ -196,7 +196,7 @@ export const getCourses: RequestHandler = asyncHandler(
         break;
     }
     let count = await Course.countDocuments();
-    count = ~~(count / 12);
+    count = ~~(count / 8);
     if (courses) {
       res.status(200).json({
         success: true,

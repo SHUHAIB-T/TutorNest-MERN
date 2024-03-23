@@ -40,3 +40,26 @@ export const protect = asyncHandler(
     }
   }
 );
+
+export const isLoggedIn = asyncHandler(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const token = req.cookies.token;
+    if (token) {
+      try {
+        const decoded = jwt.verify(token, env.JWT_SECRET) as JwtPayload;
+        const userId = new mongoose.Types.ObjectId(decoded.userId);
+        const user = await User.findOne({ _id: userId });
+        if (user) {
+          req.user = user;
+          next();
+        } else {
+          next();
+        }
+      } catch (error) {
+        next();
+      }
+    } else {
+      next();
+    }
+  }
+);

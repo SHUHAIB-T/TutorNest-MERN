@@ -8,7 +8,7 @@ interface ITeacherProfile {
   bio?: string;
   qualification?: string[];
   languages?: string[];
-  pricing: string;
+  pricing: number | null;
   connections?: string[];
 }
 
@@ -20,7 +20,7 @@ const teacherProfile = new Schema<ITeacherProfile>({
   bio: { type: String, default: "" },
   qualification: { type: Array, default: [] },
   languages: { type: Array, default: [] },
-  pricing: { type: String, default: "" },
+  pricing: { type: Number, default: null },
   connections: { type: Array, default: [] },
 });
 

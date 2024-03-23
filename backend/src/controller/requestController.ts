@@ -11,28 +11,56 @@ import Student from "../model/studentProfile";
  */
 export const createConnection = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
-    const teacherId = req.user?._id;
-    const { studentId } = req.body;
-    const aleadySent = await Requests.findOne({
-      teacherId: teacherId,
-      studentId: studentId,
-    });
-    if (!aleadySent) {
-      const creatConnection = await Requests.create({
-        studentId,
-        teacherId,
+    if (req.body.studentId) {
+      const teacherId = req.user?._id;
+      const { studentId } = req.body;
+      const aleadySent = await Requests.findOne({
+        teacherId: teacherId,
+        studentId: studentId,
       });
-      if (creatConnection) {
-        res.status(200).json({
-          success: true,
-          message: "Connection request sent",
+      if (!aleadySent) {
+        const creatConnection = await Requests.create({
+          studentId,
+          teacherId,
+          createdBy: teacherId,
         });
+        if (creatConnection) {
+          res.status(200).json({
+            success: true,
+            message: "Connection request sent",
+          });
+        } else {
+          next(Error("Somethig went wrong"));
+        }
       } else {
-        next(Error("Somethig went wrong"));
+        res.status(402);
+        next(Error("Request Allready sent!"));
       }
-    } else {
-      res.status(402);
-      next(Error("Request Allready sent!"));
+    } else if (req.body.teacherId) {
+      const studentId = req.user?._id;
+      const { teacherId } = req.body;
+      const aleadySent = await Requests.findOne({
+        teacherId: teacherId,
+        studentId: studentId,
+      });
+      if (!aleadySent) {
+        const creatConnection = await Requests.create({
+          studentId,
+          teacherId,
+          createdBy: studentId,
+        });
+        if (creatConnection) {
+          res.status(200).json({
+            success: true,
+            message: "Connection request sent",
+          });
+        } else {
+          next(Error("Somethig went wrong"));
+        }
+      } else {
+        res.status(402);
+        next(Error("Request Allready sent!"));
+      }
     }
   }
 );
@@ -44,20 +72,38 @@ export const createConnection = asyncHandler(
  */
 export const CancelConnection = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
-    const teacherId = req.user?._id;
-    const { studentId } = req.body;
-    const deleteRequest = await Requests.findOneAndDelete({
-      studentId: studentId,
-      teacherId: teacherId,
-    });
-
-    if (deleteRequest) {
-      res.status(200).json({
-        success: true,
-        message: "Connection request sent",
+    if (req.body.studentId) {
+      const teacherId = req.user?._id;
+      const { studentId } = req.body;
+      const deleteRequest = await Requests.findOneAndDelete({
+        studentId: studentId,
+        teacherId: teacherId,
       });
-    } else {
-      next(Error("Somethig went wrong"));
+
+      if (deleteRequest) {
+        res.status(200).json({
+          success: true,
+          message: "Connection request sent",
+        });
+      } else {
+        next(Error("Somethig went wrong"));
+      }
+    } else if (req.body.teacherId) {
+      const studentId = req.user?._id;
+      const { teacherId } = req.body;
+      const deleteRequest = await Requests.findOneAndDelete({
+        studentId: studentId,
+        teacherId: teacherId,
+      });
+
+      if (deleteRequest) {
+        res.status(200).json({
+          success: true,
+          message: "Connection request sent",
+        });
+      } else {
+        next(Error("Somethig went wrong"));
+      }
     }
   }
 );
@@ -69,39 +115,90 @@ export const CancelConnection = asyncHandler(
  */
 export const getAllmyRequests = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
-    const studentId = req.user?._id;
-    const requests = await Requests.aggregate([
-      { $match: { studentId: studentId, status: "PENDING" } },
-      {
-        $lookup: {
-          from: "teachers",
-          localField: "teacherId",
-          foreignField: "userID",
-          as: "teacher",
+    const user = req.user?.role;
+    if (user === "STUDENT") {
+      const studentId = req.user?._id;
+      const requests = await Requests.aggregate([
+        {
+          $match: {
+            studentId: studentId,
+            status: "PENDING",
+            createdBy: { $ne: studentId },
+          },
         },
-      },
-      { $unwind: "$teacher" },
-      {
-        $project: {
-          "teacher.name": 1,
-          "teacher.profile": 1,
-          "teacher.bio": 1,
-          _id: 1,
-          status: 1,
-          teacherId: 1,
-          studentId: 1,
-          createdAt: 1,
-          updatedAt: 1,
+        {
+          $lookup: {
+            from: "teachers",
+            localField: "teacherId",
+            foreignField: "userID",
+            as: "teacher",
+          },
         },
-      },
-    ]);
-    if (requests) {
-      res.status(200).json({
-        success: true,
-        requests,
-      });
-    } else {
-      next(Error("No requests found"));
+        { $unwind: "$teacher" },
+        {
+          $project: {
+            "teacher.name": 1,
+            "teacher.profile": 1,
+            "teacher.bio": 1,
+            _id: 1,
+            status: 1,
+            teacherId: 1,
+            studentId: 1,
+            createdAt: 1,
+            updatedAt: 1,
+          },
+        },
+      ]);
+      if (requests) {
+        res.status(200).json({
+          success: true,
+          requests,
+        });
+      } else {
+        next(Error("No requests found"));
+      }
+    } else if (user === "TUTOR") {
+      const teacherId = req.user?._id;
+      const requests = await Requests.aggregate([
+        {
+          $match: {
+            teacherId: teacherId,
+            status: "PENDING",
+            createdBy: { $ne: teacherId },
+          },
+        },
+        {
+          $lookup: {
+            from: "students",
+            localField: "studentId",
+            foreignField: "userID",
+            as: "student",
+          },
+        },
+        { $unwind: "$student" },
+        {
+          $project: {
+            "student.name": 1,
+            "student.profile": 1,
+            "student.intrests": 1,
+            "student.subjects": 1,
+            _id: 1,
+            status: 1,
+            teacherId: 1,
+            studentId: 1,
+            createdAt: 1,
+            updatedAt: 1,
+          },
+        },
+      ]);
+      if (requests) {
+        res.status(200).json({
+          success: true,
+          requests,
+        });
+      } else {
+        next(Error("No requests found"));
+      }
     }
   }
 );
@@ -113,29 +210,56 @@ export const getAllmyRequests = asyncHandler(
  */
 export const acceptRequest = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
-    const id = req.params.id;
-    const studentId = req.user?._id;
-    const { teacherId } = req.body;
-    const updateRequest = await Requests.findByIdAndUpdate(
-      { _id: id },
-      { status: "CONNECTED" },
-      { new: true }
-    );
-    const updateTutor = await Teacher.findOneAndUpdate(
-      { userID: teacherId },
-      { $push: { connections: studentId } }
-    );
-    const updateStudent = await Student.findOneAndUpdate(
-      { userID: studentId },
-      { $push: { connections: teacherId } }
-    );
-    if (updateRequest && updateStudent && updateTutor) {
-      res.status(200).json({
-        success: true,
-        message: "Request accepted",
-      });
-    } else {
-      next(Error("Some Error Occured"));
+    if (req.body.teacherId) {
+      const id = req.params.id;
+      const studentId = req.user?._id;
+      const { teacherId } = req.body;
+      const updateRequest = await Requests.findByIdAndUpdate(
+        { _id: id },
+        { status: "CONNECTED" },
+        { new: true }
+      );
+      const updateTutor = await Teacher.findOneAndUpdate(
+        { userID: teacherId },
+        { $push: { connections: studentId } }
+      );
+      const updateStudent = await Student.findOneAndUpdate(
+        { userID: studentId },
+        { $push: { connections: teacherId } }
+      );
+      if (updateRequest && updateStudent && updateTutor) {
+        res.status(200).json({
+          success: true,
+          message: "Request accepted",
+        });
+      } else {
+        next(Error("Some Error Occured"));
+      }
+    } else if (req.body.studentId) {
+      const id = req.params.id;
+      const teacherId = req.user?._id;
+      const { studentId } = req.body;
+      const updateRequest = await Requests.findByIdAndUpdate(
+        { _id: id },
+        { status: "CONNECTED" },
+        { new: true }
+      );
+      const updateTutor = await Teacher.findOneAndUpdate(
+        { userID: teacherId },
+        { $push: { connections: studentId } }
+      );
+      const updateStudent = await Student.findOneAndUpdate(
+        { userID: studentId },
+        { $push: { connections: teacherId } }
+      );
+      if (updateRequest && updateStudent && updateTutor) {
+        res.status(200).json({
+          success: true,
+          message: "Request accepted",
+        });
+      } else {
+        next(Error("Some Error Occured"));
+      }
     }
   }
 );

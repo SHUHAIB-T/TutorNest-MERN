@@ -9,6 +9,8 @@ import {
   acceptRequest,
   deleteRequest,
   getAllMyTutors,
+  createConnection,
+  CancelConnection,
 } from "../controller/requestController";
 import postRoutes from "./studentPosts";
 import { getAllMycourse } from "../controller/enrollmentController";
@@ -22,6 +24,8 @@ router.post("/acceptRequest/:id", acceptRequest);
 router.delete("/deleteRequest/:id", deleteRequest);
 router.get("/mytutors", getAllMyTutors);
 router.get("/my-coures", getAllMycourse);
+router.post("/createConnection", createConnection);
+router.post("/cancelConnection", CancelConnection);
 
 router.use("/posts", postRoutes);
 
