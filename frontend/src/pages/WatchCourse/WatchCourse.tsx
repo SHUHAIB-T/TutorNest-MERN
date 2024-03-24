@@ -182,7 +182,7 @@ export default function WatchCourse() {
                           className="text-gray-400"
                           fontSize={"large"}
                         />
-                        <h1 className="text-gray-400">{e.duration}0s</h1>
+                        <h1></h1>
                       </div>
                       <div className="leading-tight">
                         <h1 className="text-gray-200 font-bold">{e.title}</h1>
