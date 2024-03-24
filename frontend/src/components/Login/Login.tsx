@@ -9,6 +9,7 @@ import { reset } from "../../features/auth/authSlice";
 import GoogleAuth from "../GoogleAuth/GoogleAuth";
 import LoginSVG from "../../assets/LoginSVG.svg";
 import { toast } from "react-toastify";
+import Loader3 from "../Loader/Loader3/Loader3";
 
 type roleProp = { role: string };
 export default function Login({ role }: roleProp) {
@@ -67,12 +68,14 @@ export default function Login({ role }: roleProp) {
       } else if (user?.role === "ADMIN") {
         navigate("/admin");
       }
+      setIsSubmit(false);
       dispatch(reset());
     }
     if (
       (isError && (errorMessage.status as number) > 500) ||
       errorMessage.status === 404
     ) {
+      setIsSubmit(false);
       toast.error(errorMessage.message);
       dispatch(reset());
     }
@@ -136,9 +139,17 @@ export default function Login({ role }: roleProp) {
               {formError.password && (
                 <small className="text-red-700">{formError.password}</small>
               )}
-              <button className="bg-primary py-2 w-[100%] md:w-[50%] mt-4 rounded-md text-white text-base font-medium">
-                SUBMIT
-              </button>
+              {!isLoading ? (
+                <button className="bg-primary h-8 w-[100%] md:w-[50%] mt-4 rounded-md text-white text-base font-medium">
+                  SUBMIT
+                </button>
+              ) : (
+                <>
+                  <div className="bg-primary flex items-center justify-center h-8 w-[100%] md:w-[50%] mt-4 rounded-md text-white text-base font-medium">
+                    <Loader3 />
+                  </div>
+                </>
+              )}
               <small className="font-semibold mt-3 mb-8 text-blue-500">
                 Dont't have account?
                 <span

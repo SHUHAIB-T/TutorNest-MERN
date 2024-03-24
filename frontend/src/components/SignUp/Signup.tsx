@@ -53,8 +53,9 @@ export default function Signup({ role }: Props) {
 
   const [serverError, setServerError] = useState("");
 
-  const [openModal, setOpenModal] = useState(false);
-  const [isSubmit, setisSubmit] = useState(false);
+  const [openModal, setOpenModal] = useState<boolean>(false);
+  const [isSubmit, setisSubmit] = useState<boolean>(false);
+  const [sendOTP, setSendOTP] = useState<boolean>(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -80,7 +81,10 @@ export default function Signup({ role }: Props) {
         password: "password not matching",
       });
     }
+    setSendOTP(true);
+  };
 
+  useEffect(() => {
     if (
       !formError.name &&
       !formError.email &&
@@ -89,7 +93,8 @@ export default function Signup({ role }: Props) {
       userData.email.length > 0 &&
       userData.password.length > 0 &&
       userData.phone.length > 0 &&
-      userData.name.length > 0
+      userData.name.length > 0 &&
+      sendOTP
     ) {
       (async function () {
         try {
@@ -105,12 +110,13 @@ export default function Signup({ role }: Props) {
           const message = error as AxiosError;
           const Error = (message?.response?.data as { message: string })
             .message;
+          setisSubmit(false);
           setServerError(Error);
           setOpenModal(false);
         }
       })();
     }
-  };
+  }, [formError, userData, sendOTP]);
 
   useEffect(() => {
     if (formSubmit) {
@@ -136,7 +142,7 @@ export default function Signup({ role }: Props) {
       toast.error(errorMessage.message);
       dispatch(reset());
     }
-  }, [isSuccess, navigate, isError,user, dispatch, errorMessage]);
+  }, [isSuccess, navigate, isError, user, dispatch, errorMessage]);
 
   if (isLoading) {
     return <Loader />;
