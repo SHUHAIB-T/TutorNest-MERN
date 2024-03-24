@@ -1,6 +1,8 @@
 export const teacherQualifications: string[] = [
   "Bachelor of Arts (BA)",
+  "Master of Arts (MA)",
   "Bachelor of Science (BS)",
+  "Master of Science (MS)",
   "Master of Education (MEd)",
   "Bachelor of Education (BEd)",
   "Bachelor of Engineering (BE)",
