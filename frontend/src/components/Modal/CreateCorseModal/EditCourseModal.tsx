@@ -9,6 +9,7 @@ import { useAppSelector } from "../../../app/store";
 import { toast } from "react-toastify";
 import { deleteImageFromFirebase } from "../../util/uploadFirebase";
 import { caetgories, indianLanguages } from "../../../utils";
+import Loader3 from "../../Loader/Loader3/Loader3";
 
 type Prop = {
   setOpenModal: Dispatch<SetStateAction<boolean>>;
@@ -31,6 +32,8 @@ export default function EditCourseModal({
   const [formError, setFormError] = useState<ICourse>(initialstate);
   const [image, setImage] = useState<File | null>(null);
   const [submit, setSubmit] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
+
   useEffect(() => {
     setFormData(initialstate);
   }, [initialstate]);
@@ -75,6 +78,7 @@ export default function EditCourseModal({
         submit
       ) {
         try {
+          setLoading(true);
           if (image) {
             await deleteImageFromFirebase(initialstate.coverIMG);
             const filename = new Date().getTime() + image.name;
@@ -106,6 +110,7 @@ export default function EditCourseModal({
                 description: "",
                 price: "",
               });
+              setLoading(false);
             }
           } else {
             await api.put(
@@ -132,9 +137,11 @@ export default function EditCourseModal({
             });
             setUpdated((e) => !e);
             setSubmit(false);
+            setLoading(false);
           }
         } catch (err) {
           console.log(err);
+          setLoading(false);
         }
       }
     })();
@@ -273,12 +280,20 @@ export default function EditCourseModal({
                 id=""
               ></textarea>
             </div>
-            <button
-              onClick={handleFormSubmit}
-              className="font-bold text-white px-4 py-2 bg-primary rounded-lg"
-            >
-              SUBMIT
-            </button>
+            {!loading ? (
+              <button
+                onClick={handleFormSubmit}
+                className="font-bold text-white bg-primary rounded-lg"
+              >
+                SUBMIT
+              </button>
+            ) : (
+              <>
+                <div className="font-bold flex items-center justify-center text-white bg-primary rounded-lg">
+                  <Loader3 />
+                </div>
+              </>
+            )}
             <button
               onClick={() => setFormData(initialstate)}
               className="font-bold text-white px-4 py-2 bg-[#3f3b3b] rounded-lg"

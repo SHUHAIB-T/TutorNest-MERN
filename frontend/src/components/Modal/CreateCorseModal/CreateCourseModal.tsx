@@ -8,12 +8,18 @@ import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { useAppSelector } from "../../../app/store";
 import { toast } from "react-toastify";
 import { caetgories, indianLanguages } from "../../../utils";
+import Loader3 from "../../Loader/Loader3/Loader3";
 
 type Prop = {
   setOpenModal: Dispatch<SetStateAction<boolean>>;
+  setUpdated: Dispatch<SetStateAction<boolean>>;
   openModal: boolean;
 };
-export default function CreateCourseModal({ openModal, setOpenModal }: Prop) {
+export default function CreateCourseModal({
+  openModal,
+  setOpenModal,
+  setUpdated,
+}: Prop) {
   const { user } = useAppSelector((state) => state.auth);
   const initialState: ICourse = {
     title: "",
@@ -27,6 +33,7 @@ export default function CreateCourseModal({ openModal, setOpenModal }: Prop) {
   const [formError, setFormError] = useState<ICourse>(initialState);
   const [image, setImage] = useState<File | null>(null);
   const [submit, setSubmit] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const onchange = (
     e: React.ChangeEvent<
@@ -73,6 +80,7 @@ export default function CreateCourseModal({ openModal, setOpenModal }: Prop) {
         submit
       ) {
         try {
+          setLoading(true);
           const filename = new Date().getTime() + image.name;
           const storageRef = ref(storage, "converIMG/" + filename);
           const snapshot = await uploadBytes(storageRef, image);
@@ -91,12 +99,16 @@ export default function CreateCourseModal({ openModal, setOpenModal }: Prop) {
               },
               { withCredentials: true }
             );
-            console.log(data);
-            setOpenModal(false);
-            toast.success("Course Created!");
-            setFormData(initialState);
+            if (data.success) {
+              setOpenModal(false);
+              toast.success("Course Created!");
+              setFormData(initialState);
+              setUpdated((e) => !e);
+              setLoading(false);
+            }
           }
         } catch (err) {
+          setLoading(false);
           console.log(err);
         }
       }
@@ -216,12 +228,20 @@ export default function CreateCourseModal({ openModal, setOpenModal }: Prop) {
                 id=""
               ></textarea>
             </div>
-            <button
-              onClick={handleFormSubmit}
-              className="font-bold text-white px-4 py-2 bg-primary rounded-lg"
-            >
-              SUBMIT
-            </button>
+            {!loading ? (
+              <button
+                onClick={handleFormSubmit}
+                className="font-bold text-white bg-primary rounded-lg"
+              >
+                SUBMIT
+              </button>
+            ) : (
+              <>
+                <div className="font-bold text-white bg-primary flex items-center justify-center rounded-lg">
+                  <Loader3 />
+                </div>
+              </>
+            )}
             <button
               onClick={() => setFormData(initialState)}
               className="font-bold text-white px-4 py-2 bg-[#3f3b3b] rounded-lg"

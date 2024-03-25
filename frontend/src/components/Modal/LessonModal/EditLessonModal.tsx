@@ -8,6 +8,8 @@ import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { useAppSelector } from "../../../app/store";
 import { toast } from "react-toastify";
 import { deleteImageFromFirebase } from "../../util/uploadFirebase";
+import { getVideoDuration } from "../../../utils";
+import Loader3 from "../../Loader/Loader3/Loader3";
 
 type Prop = {
   setOpenModal: Dispatch<SetStateAction<boolean>>;
@@ -29,6 +31,7 @@ export default function EditLessonModal({
   const [formError, setFormError] = useState<ILesson>(initialState);
   const [video, setVideo] = useState<File | null>(null);
   const [submit, setSubmit] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     setFormData(initialState);
@@ -51,7 +54,6 @@ export default function EditLessonModal({
     setFormError({
       ...formError,
       description: validate("required", formData.description),
-      duration: validate("required", formData.duration),
       title: validate("required", formData.title),
       video: validate("required", initialState.video),
     });
@@ -70,8 +72,10 @@ export default function EditLessonModal({
         submit
       ) {
         try {
-          if (video) {
+          setLoading(true);
+          if (video && initialState.video) {
             await deleteImageFromFirebase(initialState.video);
+            const duration = await getVideoDuration(video);
             const filename = new Date().getTime() + video.name;
             const storageRef = ref(storage, "lessonVideo/" + filename);
             const snapshot = await uploadBytes(storageRef, video);
@@ -83,7 +87,7 @@ export default function EditLessonModal({
                   video: url,
                   title: formData.title,
                   description: formData.description,
-                  duration: formData.duration,
+                  duration: duration,
                 },
                 { withCredentials: true }
               );
@@ -93,6 +97,7 @@ export default function EditLessonModal({
               setUpdated((e) => !e);
               setSubmit(false);
               setEditLessonId("");
+              setLoading(false);
             }
           } else {
             await api.put(
@@ -110,9 +115,11 @@ export default function EditLessonModal({
             setFormData(initialState);
             setUpdated((e) => !e);
             setEditLessonId("");
+            setLoading(false);
           }
         } catch (err) {
           console.log(err);
+          setLoading(false);
         }
       }
     })();
@@ -133,7 +140,7 @@ export default function EditLessonModal({
         </Modal.Header>
         <Modal.Body className="bg-[#110d17] ring-1 ring-[#4d2389] rounded-b-md">
           <div className="grid grid-cols-2 gap-2 w-full">
-            <div className="flex flex-col  md:col-span-1 col-span-2">
+            <div className="flex flex-col  md:col-span-2 col-span-2">
               <label htmlFor="title" className="py-2 text-white">
                 Title
               </label>
@@ -147,22 +154,6 @@ export default function EditLessonModal({
                 name="title"
                 value={formData.title}
                 placeholder="Enter the title of the course"
-              />
-            </div>
-            <div className="flex flex-col   md:col-span-1 col-span-2">
-              <label htmlFor="title" className="py-2 text-white">
-                duration
-              </label>
-              {formError.duration && (
-                <small className="text-red-600">{formError.duration}</small>
-              )}
-              <input
-                className="bg-[#251c32] text-white border-0 rounded-md "
-                type="number"
-                name="duration"
-                value={formData.duration}
-                placeholder="Enter the duration of the course"
-                onChange={onchange}
               />
             </div>
             <div className="flex flex-col col-span-2">
@@ -197,12 +188,18 @@ export default function EditLessonModal({
                 id=""
               ></textarea>
             </div>
-            <button
-              onClick={handleFormSubmit}
-              className="font-bold text-white px-4 py-2 bg-primary rounded-lg"
-            >
-              UPDATE
-            </button>
+            {!loading ? (
+              <button
+                onClick={handleFormSubmit}
+                className="font-bold text-white bg-primary rounded-lg"
+              >
+                UPDATE
+              </button>
+            ) : (
+              <div className="font-bold flex items-center justify-center text-white bg-primary rounded-lg">
+                <Loader3 />
+              </div>
+            )}
             <button
               onClick={() => setFormData(initialState)}
               className="font-bold text-white px-4 py-2 bg-[#3f3b3b] rounded-lg"
