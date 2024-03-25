@@ -101,7 +101,7 @@ export default function TutorDetailCard({
   return (
     <>
       <ThemeProvider theme={darkTheme}>
-        <div className="w-64 h-96 relative px-3 text-gray-200 py-4 bg-my-bg-dark rounded-lg flex flex-col items-center">
+        <div className="w-64 h-[400px] relative px-3 text-gray-200 py-4 bg-my-bg-dark rounded-lg flex flex-col items-center">
           <img
             src={
               profile
@@ -111,7 +111,7 @@ export default function TutorDetailCard({
             alt=""
             className="w-28 h-28 rounded-full object-cover ring-2 ring-my-ring"
           />
-          <div className="flex flex-col items-center">
+          <div className="flex  text-center flex-col items-center">
             <h1 className="font-bold text-xl">{name}</h1>
             <small>{bio}</small>
           </div>
@@ -126,7 +126,7 @@ export default function TutorDetailCard({
             <span className="text-green-500 mt-3 font-bold"> ₹{pricing}</span>
           </div>
           <div className="w-full h-1 bg-my-ring/[0.2] mt-2" />
-          <div className="flex flex-wrap justify-center gap-2 my-2 max-h-16 overflow-auto w-full px-3">
+          <div className="flex flex-wrap justify-center gap-2 my-2 max-h-8 overflow-auto w-full px-3">
             {languages?.map((e) => (
               <small className="px-3 text-gray-400 bg-my-input h-fit rounded-full">
                 {e}
@@ -134,7 +134,7 @@ export default function TutorDetailCard({
             ))}
           </div>
           <div className="w-full h-1 bg-my-ring/[0.2] " />
-          <div className="flex flex-wrap justify-center gap-2 my-2 max-h-16 overflow-auto w-full px-3">
+          <div className="flex flex-wrap justify-center gap-2 my-2 max-h-10 overflow-auto w-full px-3">
             {qualification?.map((e) => (
               <small className="px-3 text-gray-400 bg-my-input h-fit rounded-full">
                 {e}

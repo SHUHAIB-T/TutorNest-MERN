@@ -340,13 +340,8 @@ export const getAllTutors = asyncHandler(
 
     if (req.query.language) {
       const query = (req.query.language as string)
-        .toLowerCase()
-        .replace(/\s/g, "");
       tutors = tutors.filter((e) => {
         const language = e.profile.languages
-          .join(",")
-          .toLowerCase()
-          .replace(/\s/g, "");
         if (language.includes(query)) {
           return true;
         } else if (query.includes(language)) {
@@ -357,13 +352,8 @@ export const getAllTutors = asyncHandler(
 
     if (req.query.qualification) {
       const query = (req.query.qualification as string)
-        .toLowerCase()
-        .replace(/\s/g, "");
       tutors = tutors.filter((e) => {
         const qualification = e.profile.qualification
-          .join(",")
-          .toLowerCase()
-          .replace(/\s/g, "");
         if (qualification.includes(query)) {
           return true;
         } else if (query.includes(qualification)) {
@@ -399,7 +389,7 @@ export const getAllTutors = asyncHandler(
         break;
     }
     let count = await Teacher.countDocuments();
-    count = ~~(count / 8);
+    count = Math.ceil(count / 8);
     if (tutors) {
       res.status(200).json({
         success: true,

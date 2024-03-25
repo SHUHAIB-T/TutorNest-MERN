@@ -3,28 +3,34 @@ import api from "../../API/api";
 import { AxiosError } from "axios";
 import { storage } from "../../app/fireabse";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-const user = JSON.parse(localStorage.getItem("user") as string);
 import { studentProfile } from "../../types/userTypes";
 
 export const getStudentProfile = createAsyncThunk(
   "userProfile/getStudentprofile",
   async (_, thunkAPI) => {
+    const user = JSON.parse(localStorage.getItem("user") as string);
     try {
-      if (user.role === "STUDENT") {
-        const response = await api.get("/student", {
-          withCredentials: true,
-        });
-        return response.data;
-      } else if (user.role === "TUTOR") {
-        const response = await api.get("/tutor", {
-          withCredentials: true,
-        });
-        return response.data;
-      } else if (user.role === "ADMIN") {
-        const response = await api.get("/admin", {
-          withCredentials: true,
-        });
-        return response.data;
+      switch (user.role) {
+        case "STUDENT": {
+          const studentResponse = await api.get("/student", {
+            withCredentials: true,
+          });
+          return studentResponse.data;
+        }
+        case "TUTOR": {
+          const tutorResponse = await api.get("/tutor", {
+            withCredentials: true,
+          });
+          return tutorResponse.data;
+        }
+        case "ADMIN": {
+          const adminResponse = await api.get("/admin", {
+            withCredentials: true,
+          });
+          return adminResponse.data;
+        }
+        default:
+          break;
       }
     } catch (error) {
       const axiosError = error as AxiosError;
@@ -41,6 +47,7 @@ export const getStudentProfile = createAsyncThunk(
 export const uploadProfile = createAsyncThunk(
   "userProfile/uploadProfile",
   async (file: File, thunkAPI) => {
+    const user = JSON.parse(localStorage.getItem("user") as string);
     try {
       const filename = new Date().getTime() + file.name;
       const storageRef = ref(storage, "profile/" + filename);
@@ -84,6 +91,7 @@ export const uploadProfile = createAsyncThunk(
 export const updateProfile = createAsyncThunk(
   "userProfile/updateProfile",
   async (data: studentProfile, thunkAPI) => {
+    const user = JSON.parse(localStorage.getItem("user") as string);
     try {
       if (user.role === "STUDENT") {
         const response = await api.post(

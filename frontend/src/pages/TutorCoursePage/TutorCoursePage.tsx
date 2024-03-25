@@ -57,7 +57,7 @@ export default function TutorCoursePage() {
         setUpdated={setUpdated}
         setInitialState={setInitialState}
       />
-      <CreateCourseModal openModal={openModal} setOpenModal={setOpenModal} />
+      <CreateCourseModal openModal={openModal} setUpdated={setUpdated} setOpenModal={setOpenModal} />
       <NavBar role="TUTOR" />
       <div className="flex w-full flex-col pb-96 items-center bg-secondary">
         <h1 className="font-bold text-5xl text-white mt-10">My Courses</h1>

@@ -4,10 +4,16 @@ import TutorPostCard from "../../components/TutorPostCard/TutorPostCard";
 import { useEffect, useState } from "react";
 import { IPosts } from "../../types/PostsTypes";
 import api from "../../API/api";
+import { useAppDispatch } from "../../app/store";
+import { getStudentProfile } from "../../features/users/userServieces";
 
 export default function TutorHomePage() {
   const [posts, setPosts] = useState<IPosts[]>([]);
   const [isRequestSent, setIsRequestSent] = useState(false);
+  const dispatch = useAppDispatch();
+  useEffect(() => {
+    dispatch(getStudentProfile());
+  }, [dispatch]);
 
   useEffect(() => {
     (async function () {

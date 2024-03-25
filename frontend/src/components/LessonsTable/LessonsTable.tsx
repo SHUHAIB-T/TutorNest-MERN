@@ -7,6 +7,7 @@ import ShowVideo from "../Modal/ShowVideo";
 import Swal from "sweetalert2";
 import api from "../../API/api";
 import { toast } from "react-toastify";
+import { formatDuration } from "../../utils";
 
 type prop = {
   lessons: ILesson[];
@@ -90,11 +91,17 @@ export default function LessonsTable({
                       {i + 1}
                     </Table.Cell>
                     <Table.Cell>{e.title}</Table.Cell>
-                    <Table.Cell>{e.duration}</Table.Cell>
+                    <Table.Cell>
+                      {formatDuration(e.duration as unknown as number)}
+                    </Table.Cell>
                     <Table.Cell>{e.description}</Table.Cell>
                     <Table.Cell>
                       <span
-                        onClick={() => setVideo(e.video)}
+                        onClick={() => {
+                          if (e.video) {
+                            setVideo(e.video);
+                          }
+                        }}
                         className="font-medium cursor-pointer text-cyan-600 hover:underline dark:text-cyan-500"
                       >
                         View
