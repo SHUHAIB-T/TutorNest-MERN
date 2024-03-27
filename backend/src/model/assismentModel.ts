@@ -2,7 +2,10 @@ import mongoose, { ObjectId, Schema, model } from "mongoose";
 
 type Tquestion = {
   question: string;
-  options: string[];
+  optionA: string;
+  optionB: string;
+  optionC: string;
+  optionD: string;
   answer: string;
   mark: number;
 };
@@ -10,7 +13,7 @@ type Tquestion = {
 export interface IAssessment {
   courseId: ObjectId;
   questions: Tquestion[];
-  minimuMark: number;
+  minimumMark: number;
 }
 
 const assessmentSchema = new Schema<IAssessment>({
@@ -18,12 +21,16 @@ const assessmentSchema = new Schema<IAssessment>({
   questions: [
     {
       question: { type: String, required: true },
-      options: { type: Array, required: true },
+      optionA: { type: String, required: true },
+      optionB: { type: String, required: true },
+      optionC: { type: String, required: true },
+      optionD: { type: String, required: true },
       answer: { type: String, required: true },
+      id: { type: Number, required: true },
       mark: { type: Number, required: true },
     },
   ],
-  minimuMark: { type: Number, required: true },
+  minimumMark: { type: Number, required: true },
 });
 
 const Assessment = model("Assessment", assessmentSchema);

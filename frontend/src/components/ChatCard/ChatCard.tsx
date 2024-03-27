@@ -4,6 +4,7 @@ import { userType } from "../../types/authTypes";
 import api from "../../API/api";
 import { useAppSelector } from "../../app/store";
 import { SocketContext } from "../../contexts/SocketContext";
+import { format } from "timeago.js";
 type prop = {
   chat: Ichat;
   user: userType;
@@ -63,7 +64,7 @@ export default function ChatCard({ chat, user }: prop) {
         }
         alt=""
       />
-      <div>
+      <div className="w-full">
         <h1 className="font-bold text-xl">{userData?.name}</h1>
         {chat.latest_message && (
           <small>
@@ -71,12 +72,26 @@ export default function ChatCard({ chat, user }: prop) {
               !newChat &&
               !chat.latest_message.isDelete && (
                 <>
-                  <span className="text-gray-400">
-                    {chat.latest_message.teacherProfile.name}:{" "}
-                  </span>
-                  <span className="text-gray-400">
-                    {chat.latest_message.content?.slice(0, 20)}...{" "}
-                  </span>
+                  <div className="flex w-full">
+                    <div className="text-gray-400 flex w-full">
+                      {chat.latest_message.content_type === "TEXT" ? (
+                        <div className="flex w-full justify-between">
+                          <h1>
+                            {chat.latest_message.content?.slice(0, 20)}
+                            {chat.latest_message.content &&
+                              chat.latest_message.content?.length > 20 && (
+                                <span>...</span>
+                              )}
+                          </h1>
+                          <h1>
+                            {format(chat.latest_message.createdAt as string)}
+                          </h1>
+                        </div>
+                      ) : (
+                        <span>image</span>
+                      )}
+                    </div>
+                  </div>
                 </>
               )}
             {chat.latest_message.userDetails &&
@@ -87,16 +102,32 @@ export default function ChatCard({ chat, user }: prop) {
                     {chat.latest_message.userDetails?.name}:
                   </span>
                   <span className="text-gray-400">
-                    {chat.latest_message.content?.slice(0, 20)}...{" "}
+                    {chat.latest_message.content_type === "TEXT" ? (
+                      <>
+                        <span>
+                          {chat.latest_message.content?.slice(0, 20)}
+                          {chat.latest_message.content &&
+                            chat.latest_message.content?.length > 20 && (
+                              <span>...</span>
+                            )}
+                        </span>
+                        <span>
+                          {format(chat.latest_message.createdAt as string)}
+                        </span>
+                      </>
+                    ) : (
+                      <span>image</span>
+                    )}
                   </span>
                 </>
               )}
             {newChat &&
               newChat.content_type === "TEXT" &&
               !newChat.isDelete && (
-                <span className="text-gray-400">
-                  {newChat.content?.slice(0, 15)}
-                </span>
+                <div className="text-gray-400 flex w-full justify-between">
+                  <h1>{newChat.content?.slice(0, 15)}</h1>
+                  <h1>{format(newChat.createdAt as string)}</h1>
+                </div>
               )}
           </small>
         )}

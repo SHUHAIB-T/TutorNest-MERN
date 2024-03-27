@@ -7,6 +7,7 @@ import LessonsTable from "../../components/LessonsTable/LessonsTable";
 import { ILesson } from "../../types/courseType";
 import api from "../../API/api";
 import EditLessonModal from "../../components/Modal/LessonModal/EditLessonModal";
+import CreateAssessment from "../../components/Modal/AssessmentModal/CreateAssessment";
 
 export default function LessonsPage() {
   const { id } = useParams();
@@ -15,6 +16,7 @@ export default function LessonsPage() {
   const [lessons, setLessons] = useState<ILesson[]>([]);
   const [editOpenModal, setEditOpenModal] = useState<boolean>(false);
   const [editLessonId, setEditLessonId] = useState<string>("");
+  const [openAssessmentModal, setOpeAssessmentModal] = useState<boolean>(false);
   const [initialState, setInitialState] = useState<ILesson>({
     courseId: "",
     description: "",
@@ -54,6 +56,11 @@ export default function LessonsPage() {
         courseId={id as string}
         setUpdated={setUpdated}
       />
+      <CreateAssessment
+        openModal={openAssessmentModal}
+        setOpenModal={setOpeAssessmentModal}
+        courseId={id as string}
+      />
       <NavBar role="TUTOR" />
       <div className="flex w-full flex-col pb-96 items-center bg-secondary">
         <h1 className="font-bold text-5xl text-white mt-10">Lessons</h1>
@@ -63,12 +70,20 @@ export default function LessonsPage() {
               <ChevronLeftIcon className="mb-1" /> Back
             </Link>
           </div>
-          <button
-            onClick={() => setOpenModal(true)}
-            className="bg-primary px-5 py-2 rounded-md text-white font-bold"
-          >
-            Add Lessons
-          </button>
+          <div className="flex gap-4">
+            <button
+              onClick={() => setOpeAssessmentModal(true)}
+              className="bg-primary px-5 py-2 rounded-md text-white font-bold"
+            >
+              Assessment
+            </button>
+            <button
+              onClick={() => setOpenModal(true)}
+              className="bg-primary px-5 py-2 rounded-md text-white font-bold"
+            >
+              Add Lessons
+            </button>
+          </div>
         </div>
         <div className="w-[100%] flex justify-center">
           <LessonsTable
