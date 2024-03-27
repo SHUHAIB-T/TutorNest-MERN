@@ -7,6 +7,8 @@ import { useParams } from "react-router-dom";
 import { useEffect } from "react";
 import { useAppDispatch } from "../../app/store";
 import { getCourseDetails } from "../../features/course/courseDetails/courseDetailsServiece";
+import { getEntollments } from "../../features/enrollments/enrollmentServiece";
+import Footer from "../../components/Footer/Footer";
 
 export default function CourseDetailPage() {
   const { id } = useParams();
@@ -15,7 +17,10 @@ export default function CourseDetailPage() {
   useEffect(() => {
     dispatch(getCourseDetails(id as string));
   }, [dispatch, id]);
-  
+
+  useEffect(() => {
+    dispatch(getEntollments());
+  }, [dispatch]);
   return (
     <>
       <StudentNav />
@@ -29,6 +34,7 @@ export default function CourseDetailPage() {
         </div>
         <Ratings />
       </div>
+      <Footer />
     </>
   );
 }

@@ -123,7 +123,6 @@ export default function StudentNav() {
                   Tutors
                 </Navbar.Link>
               </Link>
-              <Navbar.Link href="#">About</Navbar.Link>
             </Navbar.Collapse>
           </Navbar>
         </Flowbite>

@@ -2,6 +2,8 @@ import Rating from "@mui/material/Rating";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { ICouresUser } from "../../types/courseType";
 import { useNavigate } from "react-router-dom";
+import VerifiedIcon from "@mui/icons-material/Verified";
+import { Tooltip } from "flowbite-react";
 
 const darkTheme = createTheme({
   palette: {
@@ -11,11 +13,7 @@ const darkTheme = createTheme({
 
 interface prop extends ICouresUser {}
 
-export default function CoruseCardUser({
-  course,
-  averageRating,
-  _id,
-}: prop) {
+export default function CoruseCardUser({ course, averageRating, _id }: prop) {
   const navigate = useNavigate();
   return (
     <>
@@ -28,9 +26,14 @@ export default function CoruseCardUser({
           />
           <div className="leading-none mx-3 h-40">
             <h1 className="font-bold text-white text-2xl">{course.title}</h1>
-            <div className="flex mt-2 justify-between w-full">
+            <div className="flex mt-2 items-center justify-between w-full">
               <span className="text-green-500 font-bold"> ₹{course.price}</span>
               <small className="text-gray-300"> {course.language}</small>
+              <Tooltip content="Already Enrolled">
+                <span className="text-green-600">
+                  <VerifiedIcon />
+                </span>
+              </Tooltip>
             </div>
             <small className="text-white leading-non">
               <ThemeProvider theme={darkTheme}>

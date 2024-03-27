@@ -8,6 +8,8 @@ import api from "../../API/api";
 import { Iorder, Iuser } from "../../types/razorpayTypes";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
+import VerifiedIcon from "@mui/icons-material/Verified";
+import { Tooltip } from "flowbite-react";
 
 const darkTheme = createTheme({
   palette: {
@@ -205,14 +207,21 @@ export default function CoureseBanner() {
                     </>
                   ) : (
                     <>
-                      <button
-                        onClick={() =>
-                          navigate(`/student/my-course/${course._id}`)
-                        }
-                        className="font-bold text-md hover:bg-[#9263b8] bg-primary rounded-md w-28 h-10"
-                      >
-                        watch now
-                      </button>
+                      <div className="flex items-center">
+                        <button
+                          onClick={() =>
+                            navigate(`/student/my-course/${course._id}`)
+                          }
+                          className="font-bold text-md hover:bg-[#9263b8] bg-primary rounded-md w-28 h-10"
+                        >
+                          watch now
+                        </button>
+                        <Tooltip content="Alredy Enrolled">
+                          <span className="text-green-500 ms-5">
+                            <VerifiedIcon fontSize="large"/>
+                          </span>
+                        </Tooltip>
+                      </div>
                     </>
                   )}
                 </>

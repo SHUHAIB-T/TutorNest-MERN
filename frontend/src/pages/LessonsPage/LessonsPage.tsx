@@ -8,6 +8,7 @@ import { ILesson } from "../../types/courseType";
 import api from "../../API/api";
 import EditLessonModal from "../../components/Modal/LessonModal/EditLessonModal";
 import CreateAssessment from "../../components/Modal/AssessmentModal/CreateAssessment";
+import Footer from "../../components/Footer/Footer";
 
 export default function LessonsPage() {
   const { id } = useParams();
@@ -62,7 +63,7 @@ export default function LessonsPage() {
         courseId={id as string}
       />
       <NavBar role="TUTOR" />
-      <div className="flex w-full flex-col pb-96 items-center bg-secondary">
+      <div className="flex w-full flex-col pb-28 items-center bg-secondary">
         <h1 className="font-bold text-5xl text-white mt-10">Lessons</h1>
         <div className="w-[80%] mt-3 flex justify-between">
           <div className="flex items-center">
@@ -93,6 +94,7 @@ export default function LessonsPage() {
           />
         </div>
       </div>
+      <Footer />
     </>
   );
 }

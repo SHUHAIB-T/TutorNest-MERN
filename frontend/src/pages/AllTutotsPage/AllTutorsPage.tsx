@@ -6,6 +6,7 @@ import { useAppSelector } from "../../app/store";
 import CouresCardSkeleton from "../../components/Skelitons/CouresCardSkeleton";
 import { Pagination } from "flowbite-react";
 import TutorDetailCard from "../../components/TutorDetailCard/TutorDetailCard";
+import Footer from "../../components/Footer/Footer";
 
 export default function AllTutorsPage() {
   const { isLoading, tutors, count } = useAppSelector((state) => state.tutors);
@@ -81,6 +82,7 @@ export default function AllTutorsPage() {
           )}
         </div>
       </div>
+      <Footer />
     </>
   );
 }

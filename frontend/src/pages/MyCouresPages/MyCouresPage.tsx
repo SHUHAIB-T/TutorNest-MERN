@@ -6,6 +6,7 @@ import { getEntollments } from "../../features/enrollments/enrollmentServiece";
 import MyCouresCard from "../../components/MycourseCard/MyCouresCard";
 import CouresCardSkeleton from "../../components/Skelitons/CouresCardSkeleton";
 import { useNavigate } from "react-router-dom";
+import Footer from "../../components/Footer/Footer";
 
 export default function MyCouresPage() {
   const dispatch = useAppDispatch();
@@ -69,6 +70,7 @@ export default function MyCouresPage() {
           </div>
         </div>
       </div>
+      <Footer />
     </>
   );
 }
