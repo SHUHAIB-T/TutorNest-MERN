@@ -7,6 +7,7 @@ import CouresCardSkeleton from "../../components/Skelitons/CouresCardSkeleton";
 import { Pagination } from "flowbite-react";
 import { ISearch } from "../../types/courseType";
 import { useSearchParams } from "react-router-dom";
+import Footer from "../../components/Footer/Footer";
 
 export default function CoursesPage() {
   const [searchParams] = useSearchParams();
@@ -79,6 +80,7 @@ export default function CoursesPage() {
           )}
         </div>
       </div>
+      <Footer />
     </>
   );
 }

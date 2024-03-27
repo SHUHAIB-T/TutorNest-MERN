@@ -6,6 +6,7 @@ import { IPosts } from "../../types/PostsTypes";
 import api from "../../API/api";
 import { useAppDispatch } from "../../app/store";
 import { getStudentProfile } from "../../features/users/userServieces";
+import Footer from "../../components/Footer/Footer";
 
 export default function TutorHomePage() {
   const [posts, setPosts] = useState<IPosts[]>([]);
@@ -85,6 +86,7 @@ export default function TutorHomePage() {
           );
         })}
       </div>
+      <Footer />
     </>
   );
 }

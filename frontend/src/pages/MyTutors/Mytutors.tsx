@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { IMyTutor } from "../../types/studentTypes";
 import RateTutor from "../../components/Modal/RateTutor";
 import { Irating } from "../../types/ratingTypes";
+import Footer from "../../components/Footer/Footer";
 
 export default function Mytutors() {
   const [myteachers, setMyTeachers] = useState<IMyTutor[]>([]);
@@ -83,6 +84,7 @@ export default function Mytutors() {
             })}
         </div>
       </div>
+      <Footer />
     </>
   );
 }

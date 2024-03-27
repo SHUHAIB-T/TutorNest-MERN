@@ -71,6 +71,18 @@ export const validate = (name: string, value: unknown): string => {
       if (!value || value === "") return "* required!";
       if ((value as string).length > 70) return "limit exeeded";
       return "";
+    case "mark":
+      if (!value || value === "") return "* required!";
+      if (parseInt(value as string, 10) <= 0) return "Enter a valid score";
+      return "";
+    case "percentage":
+      if (!value) return "* required!";
+      if (
+        parseInt(value as string, 10) < 0 ||
+        parseInt(value as string, 10) > 100
+      )
+        return "Enter a valid persentage";
+      return "";
   }
   return "";
 };

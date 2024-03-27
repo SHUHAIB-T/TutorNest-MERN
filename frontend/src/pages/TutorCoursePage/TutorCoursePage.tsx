@@ -7,12 +7,14 @@ import EditCourseModal from "../../components/Modal/CreateCorseModal/EditCourseM
 import { useEffect, useState } from "react";
 import { ICourse } from "../../types/courseType";
 import api from "../../API/api";
+import Footer from "../../components/Footer/Footer";
 
 export default function TutorCoursePage() {
   const [openModal, setOpenModal] = useState(false);
   const [editOpenModal, setEditOpenModal] = useState<boolean>(false);
   const [updatd, setUpdated] = useState<boolean>(false);
   const [courses, setCourses] = useState<ICourse[]>([]);
+
   const [editCourseId, setEditCourseId] = useState<string>("");
   const [initialState, setInitialState] = useState<ICourse>({
     coverIMG: "",
@@ -57,9 +59,14 @@ export default function TutorCoursePage() {
         setUpdated={setUpdated}
         setInitialState={setInitialState}
       />
-      <CreateCourseModal openModal={openModal} setUpdated={setUpdated} setOpenModal={setOpenModal} />
+      <CreateCourseModal
+        openModal={openModal}
+        setUpdated={setUpdated}
+        setOpenModal={setOpenModal}
+      />
+
       <NavBar role="TUTOR" />
-      <div className="flex w-full flex-col pb-96 items-center bg-secondary">
+      <div className="flex w-full flex-col pb-28 items-center bg-secondary">
         <h1 className="font-bold text-5xl text-white mt-10">My Courses</h1>
         <div className="w-[80%] mt-3 flex justify-between">
           <div className="flex items-center">
@@ -89,6 +96,7 @@ export default function TutorCoursePage() {
           ))}
         </div>
       </div>
+      <Footer />
     </>
   );
 }

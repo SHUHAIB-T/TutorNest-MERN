@@ -26,7 +26,7 @@ export default function ShowVideo({
       >
         <Modal.Header />
         <Modal.Body>
-          <video controls >
+          <video controls  controlsList="nodownload" autoPlay >
             <source type="" src={url} />
           </video>
         </Modal.Body>

@@ -15,6 +15,7 @@ import LinearProgress, {
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import RateCouresModal from "../../components/Modal/RateCouresModal";
 import { Irating } from "../../types/ratingTypes";
+import { formatDuration } from "../../utils";
 
 const darkTheme = createTheme({
   palette: {
@@ -55,13 +56,17 @@ export default function WatchCourse() {
 
   useEffect(() => {
     setCurrentCoures(enrollments.find((e) => e.courseId === id));
+  }, [id, enrollments]);
+
+  useEffect(() => {
     if (currentCoures && currentCoures?.course.lessons.length > 0) {
       setCurrentVideo({
         id: currentCoures?.course.lessons[0]._id as string,
         video: currentCoures?.course.lessons[0].video as string,
       });
     }
-  }, [enrollments, id, currentCoures]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentCoures]);
 
   useEffect(() => {
     dispatch(getEntollments());
@@ -177,12 +182,14 @@ export default function WatchCourse() {
                         currentVideo.id === e._id ? "bg-my-input" : ""
                       } flex items-center px-4 py-5 gap-3`}
                     >
-                      <div>
+                      <div className="flex flex-col items-center justify-center">
                         <OndemandVideoIcon
                           className="text-gray-400"
                           fontSize={"large"}
                         />
-                        <h1></h1>
+                        <h1 className="text-gray-400">
+                          {formatDuration(e.duration as unknown as number)}
+                        </h1>
                       </div>
                       <div className="leading-tight">
                         <h1 className="text-gray-200 font-bold">{e.title}</h1>

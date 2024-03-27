@@ -9,6 +9,7 @@ import StudentSideBar from "../../components/StudentSideBar/StudentSideBar";
 import Loader from "../../components/Loader/Loader1/Loader";
 import StudentProfile from "../../components/StudentProfile/StudentProfile";
 import { useState } from "react";
+import Footer from "../../components/Footer/Footer";
 
 export default function ProfilePage() {
   const [submit, setSubmit] = useState(false);
@@ -50,6 +51,7 @@ export default function ProfilePage() {
           )}
         </div>
       </div>
+      <Footer />
     </>
   );
 }

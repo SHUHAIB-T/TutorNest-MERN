@@ -9,13 +9,13 @@ import Assessment from "../model/assismentModel";
  */
 export const createAssessment: RequestHandler = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
-    const { courseId, minimuMark, questions } = req.body;
+    const { courseId, minimumMark, questions } = req.body;
     const creatAssessment = await Assessment.findOneAndUpdate(
       {
         courseId: courseId,
       },
       {
-        minimuMark: parseInt(minimuMark, 10),
+        minimumMark: parseInt(minimumMark, 10),
         questions: questions,
       },
       {

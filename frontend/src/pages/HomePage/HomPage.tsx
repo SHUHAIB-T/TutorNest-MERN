@@ -9,6 +9,7 @@ import CouresCardSkeleton from "../../components/Skelitons/CouresCardSkeleton";
 import CoruseCardUser from "../../components/CouresCardUser/CoruseCardUser";
 import Skeleton from "@mui/material/Skeleton";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
+import Footer from "../../components/Footer/Footer";
 
 const darkTheme = createTheme({
   palette: {
@@ -110,6 +111,7 @@ export default function HomPage() {
           )}
         </div>
       </div>
+      <Footer />
     </>
   );
 }

@@ -9,6 +9,7 @@ import CreatePostModal from "../../components/Modal/PostModal/CreatePostModal";
 import EditPostModal from "../../components/Modal/PostModal/EditPostModal";
 import { reset } from "../../features/studentPosts/StudentPostsSlice";
 import { post } from "../../types/PostsTypes";
+import Footer from "../../components/Footer/Footer";
 
 export default function StudentPosts() {
   const { isLoading, posts, isUpdated } = useAppSelector(
@@ -104,6 +105,7 @@ export default function StudentPosts() {
           </div>
         </div>
       </div>
+      <Footer />
     </>
   );
 }
