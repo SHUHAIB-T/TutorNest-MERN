@@ -7,6 +7,7 @@ type Tquestion = {
   optionC: string;
   optionD: string;
   answer: string;
+  id: number;
   mark: number;
 };
 
