@@ -73,6 +73,7 @@ function App() {
       dispatch(setOnlineUsers(data));
     });
 
+
     return () => {
       socket.current?.disconnect();
     };
