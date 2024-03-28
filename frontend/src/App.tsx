@@ -62,17 +62,15 @@ function App() {
   const socket = useRef<Socket | null>(null);
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.auth);
+  const URL = "https://tutornest.online";
   useEffect(() => {
-    socket.current = io(
-      import.meta.env.VITE_ENV === "development"
-        ? "http://localhost:5000"
-        : import.meta.env.VITE_PRODUCTION_URL
-    );
+    socket.current = io(URL, {
+      transports: ["websocket"],
+    });
     socket.current.emit("setUser", user?._id);
     socket.current.on("getUsers", (data) => {
       dispatch(setOnlineUsers(data));
     });
-
 
     return () => {
       socket.current?.disconnect();
