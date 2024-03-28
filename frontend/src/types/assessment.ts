@@ -16,3 +16,7 @@ export interface IAssessment {
   minimumMark: number | null;
   questions: IQuesion[];
 }
+export interface SelectedAnswer {
+  id: number;
+  answer: string;
+}

@@ -47,7 +47,6 @@ export const getAssessment: RequestHandler = asyncHandler(
     const courseId = req.params.id;
     const assessment = await Assessment.findOne(
       { courseId: courseId },
-      { "questions.answer": 0 }
     );
     if (assessment) {
       res.status(200).json({
