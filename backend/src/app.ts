@@ -18,8 +18,8 @@ const corsConfig = {
       : env.FRONTENT_URL_DEPLOYED,
   credentials: true,
 };
-env.ENVIRONMENT === "development" && app.use(morgan("dev"));
 
+app.use(morgan("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
