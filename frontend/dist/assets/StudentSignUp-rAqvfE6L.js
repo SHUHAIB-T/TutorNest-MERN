@@ -1,0 +1,1 @@
+import{j as r}from"./index-2-yNbS5w.js";import{S as t}from"./Signup-Zya5ZLJR.js";import"./GoogleAuth-VnXN7B8a.js";function i(){return r.jsx(r.Fragment,{children:r.jsx(t,{role:"STUDENT"})})}export{i as default};
