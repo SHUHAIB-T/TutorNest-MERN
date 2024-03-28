@@ -7,4 +7,7 @@ export const env = cleanEnv(process.env, {
   JWT_SECRET: str(),
   RAZ_KEY_ID: str(),
   RAZ_SECRET_KEY: str(),
+  ENVIRONMENT: str(),
+  FRONTENT_URL: str(),
+  FRONTENT_URL_DEPLOYED: str(),
 });
