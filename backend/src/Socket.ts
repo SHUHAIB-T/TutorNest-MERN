@@ -2,15 +2,14 @@ import { Server } from "socket.io";
 import { Server as HTTPServer } from "http";
 import { getUsers, userJoin, userLeft, users } from "./utils/user";
 import { IMessage } from "./utils/interfaces";
-import { env } from "./utils/envvalid";
+
+const ORIGIN = "https://tutornest.online"
 
 export const setUpSocket = (server: HTTPServer) => {
   const io = new Server(server, {
     cors: {
-      origin:
-        env.ENVIRONMENT === "development"
-          ? env.FRONTENT_URL
-          : env.FRONTENT_URL_DEPLOYED,
+      origin: ORIGIN,
+      credentials: true,
     },
   });
   io.on("connection", (socket) => {
