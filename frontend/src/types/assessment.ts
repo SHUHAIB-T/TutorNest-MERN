@@ -20,3 +20,11 @@ export interface SelectedAnswer {
   id: number;
   answer: string;
 }
+
+export interface IResponse {
+  success: boolean;
+  obtainedScore: number;
+  totalScore: number;
+  percentage: number;
+  minimumMark: number;
+}

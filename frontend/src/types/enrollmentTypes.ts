@@ -8,8 +8,8 @@ export interface IEnrollments {
   course: myCourse;
 }
 
-interface myCourse extends ICourse {
-  lessons: ILesson[];
+export interface myCourse extends ICourse {
+  lessons?: ILesson[];
 }
 
 export interface IinitialState {

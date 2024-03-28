@@ -1,22 +1,36 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import StudentNav from "../../components/NavBar/StudentNav";
 import { useEffect, useState } from "react";
-import { IAssessment, SelectedAnswer } from "../../types/assessment";
+import { IAssessment, IResponse, SelectedAnswer } from "../../types/assessment";
 import api from "../../API/api";
 import Loader from "../../components/Loader/Loader2/Loader";
 import Loader3 from "../../components/Loader/Loader3/Loader3";
 import Swal from "sweetalert2";
+import { useAppSelector } from "../../app/store";
+import AssessmentSucceess from "../../components/Modal/AssessmentSucceess";
 
 export default function AssessmentPage() {
   const { id } = useParams();
   const [loading, setLoading] = useState<boolean>(false);
   const [loading2, setLoading2] = useState<boolean>(false);
   const [submit, setSubmit] = useState<boolean>(false);
+  const [openModal, setOpenModal] = useState<boolean>(false);
+  const [assessmentStatus, setAssessmentStatus] = useState<IResponse | null>(
+    null
+  );
+  const { enrollments } = useAppSelector((state) => state.enrollments);
+  const navigate = useNavigate();
 
   const [assessment, setAssessment] = useState<IAssessment>({
     minimumMark: null,
     questions: [],
   });
+
+  useEffect(() => {
+    if (!enrollments.find((course) => course.courseId === id)) {
+      navigate("/student");
+    }
+  }, [id, navigate, enrollments]);
 
   useEffect(() => {
     (async function () {
@@ -76,17 +90,15 @@ export default function AssessmentPage() {
             studentAnswers: selectedAnswers,
           });
           if (data.success) {
+            setAssessmentStatus(data);
+            setSubmit(false);
+            setOpenModal(true);
             setLoading2(false);
-            Swal.fire({
-              icon: "success",
-              title: "you won the test",
-            }).then(() => setSubmit(false));
           } else {
+            setAssessmentStatus(data);
+            setSubmit(false);
             setLoading2(false);
-            Swal.fire({
-              icon: "error",
-              title: "you lost",
-            }).then(() => setSubmit(false));
+            setOpenModal(true);
           }
         } catch (err) {
           console.log(err);
@@ -98,6 +110,12 @@ export default function AssessmentPage() {
 
   return (
     <>
+      <AssessmentSucceess
+        id={id}
+        AssessmentStatus={assessmentStatus}
+        openModal={openModal}
+        setOpenModal={setOpenModal}
+      />
       <StudentNav />
       <div className="bg-my-bg-dark md:px-40 pb-10 px-5 min-h-screen text-gray-200">
         {loading && (
