@@ -35,31 +35,35 @@ export default function TutorHomePage() {
   return (
     <>
       <NavBar role="TUTOR" />
-      <div className="flex justify-center relative w-full bg-secondary py-20"></div>
+      <div className="flex justify-center relative w-full bg-secondary py-5"></div>
       <div className="w-full pb-12 gap-3 flex justify-center flex-wrap bg-secondary">
-        <div className="card w-72 py-10 grid items-center justify-center relative rounded-md h-fit bg-[#372450]">
-          <h1 className="font-bold text-4xl text-white">My Profile</h1>
-          <Link to={"/tutor/profile"}>
-            <h1 className="absolute top-3 right-5  text-[#9747FF]">View</h1>
-          </Link>
+        <div className="flex flex-col gap-3">
+          <div className="card w-72 py-10 grid items-center justify-center relative rounded-md h-fit bg-[#372450]">
+            <h1 className="font-bold text-4xl text-white">My Profile</h1>
+            <Link to={"/tutor/profile"}>
+              <h1 className="absolute top-3 right-5  text-[#9747FF]">View</h1>
+            </Link>
+          </div>
+          <div className="card w-72 py-10 grid items-center justify-center relative rounded-md h-fit bg-[#372450]">
+            <h1 className="font-bold text-4xl text-white">My Students</h1>
+            <Link to={"/tutor/my-students"}>
+              <h1 className="absolute top-3 right-5  text-[#9747FF]">View</h1>
+            </Link>
+          </div>
         </div>
-        <div className="card w-72 py-10 grid items-center justify-center relative rounded-md h-fit bg-[#372450]">
-          <h1 className="font-bold text-4xl text-white">My Students</h1>
-          <Link to={"/tutor/my-students"}>
-            <h1 className="absolute top-3 right-5  text-[#9747FF]">View</h1>
-          </Link>
-        </div>
-        <div className="card w-72 py-10 grid items-center justify-center relative rounded-md h-fit bg-[#372450]">
-          <h1 className="font-bold text-4xl text-white">My documents</h1>
-          <Link to={"/tutor/documents"}>
-            <h1 className="absolute top-3 right-5  text-[#9747FF]">View</h1>
-          </Link>
-        </div>
-        <div className="card w-72 py-10 grid items-center justify-center relative rounded-md h-fit bg-[#372450]">
-          <h1 className="font-bold text-4xl text-white">My Courses</h1>
-          <Link to={"/tutor/courses"}>
-            <h1 className="absolute top-3 right-5  text-[#9747FF]">View</h1>
-          </Link>
+        <div className="flex flex-col gap-3">
+          <div className="card w-72 py-10 grid items-center justify-center relative rounded-md h-fit bg-[#372450]">
+            <h1 className="font-bold text-4xl text-white">My documents</h1>
+            <Link to={"/tutor/documents"}>
+              <h1 className="absolute top-3 right-5  text-[#9747FF]">View</h1>
+            </Link>
+          </div>
+          <div className="card w-72 py-10 grid items-center justify-center relative rounded-md h-fit bg-[#372450]">
+            <h1 className="font-bold text-4xl text-white">My Courses</h1>
+            <Link to={"/tutor/courses"}>
+              <h1 className="absolute top-3 right-5  text-[#9747FF]">View</h1>
+            </Link>
+          </div>
         </div>
       </div>
       <div className="bg-[#302c35] flex flex-wrap justify-center md:justify-start gap-5 px-2 md:px-10  py-10">

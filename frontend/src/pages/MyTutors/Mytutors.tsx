@@ -65,7 +65,7 @@ export default function Mytutors() {
         setUpdated={setUpdated}
       />
       <StudentNav />
-      <div className="flex md:px-10 p-4 gap-10 bg-secondary md:pb-64 md:pt-10">
+      <div className="flex flex-wrap md:px-10 md:pt-10 md:pb-44  p-4 gap-10 bg-secondary">
         <StudentSideBar />
         <div className="flex flex-wrap gap-4">
           {myteachers.length > 0 &&

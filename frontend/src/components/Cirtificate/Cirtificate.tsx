@@ -16,7 +16,7 @@ export default function Cirtificate({ courseId }: prop) {
 
   return (
     <>
-      <div className="flex w-[1000px] ring-4   bg-gray-300 p-4 h-[500px] flex-col justify-end items-center">
+      <div className="flex w-[1000px] z-0 ring-4   bg-gray-300 p-4 h-[500px] flex-col justify-end items-center">
         <div className="w-full h-full font-medium border-2 border-my-ring rounded-lg">
           <div className="bg-my-input flex flex-col items-center justify-center rounded-lg w-full h-[250px]">
             <img src={Logo} className="w-fit" alt="" />

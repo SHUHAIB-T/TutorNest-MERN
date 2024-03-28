@@ -27,7 +27,7 @@ export default function CourseDetailPage() {
       <div className="flex bg-secondary flex-col w-full min-h-screen text-gray-200">
         <CoureseBanner />
         <div className="flex flex-col items-center space-y-3">
-          <div className="flex gap-10 px-10">
+          <div className="flex flex-wrap justify-center gap-10 px-10">
             <LessonsCard />
             <AuthorCard />
           </div>

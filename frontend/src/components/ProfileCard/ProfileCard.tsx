@@ -52,7 +52,7 @@ export default function ProfileCard() {
             src={
               profile?.profile
                 ? profile.profile
-                : "https://www.seekpng.com/png/detail/115-1150456_avatar-generic-avatar.png"
+                : "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png"
             }
             className="rounded-full m-0 w-40 ring-1 ring-[#9747FF] "
             alt=""

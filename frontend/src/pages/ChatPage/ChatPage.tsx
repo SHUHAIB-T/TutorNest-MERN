@@ -8,6 +8,7 @@ import { getAllChats } from "../../features/chat/chatServieces";
 import { getMyMessages } from "../../features/message/mesageServiece";
 import { IMessage, Ichat } from "../../types/chatandMessage";
 import { SocketContext } from "../../contexts/SocketContext";
+import Logo from "../../assets/Logo.svg";
 
 type Prop = {
   role: string;
@@ -45,13 +46,27 @@ export default function ChatPage({ role }: Prop) {
         {role === "TUTOR" && <NavBar role="TUTOR" />}
         {role === "STUDENT" && <StudentNav />}
         <div className="p-5 flex gap-6">
-          <SideBar chat={chat} setCurrentChat={setCurrentChat} />
-          <Chatwindow
-            messages={messages}
-            setMessages={setMessages}
-            currentChat={currentChat}
-            role={role}
-          />
+          <div className={`md:w-72 ${currentChat._id ? "hidden" : "block"} md:inline-block`}>
+            <SideBar chat={chat} setCurrentChat={setCurrentChat} />
+          </div>
+          <div className="w-full h-[80vh]">
+            {currentChat._id ? (
+              <Chatwindow
+                messages={messages}
+                setMessages={setMessages}
+                currentChat={currentChat}
+                setCurrentChat={setCurrentChat}
+                role={role}
+              />
+            ) : (
+              <div className="w-full hidden  h-full md:grid items-center justify-center">
+                <div className="text-white flex items-center flex-col">
+                  <img src={Logo} alt="" />
+                  <h1>send and recieve messages...</h1>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </>

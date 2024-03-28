@@ -99,21 +99,20 @@ export default function ChatCard({ chat, user }: prop) {
               !chat.latest_message.isDelete && (
                 <>
                   <span className="text-gray-400">
-                    {chat.latest_message.userDetails?.name}:
-                  </span>
-                  <span className="text-gray-400">
                     {chat.latest_message.content_type === "TEXT" ? (
                       <>
-                        <span>
-                          {chat.latest_message.content?.slice(0, 20)}
-                          {chat.latest_message.content &&
-                            chat.latest_message.content?.length > 20 && (
-                              <span>...</span>
-                            )}
-                        </span>
-                        <span>
-                          {format(chat.latest_message.createdAt as string)}
-                        </span>
+                        <div className="text-gray-400 flex w-full justify-between">
+                          <span>
+                            {chat.latest_message.content?.slice(0, 20)}
+                            {chat.latest_message.content &&
+                              chat.latest_message.content?.length > 20 && (
+                                <span>...</span>
+                              )}
+                          </span>
+                          <span>
+                            {format(chat.latest_message.createdAt as string)}
+                          </span>
+                        </div>
                       </>
                     ) : (
                       <span>image</span>

@@ -51,8 +51,7 @@ export default function StudentNav() {
                     />
                   ) : (
                     <img
-                      alt="User settings"
-                      src="https://www.seekpng.com/png/detail/115-1150456_avatar-generic-avatar.png"
+                      src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png"
                       className="w-10 rounded-full border-2 border-violet-700"
                     />
                   )

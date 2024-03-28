@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../app/store";
 import StudentNav from "../../components/NavBar/StudentNav";
 import { useNavigate, useParams } from "react-router-dom";
@@ -16,6 +16,7 @@ import { ThemeProvider, createTheme } from "@mui/material/styles";
 import RateCouresModal from "../../components/Modal/RateCouresModal";
 import { Irating } from "../../types/ratingTypes";
 import { formatDuration } from "../../utils";
+import { ILesson } from "../../types/courseType";
 
 const darkTheme = createTheme({
   palette: {
@@ -50,6 +51,7 @@ export default function WatchCourse() {
     video: "",
   });
   const [openModal, setOpenModal] = useState<boolean>(false);
+  const [isMobile, setIsMobile] = useState<boolean>(true);
   const [ratings, setRatings] = useState<Irating[]>([]);
   const [currentRating, setCurrentRating] = useState<Irating>();
   const [rateCouresId, setRateCourseId] = useState<string>("");
@@ -57,9 +59,32 @@ export default function WatchCourse() {
   useEffect(() => {
     setCurrentCoures(enrollments.find((e) => e.courseId === id));
   }, [id, enrollments]);
+  const containerRef = useRef(null);
+  useEffect(() => {
+    const container = containerRef.current;
+    if (container) {
+      const handleInitialMobileCheck = () => {
+        const width = window.innerWidth;
+        setIsMobile(width <= 768);
+      };
+      handleInitialMobileCheck();
+      const handleResize = () => {
+        const width = window.innerWidth;
+        setIsMobile(width <= 768); 
+      };
+
+      window.addEventListener("resize", handleResize);
+
+      return () => window.removeEventListener("resize", handleResize);
+    }
+  }, [containerRef]);
 
   useEffect(() => {
-    if (currentCoures && currentCoures?.course.lessons.length > 0) {
+    if (
+      currentCoures &&
+      currentCoures?.course.lessons &&
+      currentCoures?.course.lessons.length > 0
+    ) {
       setCurrentVideo({
         id: currentCoures?.course.lessons[0]._id as string,
         video: currentCoures?.course.lessons[0].video as string,
@@ -118,7 +143,7 @@ export default function WatchCourse() {
         setRateCouresId={setRateCourseId}
       />
       <ThemeProvider theme={darkTheme}>
-        <div className="bg-my-bg-dark min-h-screen">
+        <div ref={containerRef} className="bg-my-bg-dark min-h-screen">
           <StudentNav />
           <BorderLinearProgress
             variant="determinate"
@@ -126,7 +151,7 @@ export default function WatchCourse() {
               currentCoures?.completed
                 ? Math.floor(
                     (currentCoures.completed?.length /
-                      currentCoures.course.lessons.length) *
+                      (currentCoures.course.lessons as ILesson[]).length) *
                       100
                   )
                 : 0
@@ -141,10 +166,11 @@ export default function WatchCourse() {
                 onEnded={() => {
                   updateProgress(currentVideo?.id as string);
                 }}
+                {...(isMobile ? { width: "90%", height: "200px" } : null)}
               />
               {currentCoures?.isComplete && (
                 <>
-                  <div className="flex gap-3">
+                  <div className="flex gap-3 my-2">
                     <button
                       onClick={() => {
                         setCurrentRating(
@@ -173,38 +199,43 @@ export default function WatchCourse() {
                 </>
               )}
             </div>
-            <div className="md:w-5/12 w-full px-10 h-screen flex flex-col items-center">
-              <h1 className="font-bold text-4xl text-yellow-50">LESSONS</h1>
+            <div className="md:w-5/12 w-full md:px-10 px-3 h-screen flex flex-col items-center">
+              <h1 className="font-bold text-4xl my-3 text-yellow-50">
+                LESSONS
+              </h1>
               <div className="w-full bg-mycard-body overflow-y-scroll rounded-xl mt-2 h-96">
-                {currentCoures?.course.lessons.map((e) => (
-                  <>
-                    <div
-                      onClick={() => {
-                        setCurrentVideo({
-                          id: e._id as string,
-                          video: e.video as string,
-                        });
-                      }}
-                      className={`hover:bg-[#402757] cursor-pointer ${
-                        currentVideo.id === e._id ? "bg-my-input" : ""
-                      } flex items-center px-4 py-5 gap-3`}
-                    >
-                      <div className="flex flex-col items-center justify-center">
-                        <OndemandVideoIcon
-                          className="text-gray-400"
-                          fontSize={"large"}
-                        />
-                        <h1 className="text-gray-400">
-                          {formatDuration(e.duration as unknown as number)}
-                        </h1>
+                {currentCoures?.course.lessons &&
+                  currentCoures?.course.lessons.map((e) => (
+                    <>
+                      <div
+                        onClick={() => {
+                          setCurrentVideo({
+                            id: e._id as string,
+                            video: e.video as string,
+                          });
+                        }}
+                        className={`hover:bg-[#402757] cursor-pointer ${
+                          currentVideo.id === e._id ? "bg-my-input" : ""
+                        } flex items-center px-4 py-5 gap-3`}
+                      >
+                        <div className="flex flex-col items-center justify-center">
+                          <OndemandVideoIcon
+                            className="text-gray-400"
+                            fontSize={"large"}
+                          />
+                          <h1 className="text-gray-400">
+                            {formatDuration(e.duration as unknown as number)}
+                          </h1>
+                        </div>
+                        <div className="leading-tight">
+                          <h1 className="text-gray-200 font-bold">{e.title}</h1>
+                          <small className="text-gray-300">
+                            {e.description}
+                          </small>
+                        </div>
                       </div>
-                      <div className="leading-tight">
-                        <h1 className="text-gray-200 font-bold">{e.title}</h1>
-                        <small className="text-gray-300">{e.description}</small>
-                      </div>
-                    </div>
-                  </>
-                ))}
+                    </>
+                  ))}
               </div>
             </div>
           </div>
