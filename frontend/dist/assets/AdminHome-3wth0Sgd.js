@@ -1,1 +1,0 @@
-import{j as r}from"./index-2-yNbS5w.js";import{N as m}from"./NavBar-0ewIxy5D.js";import{A as o}from"./AdminSideBar-Ldar0oxO.js";import"./Cancel-UQqRj3Q1.js";import"./Paper-Mk-paF5O.js";function n(){return r.jsxs(r.Fragment,{children:[r.jsx(m,{role:"TUTOR"}),r.jsx("div",{className:"flex md:p-10 p-4 w-full h-[100vh] bg-secondary",children:r.jsx(o,{})})]})}export{n as default};
