@@ -148,6 +148,19 @@ export default function EditQuestionModal({
       setEditQueationId("");
     }
   };
+
+  const checkAnswer = (ans: string) => {
+    switch (ans) {
+      case formData.optionA:
+        return "optionA";
+      case formData.optionB:
+        return "optionB";
+      case formData.optionC:
+        return "optionC";
+      case formData.optionD:
+        return "optionD";
+    }
+  };
   return (
     <>
       <Modal
@@ -246,11 +259,21 @@ export default function EditQuestionModal({
                 onChange={onchange}
                 className="bg-my-input text-gray-200 rounded border-0 outline-0"
               >
-                <option value="">-Answer-</option>
-                <option value={formData.optionA}>Option A</option>
-                <option value={formData.optionB}>Option B</option>
-                <option value={formData.optionC}>Option C</option>
-                <option value={formData.optionD}>Option D</option>
+                <option value={formData.answer}>
+                  {checkAnswer(formData.answer)}
+                </option>
+                {checkAnswer(formData.answer) !== "optionA" && (
+                  <option value={formData.optionA}>Option A</option>
+                )}
+                {checkAnswer(formData.answer) !== "optionB" && (
+                  <option value={formData.optionB}>Option B</option>
+                )}
+                {checkAnswer(formData.answer) !== "optionC" && (
+                  <option value={formData.optionC}>Option C</option>
+                )}
+                {checkAnswer(formData.answer) !== "optionD" && (
+                  <option value={formData.optionD}>Option D</option>
+                )}
               </select>
             </div>
             <div className="flex flex-col md:col-span-1 col-span-2 gap-2">

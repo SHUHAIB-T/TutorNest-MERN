@@ -74,7 +74,7 @@ export default function WatchCourse() {
 
   useEffect(() => {
     if (!enrollments.find((e) => e.courseId === id)) {
-      navigate("/courses");
+      navigate("/student");
     }
   }, [currentCoures, navigate, id, enrollments]);
   const [updated, setUpdated] = useState<boolean>(false);
@@ -159,7 +159,14 @@ export default function WatchCourse() {
                     >
                       Rate course
                     </button>
-                    <button className="bg-primary py-1 px-3 rounded-md text-gray-200">
+                    <button
+                      onClick={() =>
+                        navigate(
+                          `/student/assessment/${currentCoures.courseId}`
+                        )
+                      }
+                      className="bg-primary py-1 px-3 rounded-md text-gray-200"
+                    >
                       Assessment
                     </button>
                   </div>

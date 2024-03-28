@@ -14,6 +14,7 @@ import { useAppDispatch, useAppSelector } from "./app/store";
 import { setOnlineUsers } from "./features/Socket/SocketSlice";
 import MyCouresPage from "./pages/MyCouresPages/MyCouresPage";
 import WatchCourse from "./pages/WatchCourse/WatchCourse";
+import AssessmentPage from "./pages/AssessmentPage/AssessmentPage";
 
 const StudentSignUp = lazy(() => import("./pages/SignupPage/StudentSignUp"));
 const HomPage = lazy(() => import("./pages/HomePage/HomPage"));
@@ -97,6 +98,10 @@ function App() {
               <Route path="/student/my-tutors" element={<Mytutors />} />
               <Route path="/student/my-course" element={<MyCouresPage />} />
               <Route path="/student/my-course/:id" element={<WatchCourse />} />
+              <Route
+                path="/student/assessment/:id"
+                element={<AssessmentPage />}
+              />
               <Route
                 path="/student/chat"
                 element={<ChatPage role="STUDENT" />}
