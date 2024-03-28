@@ -3,13 +3,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.setUpSocket = void 0;
 const socket_io_1 = require("socket.io");
 const user_1 = require("./utils/user");
-const envvalid_1 = require("./utils/envvalid");
+const ORIGIN = "https://tutornest.online";
 const setUpSocket = (server) => {
     const io = new socket_io_1.Server(server, {
         cors: {
-            origin: envvalid_1.env.ENVIRONMENT === "development"
-                ? envvalid_1.env.FRONTENT_URL
-                : envvalid_1.env.FRONTENT_URL_DEPLOYED,
+            origin: ORIGIN,
+            credentials: true,
         },
     });
     io.on("connection", (socket) => {
