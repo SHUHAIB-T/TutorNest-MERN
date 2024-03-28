@@ -1,10 +1,10 @@
 import axios from "axios";
 import Cookies from "js-cookie";
 
-const baseURL =
-  import.meta.env.VITE_ENV === "development"
-    ? import.meta.env.VITE_BASE_URL
-    : import.meta.env.VITE_PRODUCTION_URL;
+const baseURL = "https://tutornest.online/api";
+// import.meta.env.VITE_ENV === "development"
+//   ? import.meta.env.VITE_BASE_URL
+//   : import.meta.env.VITE_PRODUCTION_URL;
 
 const data = JSON.parse(localStorage.getItem("user") as string);
 const user = data as { id: string; email: string; role: string };
