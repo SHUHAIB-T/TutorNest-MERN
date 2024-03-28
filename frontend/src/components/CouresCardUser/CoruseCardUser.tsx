@@ -41,7 +41,7 @@ export default function CoruseCardUser({ course, averageRating, _id }: prop) {
             </small>
             <div className="h-16">
               <small className="text-gray-300">
-                {course.description.slice(0, 60)}...
+                {(course.description as string).slice(0, 60)}...
               </small>
             </div>
           </div>
