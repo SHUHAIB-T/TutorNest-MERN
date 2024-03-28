@@ -300,7 +300,7 @@ export default function EditQuestionModal({
               onClick={handleSubmit}
               className="py-2 rounded-lg bg-primary mt-3 col-span-2 text-gray-200"
             >
-              Add Question
+              Update Question
             </button>
           </form>
         </Modal.Body>

@@ -14,12 +14,13 @@ declare module "express" {
 export const protect = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     const token = req.cookies.token;
+    const role = req.headers.authorization?.split(" ")[1];
     if (token) {
       try {
         const decoded = jwt.verify(token, env.JWT_SECRET) as JwtPayload;
         const userId = new mongoose.Types.ObjectId(decoded.userId);
         const user = await User.findOne({ _id: userId });
-        if (!user) {
+        if (!user || user.role !== role) {
           res.status(401);
           next(Error("Unauthorized user"));
         } else if (!user.status) {

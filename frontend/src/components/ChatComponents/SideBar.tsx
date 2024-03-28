@@ -12,7 +12,7 @@ export default function SideBar({ chat, setCurrentChat }: prop) {
 
   return (
     <>
-      <div className="flex relative flex-col items-center h-[80vh] overflow-hidden rounded-2xl bg-mycard-body w-72">
+      <div className="flex w-[90vw] relative flex-col items-center h-[80vh] overflow-hidden rounded-2xl bg-mycard-body md:w-72">
         <div className="w-full sticky top-0 p-3 bg-my-bg-dark">
           <div className="flex justify-between w-full text-white gap-3 sticky top-0">
             <h1 className="text-white mt-2 font-bold">CHATS</h1>

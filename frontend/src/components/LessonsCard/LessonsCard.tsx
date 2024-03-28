@@ -24,7 +24,7 @@ export default function LessonsCard() {
 
   return (
     <>
-      <div className="flex flex-col items-center space-y-1">
+      <div className="flex flex-col items-center md:max-w-2xl w-[90vw] space-y-1">
         <h1 className="text-4xl font-bold mt-5">Course Contents</h1>
         <ThemeProvider theme={darkTheme}>
           {course && course?.lessons.length === 0 ? (

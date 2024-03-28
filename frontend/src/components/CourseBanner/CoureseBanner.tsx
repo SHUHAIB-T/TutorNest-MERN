@@ -121,113 +121,111 @@ export default function CoureseBanner() {
   return (
     <>
       <ThemeProvider theme={darkTheme}>
-        <div className="bg-my-bg-dark w-full py-10 flex justify-center gap-40 flex-wrap items-center ">
-          <>
-            <div className="max-w-96">
-              {isLoading ? (
-                <>
-                  <Skeleton
-                    variant="text"
-                    width={400}
-                    sx={{ fontSize: "3rem" }}
+        <div className="bg-my-bg-dark w-full py-10 md:px-0 px-4 flex justify-center gap-4 md:gap-40 flex-wrap items-center ">
+          <div className="max-w-96">
+            {isLoading ? (
+              <>
+                <Skeleton
+                  variant="text"
+                  width={400}
+                  sx={{ fontSize: "3rem" }}
+                />
+                <Skeleton variant="text" sx={{ fontSize: "1rem" }} />
+                <Skeleton
+                  variant="text"
+                  width={200}
+                  sx={{ fontSize: "1rem" }}
+                />
+                <Skeleton
+                  variant="text"
+                  width={100}
+                  sx={{ fontSize: "4rem" }}
+                />
+              </>
+            ) : (
+              <>
+                <h1 className="font-bold text-start text-4xl">
+                  {course?.course?.title}
+                </h1>
+                <small>{course?.course?.description}</small> <br />
+                <Rating
+                  name="read-only"
+                  className="mt-3"
+                  value={course?.averageRating}
+                  size="small"
+                  readOnly
+                />
+                <h1 className="text-2xl font-bold text-green-500">
+                  ₹{course?.course?.price}
+                </h1>
+              </>
+            )}
+          </div>
+          <div className="max-w-96 space-y-5">
+            {isLoading ? (
+              <>
+                <Skeleton variant="rounded" width={350} height={100} />
+                <Skeleton
+                  variant="text"
+                  width={100}
+                  sx={{ fontSize: "4rem" }}
+                />
+              </>
+            ) : (
+              <>
+                {course?.course?.coverIMG ? (
+                  <img
+                    className="w-80 h-44 object-cover rounded-md"
+                    src={course?.course?.coverIMG}
+                    alt=""
                   />
-                  <Skeleton variant="text" sx={{ fontSize: "1rem" }} />
-                  <Skeleton
-                    variant="text"
-                    width={200}
-                    sx={{ fontSize: "1rem" }}
-                  />
-                  <Skeleton
-                    variant="text"
-                    width={100}
-                    sx={{ fontSize: "4rem" }}
-                  />
-                </>
-              ) : (
-                <>
-                  <h1 className="font-bold text-start text-4xl">
-                    {course?.course?.title}
-                  </h1>
-                  <small>{course?.course?.description}</small> <br />
-                  <Rating
-                    name="read-only"
-                    className="mt-3"
-                    value={course?.averageRating}
-                    size="small"
-                    readOnly
-                  />
-                  <h1 className="text-2xl font-bold text-green-500">
-                    ₹{course?.course?.price}
-                  </h1>
-                </>
-              )}
-            </div>
-            <div className="max-w-96 space-y-5">
-              {isLoading ? (
-                <>
-                  <Skeleton variant="rounded" width={350} height={100} />
-                  <Skeleton
-                    variant="text"
-                    width={100}
-                    sx={{ fontSize: "4rem" }}
-                  />
-                </>
-              ) : (
-                <>
-                  {course?.course?.coverIMG ? (
-                    <img
-                      className="w-80 h-44 object-cover rounded-md"
-                      src={course?.course?.coverIMG}
-                      alt=""
-                    />
-                  ) : (
-                    <>
-                      {" "}
-                      <Skeleton variant="rounded" width={350} height={100} />
-                    </>
-                  )}
-                  {!course?.isEnrolled ? (
-                    <>
-                      {loading ? (
-                        <>
-                          <div className="font-bold text-md flex items-center justify-center bg-primary rounded-md w-28 h-10">
-                            <Loader3 />
-                          </div>
-                        </>
-                      ) : (
-                        <>
-                          <button
-                            onClick={handleClick}
-                            className="font-bold text-md hover:bg-[#9263b8] bg-primary rounded-md w-28 h-10"
-                          >
-                            Enroll Now
-                          </button>
-                        </>
-                      )}
-                    </>
-                  ) : (
-                    <>
-                      <div className="flex items-center">
+                ) : (
+                  <>
+                    {" "}
+                    <Skeleton variant="rounded" width={350} height={100} />
+                  </>
+                )}
+                {!course?.isEnrolled ? (
+                  <>
+                    {loading ? (
+                      <>
+                        <div className="font-bold text-md flex items-center justify-center bg-primary rounded-md w-28 h-10">
+                          <Loader3 />
+                        </div>
+                      </>
+                    ) : (
+                      <>
                         <button
-                          onClick={() =>
-                            navigate(`/student/my-course/${course._id}`)
-                          }
+                          onClick={handleClick}
                           className="font-bold text-md hover:bg-[#9263b8] bg-primary rounded-md w-28 h-10"
                         >
-                          watch now
+                          Enroll Now
                         </button>
-                        <Tooltip content="Alredy Enrolled">
-                          <span className="text-green-500 ms-5">
-                            <VerifiedIcon fontSize="large"/>
-                          </span>
-                        </Tooltip>
-                      </div>
-                    </>
-                  )}
-                </>
-              )}
-            </div>
-          </>
+                      </>
+                    )}
+                  </>
+                ) : (
+                  <>
+                    <div className="flex items-center">
+                      <button
+                        onClick={() =>
+                          navigate(`/student/my-course/${course._id}`)
+                        }
+                        className="font-bold text-md hover:bg-[#9263b8] bg-primary rounded-md w-28 h-10"
+                      >
+                        watch now
+                      </button>
+                      <Tooltip content="Alredy Enrolled">
+                        <span className="text-green-500 ms-5">
+                          <VerifiedIcon fontSize="large" />
+                        </span>
+                      </Tooltip>
+                    </div>
+                  </>
+                )}
+              </>
+            )}
+          </div>
         </div>
       </ThemeProvider>
     </>

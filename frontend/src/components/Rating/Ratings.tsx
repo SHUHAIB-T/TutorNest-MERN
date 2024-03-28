@@ -15,18 +15,18 @@ export default function Ratings() {
       <div className="w-full flex py-4 flex-col items-center min-h-14 bg-my-bg-dark/[0.3] mt-6">
         <h1 className="font-bold text-xl">RATINGS</h1>
 
-        <div className="w-[80%] flex gap-10 py-10 justify-center overflow-x-auto">
+        <div className="md:w-[80%] w-[90%] flex gap-10 py-10 justify-center overflow-x-auto">
           {isLoading ? (
             <></>
           ) : (
             <>
               {course?.ratings.map((e) => (
-                <div className="bg-mycard-body p-5 rounded-md object-cover flex gap-3 shrink-0 w-96 h-fit">
+                <div className="bg-mycard-body md:p-5 rounded-md object-cover flex gap-3 shrink-0 w-96 h-fit">
                   <img
                     src={
                       e.student.profile
                         ? e.student.profile
-                        : "https://www.seekpng.com/png/detail/115-1150456_avatar-generic-avatar.png"
+                        : "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png"
                     }
                     alt=""
                     className="w-28 object-cover rounded-md"

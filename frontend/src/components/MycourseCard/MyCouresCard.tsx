@@ -3,7 +3,7 @@ import { ICourse, ILesson } from "../../types/courseType";
 import { Progress } from "flowbite-react";
 
 interface prop extends ICourse {
-  lessons: ILesson[];
+  lessons: ILesson[] | undefined;
   completed?: string[];
 }
 export default function MyCouresCard({
@@ -35,7 +35,9 @@ export default function MyCouresCard({
             <Progress
               progress={
                 completed
-                  ? Math.floor((completed?.length / lessons.length) * 100)
+                  ? Math.floor(
+                      (completed?.length / (lessons as ILesson[]).length) * 100
+                    )
                   : 0
               }
               progressLabelPosition="inside"
@@ -47,7 +49,7 @@ export default function MyCouresCard({
             />
             <div className="h-16">
               <small className="text-gray-300">
-                {description.slice(0, 60)}...
+                {(description as string).slice(0, 60)}...
               </small>
             </div>
           </div>

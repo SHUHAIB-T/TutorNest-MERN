@@ -1,0 +1,15 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const adminProfileController_1 = require("../controller/adminProfileController");
+const adminUserController_1 = require("../controller/adminUserController");
+const router = (0, express_1.Router)();
+router.get("/", adminProfileController_1.getAdminProfile);
+router.patch("/updateProfilePicture", adminProfileController_1.updateProfilePicture);
+router.get("/tutors", adminUserController_1.getAllTutors);
+router.get("/students", adminUserController_1.getAllstudnets);
+router.patch("/user-block/:id", adminUserController_1.blockUser);
+router.patch("/user-unblock/:id", adminUserController_1.unblockUser);
+router.route("/document/:id").get(adminUserController_1.getTutuorDocument).patch(adminUserController_1.toggleVerify);
+router.get('/tutor/:id', adminUserController_1.getSingleTutor);
+exports.default = router;

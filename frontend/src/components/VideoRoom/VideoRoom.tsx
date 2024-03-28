@@ -8,8 +8,8 @@ export default function VideoRoom() {
   const { profile } = useAppSelector((state) => state.userProfile);
   const { id } = useParams();
   const myMeeting = async (element: HTMLDivElement) => {
-    const appID = 462450910;
-    const serverSecret = "23ce8ba01ffe3c56eb0373568ecc0f22";
+    const appID = parseInt(import.meta.env.VITE_APP_ID, 10);
+    const serverSecret = import.meta.env.VITE_ROOM_SECRET;
     const kitToken = ZegoUIKitPrebuilt.generateKitTokenForTest(
       appID,
       serverSecret,

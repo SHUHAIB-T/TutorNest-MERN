@@ -5,6 +5,7 @@ import AttachFileIcon from "@mui/icons-material/AttachFile";
 import CloseIcon from "@mui/icons-material/Close";
 import DeleteIcon from "@mui/icons-material/Delete";
 import DuoIcon from "@mui/icons-material/Duo";
+import ArrowLeftIcon from "@mui/icons-material/ArrowLeft";
 import {
   useRef,
   useState,
@@ -24,7 +25,6 @@ import {
   deleteMessage,
 } from "../../features/message/mesageServiece";
 import api from "../../API/api";
-import Logo from "../../assets/Logo.svg";
 import { SocketContext } from "../../contexts/SocketContext";
 import { deleteImageFromFirebase, uploadImage } from "../util/uploadFirebase";
 import Swal from "sweetalert2";
@@ -40,12 +40,14 @@ type Prop = {
   currentChat: Ichat;
   messages: IMessage[];
   setMessages: Dispatch<SetStateAction<IMessage[]>>;
+  setCurrentChat: Dispatch<SetStateAction<Ichat>>;
   role: string;
 };
 export default function Chatwindow({
   currentChat,
   messages,
   setMessages,
+  setCurrentChat,
   role,
 }: Prop) {
   const socket = useContext(SocketContext);
@@ -213,47 +215,90 @@ export default function Chatwindow({
 
   return (
     <>
-      <div className="flex relative flex-col flex-grow max-w-5xl bg-mycard-body shadow-xl rounded-lg overflow-hidden">
-        {currentChat._id ? (
-          <>
-            <div className="flex sticky top justify-between items-center w-full bg-my-bg-dark p-2">
-              <div className="flex gap-3 text-white">
-                <img
-                  className="w-10 rounded-full"
-                  src={
-                    userData?.profile
-                      ? userData.profile
-                      : "https://profilemagazine.com/wp-content/uploads/2020/04/Ajmere-Dale-Square-thumbnail.jpg"
-                  }
-                  alt=""
-                />
-                <h1 className="font-bold">{userData?.name}</h1>
-              </div>
-              <Link
-                to={
-                  role === "STUDENT"
-                    ? `/student/video-chat/${currentChat._id}`
-                    : `/tutor/video-chat/${currentChat._id}`
-                }
-                className="text-white"
+      <div className="flex relative flex-col h-[80vh] flex-grow w-full bg-mycard-body shadow-xl rounded-lg overflow-hidden">
+        <>
+          <div className="flex sticky top justify-between items-center w-full bg-my-bg-dark p-2">
+            <div className="flex gap-3 items-center text-white">
+              <span
+                onClick={() => setCurrentChat({ _id: "" })}
+                className="md:hidden hover:bg-mycard-body cursor-pointer w-10 h-10 flex items-center justify-center rounded-full"
               >
-                <DuoIcon fontSize="large" />
-              </Link>
+                <ArrowLeftIcon fontSize="large" />
+              </span>
+              <img
+                className="w-10 rounded-full"
+                src={
+                  userData?.profile
+                    ? userData.profile
+                    : "https://profilemagazine.com/wp-content/uploads/2020/04/Ajmere-Dale-Square-thumbnail.jpg"
+                }
+                alt=""
+              />
+              <h1 className="font-bold">{userData?.name}</h1>
             </div>
-            <div className="w-full items-center justify-center flex">
-              {isLoading && <Loader />}
-            </div>
-            <div
-              id="scrol-y"
-              onScroll={(e) => handleScrol(e)}
-              className="flex flex-col flex-grow h-0 p-4 overflow-auto"
+            <Link
+              to={
+                role === "STUDENT"
+                  ? `/student/video-chat/${currentChat._id}`
+                  : `/tutor/video-chat/${currentChat._id}`
+              }
+              className="text-white"
             >
-              {messages.length > 0 &&
-                messages.map((e) =>
-                  e.senderId !== user?._id ? (
-                    <div className="flex w-full mt-2 space-x-3 max-w-xs">
+              <DuoIcon fontSize="large" />
+            </Link>
+          </div>
+          <div className="w-full items-center justify-center flex">
+            {isLoading && <Loader />}
+          </div>
+          <div
+            id="scrol-y"
+            onScroll={(e) => handleScrol(e)}
+            className="flex flex-col flex-grow h-0 p-4 overflow-auto"
+          >
+            {messages.length > 0 &&
+              messages.map((e) =>
+                e.senderId !== user?._id ? (
+                  <div className="flex w-full mt-2 space-x-3 max-w-xs">
+                    <div>
+                      <div className="bg-my-ring text-gray-200 p-3 rounded-r-2xl rounded-bl-2xl">
+                        {e.content_type === "TEXT" && !e.isDelete && (
+                          <p className="text-sm">{e.content}</p>
+                        )}
+                        {e.content_type === "MEDIA" && !e.isDelete && (
+                          <img className="max-w-50" src={e.content} alt="" />
+                        )}
+                        {e.isDelete && (
+                          <p className="italic text-gray-400">
+                            this message has been deleted
+                          </p>
+                        )}
+                      </div>
+                      <span className="text-xs text-gray-500 leading-none">
+                        {format(e.createdAt as string)}
+                      </span>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="flex w-full mt-2 message-box space-x-3 max-w-xs ml-auto justify-end">
+                    <div className="flex">
+                      {!e.isDelete && (
+                        <button
+                          onClick={() => {
+                            if (e.content_type && e.content && e._id) {
+                              handeletemessage(
+                                e.content_type,
+                                e.content,
+                                e._id
+                              );
+                            }
+                          }}
+                          className="text-my-ring delete-btn hover:text-white mb-5"
+                        >
+                          <DeleteIcon fontSize="small" />
+                        </button>
+                      )}
                       <div>
-                        <div className="bg-my-ring text-gray-200 p-3 rounded-r-2xl rounded-bl-2xl">
+                        <div className="bg-my-bg-dark text-white p-3 rounded-l-2xl rounded-br-2xl">
                           {e.content_type === "TEXT" && !e.isDelete && (
                             <p className="text-sm">{e.content}</p>
                           )}
@@ -266,160 +311,108 @@ export default function Chatwindow({
                             </p>
                           )}
                         </div>
+
                         <span className="text-xs text-gray-500 leading-none">
                           {format(e.createdAt as string)}
                         </span>
                       </div>
                     </div>
-                  ) : (
-                    <div className="flex w-full mt-2 message-box space-x-3 max-w-xs ml-auto justify-end">
-                      <div className="flex">
-                        {!e.isDelete && (
-                          <button
-                            onClick={() => {
-                              if (e.content_type && e.content && e._id) {
-                                handeletemessage(
-                                  e.content_type,
-                                  e.content,
-                                  e._id
-                                );
-                              }
-                            }}
-                            className="text-my-ring delete-btn hover:text-white mb-5"
-                          >
-                            <DeleteIcon fontSize="small" />
-                          </button>
-                        )}
-                        <div>
-                          <div className="bg-my-bg-dark text-white p-3 rounded-l-2xl rounded-br-2xl">
-                            {e.content_type === "TEXT" && !e.isDelete && (
-                              <p className="text-sm">{e.content}</p>
-                            )}
-                            {e.content_type === "MEDIA" && !e.isDelete && (
-                              <img
-                                className="max-w-50"
-                                src={e.content}
-                                alt=""
-                              />
-                            )}
-                            {e.isDelete && (
-                              <p className="italic text-gray-400">
-                                this message has been deleted
-                              </p>
-                            )}
-                          </div>
-
-                          <span className="text-xs text-gray-500 leading-none">
-                            {format(e.createdAt as string)}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  )
-                )}
-              <div ref={scroll} />
-            </div>
-            <div className="flex justify-end">
-              <EmojiPicker
-                theme={Theme.DARK}
-                height={300}
-                searchDisabled={true}
-                open={showEmoji}
-                lazyLoadEmojis={true}
-                className="bg-my-bg-dark"
-                onEmojiClick={(e) => {
-                  setMessage((prev) => prev + e.emoji);
-                }}
-              />
-            </div>
-            {showInput && (
-              <div className="bg-primary">
-                <input
-                  onChange={(e) =>
-                    e.target.files &&
-                    (async function () {
-                      if (e.target.files) {
-                        setUplaodedIMG(await uploadImage(e.target.files[0]));
-                        setShowInput(false);
-                      }
-                    })()
-                  }
-                  type="file"
-                />
-              </div>
-            )}
-            {uploadedIMG && (
-              <div className="max-w-96 p-3 bg-secondary rounded-md">
-                <span className="flex text-white justify-end p-2">
-                  <div
-                    onClick={() => {
-                      (async function () {
-                        await deleteImageFromFirebase(uploadedIMG);
-                        setUplaodedIMG("");
-                      })();
-                    }}
-                    className="hover:bg-primary cursor-pointer rounded-md"
-                  >
-                    <CloseIcon />
                   </div>
-                </span>
-                <img className="" src={uploadedIMG} alt="" />
-                <span className="flex w-full justify-end items-center p-2">
-                  <p className="text-gray-400 me-3">Send image</p>
-                  <div
-                    onClick={() => {
-                      setBodyData({
-                        ...bodyData,
-                        content_type: "MEDIA",
-                        content: uploadedIMG,
-                      });
-                      setUplaodedIMG("");
-                    }}
-                    className="hover:bg-my-bg-dark cursor-pointer py-1 px-2 rounded-lg"
-                  >
-                    <SendIcon className="text-my-ring cursor-pointer" />
-                  </div>
-                </span>
-              </div>
-            )}
-            <div className="bg-my-bg-dark p-4 flex gap-3 items-center">
-              <div
-                onClick={() => setShowInput((prev) => !prev)}
-                className="w-10 h-10 items-center cursor-pointer justify-center flex rounded-full hover:bg-secondary"
-              >
-                <AttachFileIcon className="text-my-ring" />
-              </div>
+                )
+              )}
+            <div ref={scroll} />
+          </div>
+          <div className="flex justify-end">
+            <EmojiPicker
+              theme={Theme.DARK}
+              height={300}
+              searchDisabled={true}
+              open={showEmoji}
+              lazyLoadEmojis={true}
+              className="bg-my-bg-dark"
+              onEmojiClick={(e) => {
+                setMessage((prev) => prev + e.emoji);
+              }}
+            />
+          </div>
+          {showInput && (
+            <div className="bg-primary">
               <input
-                className="flex items-center text-white ring-1 ring-my-ring border-0 bg-my-input h-10 w-full rounded px-3 text-sm"
-                type="text"
-                placeholder="Type your message…"
-                value={message}
-                disabled={uploadedIMG ? true : false}
-                onChange={(e) => {
-                  setMessage(e.target.value);
-                  setShowEmoji(false);
-                  setShowInput(false);
-                }}
-                onFocus={() => setShowEmoji(false)}
+                onChange={(e) =>
+                  e.target.files &&
+                  (async function () {
+                    if (e.target.files) {
+                      setUplaodedIMG(await uploadImage(e.target.files[0]));
+                      setShowInput(false);
+                    }
+                  })()
+                }
+                type="file"
               />
-              <span onClick={() => setShowEmoji((s) => !s)}>
-                <EmojiEmotionsIcon className="text-my-ring cursor-pointer" />
+            </div>
+          )}
+          {uploadedIMG && (
+            <div className="max-w-96 p-3 bg-secondary rounded-md">
+              <span className="flex text-white justify-end p-2">
+                <div
+                  onClick={() => {
+                    (async function () {
+                      await deleteImageFromFirebase(uploadedIMG);
+                      setUplaodedIMG("");
+                    })();
+                  }}
+                  className="hover:bg-primary cursor-pointer rounded-md"
+                >
+                  <CloseIcon />
+                </div>
               </span>
-              <span onClick={handleSend}>
-                <SendIcon className="text-my-ring cursor-pointer" />
+              <img className="" src={uploadedIMG} alt="" />
+              <span className="flex w-full justify-end items-center p-2">
+                <p className="text-gray-400 me-3">Send image</p>
+                <div
+                  onClick={() => {
+                    setBodyData({
+                      ...bodyData,
+                      content_type: "MEDIA",
+                      content: uploadedIMG,
+                    });
+                    setUplaodedIMG("");
+                  }}
+                  className="hover:bg-my-bg-dark cursor-pointer py-1 px-2 rounded-lg"
+                >
+                  <SendIcon className="text-my-ring cursor-pointer" />
+                </div>
               </span>
             </div>
-          </>
-        ) : (
-          <>
-            <div className="w-full h-full grid items-center justify-center">
-              <div className="text-white flex items-center flex-col">
-                <img src={Logo} alt="" />
-                <h1>send and recieve messages...</h1>
-              </div>
+          )}
+          <div className="bg-my-bg-dark p-4 flex gap-3 items-center">
+            <div
+              onClick={() => setShowInput((prev) => !prev)}
+              className="w-10 h-10 items-center cursor-pointer justify-center flex rounded-full hover:bg-secondary"
+            >
+              <AttachFileIcon className="text-my-ring" />
             </div>
-          </>
-        )}
+            <input
+              className="flex items-center text-white ring-1 ring-my-ring border-0 bg-my-input h-10 w-full rounded px-3 text-sm"
+              type="text"
+              placeholder="Type your message…"
+              value={message}
+              disabled={uploadedIMG ? true : false}
+              onChange={(e) => {
+                setMessage(e.target.value);
+                setShowEmoji(false);
+                setShowInput(false);
+              }}
+              onFocus={() => setShowEmoji(false)}
+            />
+            <span onClick={() => setShowEmoji((s) => !s)}>
+              <EmojiEmotionsIcon className="text-my-ring cursor-pointer" />
+            </span>
+            <span onClick={handleSend}>
+              <SendIcon className="text-my-ring cursor-pointer" />
+            </span>
+          </div>
+        </>
       </div>
     </>
   );

@@ -80,7 +80,7 @@ export default function EditCourseModal({
         try {
           setLoading(true);
           if (image) {
-            await deleteImageFromFirebase(initialstate.coverIMG);
+            await deleteImageFromFirebase(initialstate.coverIMG as string);
             const filename = new Date().getTime() + image.name;
             const storageRef = ref(storage, "converIMG/" + filename);
             const snapshot = await uploadBytes(storageRef, image);
