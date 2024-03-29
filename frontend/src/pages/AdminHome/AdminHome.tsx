@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import api from "../../API/api";
 import { IDashboardData } from "../../types/adminUserTypes";
 import { getAllYears } from "../../utils";
+import { toast } from "react-toastify";
 
 const darkTheme = createTheme({
   palette: {
@@ -26,8 +27,8 @@ export default function AdminHome() {
       try {
         const { data } = await api.get(`/admin/get-users?year=${year}`);
         setData(data);
-      } catch (err) {
-        console.log(err);
+      } catch (_err) {
+        toast.error("Error");
       }
     })();
   }, [year]);

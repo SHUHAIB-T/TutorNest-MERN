@@ -33,7 +33,6 @@ export default function ConnectionsDrawer({ open, setOpen }: prop) {
           withCredentials: true,
         });
         if (response) {
-          console.log(response.data.requests);
           setRequests(response.data.requests);
           setIsUpdate(false);
         }

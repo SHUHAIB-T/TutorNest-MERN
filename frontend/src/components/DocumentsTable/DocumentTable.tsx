@@ -46,11 +46,9 @@ export default function DocumentTable({
       if (result.isConfirmed) {
         const imageRef = ref(storage, url);
         deleteObject(imageRef)
-          .then(() => {
-            console.log("old image deleted");
-          })
-          .catch((error) => {
-            console.log(error);
+          .then(() => {})
+          .catch(() => {
+            toast.error("Error");
           });
         setDeleteIMG(id);
       }

@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { ICourse } from "../../types/courseType";
 import api from "../../API/api";
 import Footer from "../../components/Footer/Footer";
+import { toast } from "react-toastify";
 
 export default function TutorCoursePage() {
   const [openModal, setOpenModal] = useState(false);
@@ -28,10 +29,9 @@ export default function TutorCoursePage() {
         const { data } = await api.get("/tutor/my_courses", {
           withCredentials: true,
         });
-        // console.log("my courses", data);
         setCourses(data.courses);
-      } catch (err) {
-        console.log(err);
+      } catch (_err) {
+        toast.error("Error")
       }
     })();
   }, [updatd]);

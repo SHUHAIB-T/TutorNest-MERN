@@ -10,6 +10,7 @@ import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 import VerifiedIcon from "@mui/icons-material/Verified";
 import { Tooltip } from "flowbite-react";
+import { toast } from "react-toastify";
 
 const darkTheme = createTheme({
   palette: {
@@ -56,7 +57,7 @@ export default function CoureseBanner() {
           });
         }
       } catch (err) {
-        console.log(err);
+        toast.error("Error");
       }
     }
   };
@@ -110,7 +111,7 @@ export default function CoureseBanner() {
             setLoading(false);
           }
         } catch (err) {
-          console.log(err);
+          toast.error("Error");
           setLoading(false);
         }
       })();

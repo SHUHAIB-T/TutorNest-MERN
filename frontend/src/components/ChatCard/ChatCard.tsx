@@ -5,6 +5,7 @@ import api from "../../API/api";
 import { useAppSelector } from "../../app/store";
 import { SocketContext } from "../../contexts/SocketContext";
 import { format } from "timeago.js";
+import { toast } from "react-toastify";
 type prop = {
   chat: Ichat;
   user: userType;
@@ -30,7 +31,7 @@ export default function ChatCard({ chat, user }: prop) {
         });
         setUserData(data.userProfile);
       } catch (err) {
-        console.log(err);
+        toast.error("Error");
       }
     })();
   }, [chat.members, user._id]);
@@ -122,6 +123,7 @@ export default function ChatCard({ chat, user }: prop) {
               )}
             {newChat &&
               newChat.content_type === "TEXT" &&
+              newChat.chatId === chat._id &&
               !newChat.isDelete && (
                 <div className="text-gray-400 flex w-full justify-between">
                   <h1>{newChat.content?.slice(0, 15)}</h1>

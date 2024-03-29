@@ -37,8 +37,8 @@ export default function StudentRequestCard({
             setAccept({ id: "", studentId: "" });
             setIsUpdate(true);
           }
-        } catch (error) {
-          console.log(error);
+        } catch (_error) {
+          toast.error("Error")
         }
       }
     })();
@@ -57,8 +57,8 @@ export default function StudentRequestCard({
             setDeleteId("");
             toast("Request rejected!");
           }
-        } catch (error) {
-          console.log(error);
+        } catch (_error) {
+          toast.error("Error")
         }
       }
     })();

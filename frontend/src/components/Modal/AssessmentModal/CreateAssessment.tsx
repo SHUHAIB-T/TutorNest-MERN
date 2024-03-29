@@ -44,8 +44,8 @@ export default function CreateAssessment({
         if (data.success) {
           setAssessment(data.assessment);
         }
-      } catch (err) {
-        console.log(err);
+      } catch (_err) {
+        toast.error("Error");
       }
     })();
   }, [courseId, updated]);
@@ -115,8 +115,8 @@ export default function CreateAssessment({
             setUpdated((e) => !e);
             setLoading(false);
           }
-        } catch (err) {
-          console.log(err);
+        } catch (_err) {
+          toast.error("Error");
           setSubmit(false);
           setLoading(false);
         }

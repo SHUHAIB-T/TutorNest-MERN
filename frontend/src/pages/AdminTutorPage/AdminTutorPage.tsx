@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import { IAdminTutor } from "../../types/adminUserTypes";
 import { debaunce } from "../../components/util/utilityFuctions";
 import { Pagination } from "flowbite-react";
+import { toast } from "react-toastify";
 
 export default function AdminTutorPage() {
   const [tutorData, setTutorData] = useState<IAdminTutor[]>([]);
@@ -35,8 +36,8 @@ export default function AdminTutorPage() {
         );
         setTutorData(response.data.teachers);
         setCount(response.data.count);
-      } catch (err) {
-        console.log(err);
+      } catch (_err) {
+        toast.error("Error");
       }
     })();
   }, [blockId, unblockId, search, currentPage]);

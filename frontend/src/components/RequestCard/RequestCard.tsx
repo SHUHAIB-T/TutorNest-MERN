@@ -37,8 +37,8 @@ export default function RequestCard({
             setAccept({ id: "", teacherId: "" });
             setIsUpdate(true);
           }
-        } catch (error) {
-          console.log(error);
+        } catch (_error) {
+          toast.error("Error")
         }
       }
     })();
@@ -57,8 +57,8 @@ export default function RequestCard({
             setDeleteId("");
             toast("Request rejected!");
           }
-        } catch (error) {
-          console.log(error);
+        } catch (_error) {
+          toast.error("Error");
         }
       }
     })();

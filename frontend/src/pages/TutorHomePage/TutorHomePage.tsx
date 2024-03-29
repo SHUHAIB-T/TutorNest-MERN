@@ -7,6 +7,7 @@ import api from "../../API/api";
 import { useAppDispatch } from "../../app/store";
 import { getStudentProfile } from "../../features/users/userServieces";
 import Footer from "../../components/Footer/Footer";
+import { toast } from "react-toastify";
 
 export default function TutorHomePage() {
   const [posts, setPosts] = useState<IPosts[]>([]);
@@ -26,8 +27,8 @@ export default function TutorHomePage() {
           setPosts(response.data.posts);
           setIsRequestSent(false);
         }
-      } catch (error) {
-        console.log(error);
+      } catch (_error) {
+        toast.error("Error")
       }
     })();
   }, [isRequestSent]);

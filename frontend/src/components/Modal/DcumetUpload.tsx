@@ -78,8 +78,8 @@ export default function DcumetUpload({
               }
             }
           }
-        } catch (error) {
-          console.log(error);
+        } catch (_error) {
+          toast.error("Error");
         }
       }
     })();

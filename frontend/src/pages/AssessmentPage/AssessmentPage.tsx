@@ -8,6 +8,7 @@ import Loader3 from "../../components/Loader/Loader3/Loader3";
 import Swal from "sweetalert2";
 import { useAppSelector } from "../../app/store";
 import AssessmentSucceess from "../../components/Modal/AssessmentSucceess";
+import { toast } from "react-toastify";
 
 export default function AssessmentPage() {
   const { id } = useParams();
@@ -40,7 +41,7 @@ export default function AssessmentPage() {
         setAssessment(data.assessment);
         setLoading(false);
       } catch (err) {
-        console.log(err);
+        toast.error("Error")
         setLoading(false);
       }
     })();
@@ -100,8 +101,8 @@ export default function AssessmentPage() {
             setLoading2(false);
             setOpenModal(true);
           }
-        } catch (err) {
-          console.log(err);
+        } catch (_err) {
+          toast.error("Error")
           setLoading2(false);
         }
       }

@@ -19,7 +19,6 @@ import Lesson from "../model/lessonModel";
 export const createEnrollment: RequestHandler = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     const { courseId } = req.body;
-    console.log(req.body);
     const studentId = req.user?._id;
     const course = await Course.findOne(
       { _id: courseId },
@@ -54,7 +53,6 @@ export const createEnrollment: RequestHandler = asyncHandler(
     )
       .then((order) => order)
       .catch((err) => {
-        console.log("Error with razorpay ====>>>", err);
         if (err) {
           res.status(500);
           next(Error("Error occured in razorpay"));

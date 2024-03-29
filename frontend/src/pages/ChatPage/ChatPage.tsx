@@ -9,6 +9,7 @@ import { getMyMessages } from "../../features/message/mesageServiece";
 import { IMessage, Ichat } from "../../types/chatandMessage";
 import { SocketContext } from "../../contexts/SocketContext";
 import Logo from "../../assets/Logo.svg";
+import { toast } from "react-toastify";
 
 type Prop = {
   role: string;
@@ -33,8 +34,8 @@ export default function ChatPage({ role }: Prop) {
         try {
           const messages = await getMyMessages(currentChat._id, null);
           setMessages(messages.messages);
-        } catch (err) {
-          console.log(err);
+        } catch (_err) {
+          toast.error("Error") 
         }
       })();
     }

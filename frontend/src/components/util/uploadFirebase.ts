@@ -23,11 +23,9 @@ export const deleteImageFromFirebase = async (
   const imageRef = ref(storage, url);
   deleteObject(imageRef)
     .then(() => {
-      console.log("old image deleted");
       return true;
     })
-    .catch((error) => {
-      console.log(error);
+    .catch(() => {
       return false;
     });
   return false;
