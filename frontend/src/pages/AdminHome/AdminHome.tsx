@@ -7,6 +7,8 @@ import api from "../../API/api";
 import { IDashboardData } from "../../types/adminUserTypes";
 import { getAllYears } from "../../utils";
 import { toast } from "react-toastify";
+import { useAppDispatch } from "../../app/store";
+import { getStudentProfile } from "../../features/users/userServieces";
 
 const darkTheme = createTheme({
   palette: {
@@ -15,12 +17,17 @@ const darkTheme = createTheme({
 });
 
 export default function AdminHome() {
+  const dispatch = useAppDispatch();
   const [data, setData] = useState<IDashboardData>({
     students: 0,
     monthlyJoinnings: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     teachers: 0,
   });
   const [year, setYear] = useState<number>(getAllYears()[0]);
+  
+  useEffect(() => {
+    dispatch(getStudentProfile());
+  }, [dispatch]);
 
   useEffect(() => {
     (async function () {
