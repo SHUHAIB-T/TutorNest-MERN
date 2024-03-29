@@ -65,12 +65,10 @@ function App() {
   const URL = "https://tutornest.online";
   // const URL = "http://localhost:5000";
   useEffect(() => {
-    socket.current = io(URL, {
-      transports: ["websocket"],
-    });
+    socket.current = io(URL);
     socket.current.emit("setUser", user?._id);
     socket.current.on("getUsers", (data) => {
-      console.log(data);
+      console.log("online users:", data);
       dispatch(setOnlineUsers(data));
     });
 
