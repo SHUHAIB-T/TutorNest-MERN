@@ -11,5 +11,6 @@ router.get("/students", adminUserController_1.getAllstudnets);
 router.patch("/user-block/:id", adminUserController_1.blockUser);
 router.patch("/user-unblock/:id", adminUserController_1.unblockUser);
 router.route("/document/:id").get(adminUserController_1.getTutuorDocument).patch(adminUserController_1.toggleVerify);
-router.get('/tutor/:id', adminUserController_1.getSingleTutor);
+router.get("/tutor/:id", adminUserController_1.getSingleTutor);
+router.get("/get-users", adminUserController_1.getDashboardDetais);
 exports.default = router;
