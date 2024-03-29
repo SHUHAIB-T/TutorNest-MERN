@@ -48,6 +48,7 @@ const authSlice = createSlice({
         localStorage.setItem("user", JSON.stringify(action.payload.user));
         state.user = action.payload.user;
         Cookies.set("token", action.payload.tocken, { expires: 2 });
+        window.location.reload();
       })
       .addCase(signup.rejected, (state, action) => {
         state.isError = true;
@@ -64,6 +65,7 @@ const authSlice = createSlice({
         state.user = action.payload.user;
         localStorage.setItem("user", JSON.stringify(action.payload.user));
         Cookies.set("token", action.payload.tocken, { expires: 2 });
+        window.location.reload();
       })
       .addCase(login.rejected, (state, action) => {
         state.isSuccess = false;
@@ -81,6 +83,7 @@ const authSlice = createSlice({
         state.user = action.payload.user;
         localStorage.setItem("user", JSON.stringify(action.payload.user));
         Cookies.set("token", action.payload.tocken, { expires: 2 });
+        window.location.reload();
       })
       .addCase(googleAuth.rejected, (state, action) => {
         state.isLoading = false;
