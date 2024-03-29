@@ -70,6 +70,7 @@ function App() {
     });
     socket.current.emit("setUser", user?._id);
     socket.current.on("getUsers", (data) => {
+      console.log(data);
       dispatch(setOnlineUsers(data));
     });
 
