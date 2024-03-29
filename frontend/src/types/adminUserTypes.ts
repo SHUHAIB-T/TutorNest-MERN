@@ -27,3 +27,9 @@ export interface IAdminStudent {
     updatedAt: string;
   };
 }
+
+export interface IDashboardData {
+  teachers: number;
+  students: number;
+  monthlyJoinnings: number[];
+}

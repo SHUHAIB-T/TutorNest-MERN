@@ -74,3 +74,15 @@ export function formatDuration(duration: number): string {
 
   return `${formattedHours}${formattedMinutes}:${formattedSeconds}`;
 }
+
+export function getAllYears(): number[] {
+  const currentYear = new Date().getFullYear();
+  const startYear = 2023;
+  const years: number[] = [];
+
+  for (let year = startYear; year <= currentYear; year++) {
+    years.push(year);
+  }
+
+  return years.reverse();
+}
