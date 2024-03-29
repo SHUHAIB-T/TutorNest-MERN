@@ -5,6 +5,7 @@ import { IMessage } from "./utils/interfaces";
 
 export const setUpSocket = (server: HTTPServer) => {
   const ORIGIN = "https://tutornest.online";
+  console.log("socket backend")
   const io = new Server(server, {
     pingTimeout: 6000,
     cors: {
@@ -13,6 +14,7 @@ export const setUpSocket = (server: HTTPServer) => {
     },
   });
   io.on("connection", (socket) => {
+    console.log("socket connected")
     socket.on("setUser", (userId: string) => {
       userJoin(socket.id, userId);
       io.emit("getUsers", getUsers());
