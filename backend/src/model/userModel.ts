@@ -8,6 +8,7 @@ export interface IUser {
   role: string;
   password: string;
   status: boolean;
+  createdAt: Date;
   matchPassword(Password: string): Promise<boolean>;
 }
 export type user = mongoose.Document<unknown, IUser> &

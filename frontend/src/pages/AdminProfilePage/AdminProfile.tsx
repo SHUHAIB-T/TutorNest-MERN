@@ -14,11 +14,11 @@ export default function AdminProfile() {
   }, [dispatch]);
   return (
     <>
-      <div className="w-[100vw]">
-        <NavBar role="TUTOR" />
-        <div className="flex md:p-10 p-4 gap-10 bg-secondary md:pb-[334px]">
+      <div className="w-full">
+        <NavBar role="ADMIN" />
+        <div className="flex flex-wrap md:p-10 p-4 gap-10 bg-secondary md:pb-[334px]">
           <AdminSideBar />
-          <div className="flex flex-col w-[100%]">
+          <div className="flex flex-col md:w-[60vw]">
             {isLoading ? (
               <div className="flex flex-wrap gap-3">
                 <Skeleton variant="circular" width={200} height={200} />

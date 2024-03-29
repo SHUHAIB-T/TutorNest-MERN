@@ -17,7 +17,7 @@ export default function NavBar({ role }: { role: string }) {
   const [open, setOpen] = useState<boolean>(false);
 
   const drop = () => {
-    if (role === "TUTOR") {
+    if (role === "TUTOR" || role === "ADMIN") {
       return (
         <>
           <div className="sticky top-0 z-10">

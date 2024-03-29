@@ -3,9 +3,8 @@ import { Server as HTTPServer } from "http";
 import { getUsers, userJoin, userLeft, users } from "./utils/user";
 import { IMessage } from "./utils/interfaces";
 
-const ORIGIN = "https://tutornest.online"
-
 export const setUpSocket = (server: HTTPServer) => {
+  const ORIGIN = "https://tutornest.online";
   const io = new Server(server, {
     cors: {
       origin: ORIGIN,

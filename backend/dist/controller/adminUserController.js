@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getSingleTutor = exports.toggleVerify = exports.getTutuorDocument = exports.unblockUser = exports.blockUser = exports.getAllstudnets = exports.getAllTutors = void 0;
+exports.getDashboardDetais = exports.getSingleTutor = exports.toggleVerify = exports.getTutuorDocument = exports.unblockUser = exports.blockUser = exports.getAllstudnets = exports.getAllTutors = void 0;
 const express_async_handler_1 = __importDefault(require("express-async-handler"));
 const teacherProfile_1 = __importDefault(require("../model/teacherProfile"));
 const studentProfile_1 = __importDefault(require("../model/studentProfile"));
@@ -228,5 +228,45 @@ exports.getSingleTutor = (0, express_async_handler_1.default)((req, res, next) =
     else {
         res.status(404);
         next(Error("No user found!"));
+    }
+}));
+/**
+ * @disc    Get a single tutor
+ * @route   GET /api/admin/get-users
+ * @access  private
+ */
+exports.getDashboardDetais = (0, express_async_handler_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const users = yield userModel_1.default.find({
+        status: true,
+        role: { $in: ["STUDENT", "TUTOR"] },
+    });
+    let year = req.query.year;
+    const monthlyJoinnings = Array(12).fill(0);
+    if (year) {
+        year = parseInt(year);
+    }
+    else {
+        year = new Date().getFullYear();
+    }
+    if (users) {
+        users.forEach((user) => {
+            const createdAt = new Date(user.createdAt);
+            const userYear = createdAt.getFullYear();
+            if (userYear === year) {
+                const month = createdAt.getMonth();
+                monthlyJoinnings[month]++;
+            }
+        });
+        const students = yield studentProfile_1.default.countDocuments();
+        const teachers = yield teacherProfile_1.default.countDocuments();
+        res.json({
+            monthlyJoinnings,
+            students,
+            teachers,
+        });
+    }
+    else {
+        res.status(500);
+        next(Error("Internal serer Error"));
     }
 }));

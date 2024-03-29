@@ -43,7 +43,7 @@ export default function AdminTutorPage() {
 
   return (
     <>
-      <NavBar role="TUTOR" />
+      <NavBar role="ADMIN" />
       <div className="flex flex-col items-center md:p-10 p-4 w-full h-[100vh] bg-secondary">
         <h1 className="font-bold text-white text-4xl">MANAGE TUTORS</h1>
         <div className="flex flex-wrap items-center justify-between mt-10 w-full md:w-[80%]">

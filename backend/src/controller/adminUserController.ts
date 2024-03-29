@@ -240,3 +240,45 @@ export const getSingleTutor = asynchandler(
     }
   }
 );
+
+/**
+ * @disc    Get a single tutor
+ * @route   GET /api/admin/get-users
+ * @access  private
+ */
+export const getDashboardDetais = asynchandler(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const users = await User.find({
+      status: true,
+      role: { $in: ["STUDENT", "TUTOR"] },
+    });
+    let year = req.query.year as string | number;
+    const monthlyJoinnings = Array(12).fill(0);
+    if (year) {
+      year = parseInt(year as string);
+    } else {
+      year = new Date().getFullYear();
+    }
+    if (users) {
+      users.forEach((user) => {
+        const createdAt = new Date(user.createdAt);
+        const userYear = createdAt.getFullYear();
+        if (userYear === year) {
+          const month = createdAt.getMonth();
+          monthlyJoinnings[month]++;
+        }
+      });
+      const students = await Student.countDocuments();
+      const teachers = await Teacher.countDocuments();
+
+      res.json({
+        monthlyJoinnings,
+        students,
+        teachers,
+      });
+    } else {
+      res.status(500);
+      next(Error("Internal serer Error"));
+    }
+  }
+);
