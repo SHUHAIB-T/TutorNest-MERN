@@ -62,8 +62,8 @@ function App() {
   const socket = useRef<Socket | null>(null);
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.auth);
-  // const URL = "https://tutornest.online";
-  const URL = "http://localhost:5000";
+  const URL = "https://tutornest.online";
+  // const URL = "http://localhost:5000";
   useEffect(() => {
     socket.current = io(URL, {
       transports: ["websocket"],

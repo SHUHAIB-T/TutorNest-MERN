@@ -43,7 +43,6 @@ exports.getProfile = (0, express_async_handler_1.default)((req, res, next) => __
 exports.updateStudentProfile = (0, express_async_handler_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     var _b;
     const userId = (_b = req.user) === null || _b === void 0 ? void 0 : _b._id;
-    console.log(userId);
     const { name, phone, dob, gender, standard, subjects, intrests, preffered_language, } = req.body.data;
     const updatedUser = yield studentProfile_1.default.findOneAndUpdate({ userID: userId }, {
         name: name,

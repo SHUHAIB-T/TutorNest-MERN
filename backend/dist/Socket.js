@@ -5,7 +5,6 @@ const socket_io_1 = require("socket.io");
 const user_1 = require("./utils/user");
 const setUpSocket = (server) => {
     const ORIGIN = "https://tutornest.online";
-    console.log("socket backend");
     const io = new socket_io_1.Server(server, {
         pingTimeout: 6000,
         cors: {
@@ -14,13 +13,9 @@ const setUpSocket = (server) => {
         },
     });
     io.on("connection", (socket) => {
-        console.log("socket connected");
         socket.on("setUser", (userId) => {
             (0, user_1.userJoin)(socket.id, userId);
             io.emit("getUsers", (0, user_1.getUsers)());
-        });
-        socket.on("hello", (data) => {
-            console.log("this is from user", data);
         });
         socket.on("send-new-message", (data) => {
             var _a;
