@@ -6,6 +6,7 @@ import { IMessage } from "./utils/interfaces";
 export const setUpSocket = (server: HTTPServer) => {
   const ORIGIN = "https://tutornest.online";
   const io = new Server(server, {
+    pingTimeout: 6000,
     cors: {
       origin: ORIGIN,
       credentials: true,
