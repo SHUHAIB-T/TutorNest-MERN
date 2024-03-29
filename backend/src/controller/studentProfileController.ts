@@ -31,7 +31,6 @@ export const getProfile = asyncHandler(
 export const updateStudentProfile = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     const userId = req.user?._id;
-    console.log(userId);
     const {
       name,
       phone,

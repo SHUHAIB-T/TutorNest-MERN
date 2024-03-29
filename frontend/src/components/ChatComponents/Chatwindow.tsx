@@ -29,6 +29,7 @@ import { SocketContext } from "../../contexts/SocketContext";
 import { deleteImageFromFirebase, uploadImage } from "../util/uploadFirebase";
 import Swal from "sweetalert2";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 
 type userDtaType = {
   name: string;
@@ -82,7 +83,7 @@ export default function Chatwindow({
           setIsscroll(false);
           setFetchMessage(false);
         } catch (err) {
-          console.log(err);
+          toast.error("Error");
         }
       })();
     }
@@ -99,7 +100,7 @@ export default function Chatwindow({
           });
           setUserData(data.userProfile);
         } catch (err) {
-          console.log(err);
+          toast.error("Error");
         }
       }
     })();

@@ -55,8 +55,8 @@ export default function LessonsTable({
           setDeleteLessonId("");
           setUpdated((e) => !e);
           toast.success("lesson deleted");
-        } catch (err) {
-          console.log(err);
+        } catch (_err) {
+          toast.error("Error");
         }
       }
     })();

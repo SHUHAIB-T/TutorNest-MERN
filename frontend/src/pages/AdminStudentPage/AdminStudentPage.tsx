@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import { IAdminStudent } from "../../types/adminUserTypes";
 import { debaunce } from "../../components/util/utilityFuctions";
 import { Pagination } from "flowbite-react";
+import { toast } from "react-toastify";
 
 export default function AdminStudentPage() {
   const [studentData, setStudentData] = useState<IAdminStudent[]>([]);
@@ -35,8 +36,8 @@ export default function AdminStudentPage() {
         );
         setStudentData(response.data.students);
         setCount(response.data.count);
-      } catch (err) {
-        console.log(err);
+      } catch (_err) {
+        toast.error("Error");
       }
     })();
   }, [blockId, unblockId, search, currentPage]);

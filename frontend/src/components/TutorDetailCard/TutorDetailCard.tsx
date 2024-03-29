@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import api from "../../API/api";
 import { useAppSelector } from "../../app/store";
+import { toast } from "react-toastify";
 
 const darkTheme = createTheme({
   palette: {
@@ -52,9 +53,9 @@ export default function TutorDetailCard({
           );
           setUserId("");
           navigate("/student/chat");
-        } catch (err) {
+        } catch (_err) {
           setUserId("");
-          console.log(err);
+          toast.error("Error")
         }
       }
     })();
@@ -68,11 +69,10 @@ export default function TutorDetailCard({
         });
         if (data.success) {
           setRequested(true);
-          console.log("request created");
         }
       } catch (err) {
         setRequested(false);
-        console.log(err);
+        toast.error("Error")
       }
     } else {
       navigate("/login");
@@ -87,11 +87,10 @@ export default function TutorDetailCard({
         });
         if (data.success) {
           setRequested(false);
-          console.log("request cancelled");
         }
       } catch (err) {
         setRequested(true);
-        console.log(err);
+        toast.error("Error");
       }
     } else {
       navigate("/login");

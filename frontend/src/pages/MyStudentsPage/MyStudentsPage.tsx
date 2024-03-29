@@ -5,6 +5,7 @@ import MyStudentTable from "../../components/MystudentTable/MyStudentTable";
 import { useEffect, useState } from "react";
 import { IMyStudents } from "../../types/tutorTypes";
 import api from "../../API/api";
+import { toast } from "react-toastify";
 
 export default function MyStudentsPage() {
   const [students, setStudents] = useState<IMyStudents[]>([]);
@@ -17,8 +18,8 @@ export default function MyStudentsPage() {
         if (response) {
           setStudents(response.data.students);
         }
-      } catch (error) {
-        console.log(error);
+      } catch (_error) {
+        toast.error("Error")
       }
     })();
   }, []);

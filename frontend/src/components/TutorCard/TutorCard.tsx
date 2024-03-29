@@ -4,6 +4,7 @@ import { IMyTutor } from "../../types/studentTypes";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import api from "../../API/api";
 import { Irating } from "../../types/ratingTypes";
+import { toast } from "react-toastify";
 
 interface prop extends IMyTutor {
   tutorRatings: Irating[];
@@ -36,8 +37,8 @@ export default function TutorCard({
           );
           setUserId("");
           navigate("/student/chat");
-        } catch (err) {
-          console.log(err);
+        } catch (_err) {
+          toast.error("Error");
         }
       }
     })();

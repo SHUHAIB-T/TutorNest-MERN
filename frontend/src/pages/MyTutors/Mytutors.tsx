@@ -7,6 +7,7 @@ import { IMyTutor } from "../../types/studentTypes";
 import RateTutor from "../../components/Modal/RateTutor";
 import { Irating } from "../../types/ratingTypes";
 import Footer from "../../components/Footer/Footer";
+import { toast } from "react-toastify";
 
 export default function Mytutors() {
   const [myteachers, setMyTeachers] = useState<IMyTutor[]>([]);
@@ -35,8 +36,8 @@ export default function Mytutors() {
           withCredentials: true,
         });
         setMyTeachers(data.teachers);
-      } catch (err) {
-        console.log(err);
+      } catch (_err) {
+        toast.error("Error")
       }
     })();
   }, []);
@@ -48,8 +49,8 @@ export default function Mytutors() {
           withCredentials: true,
         });
         setTutorRatings(data.ratings);
-      } catch (err) {
-        console.log(err);
+      } catch (_err) {
+        toast.error("Error")
       }
     })();
   }, [updated]);

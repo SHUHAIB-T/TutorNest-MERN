@@ -120,13 +120,12 @@ export const getCourses: RequestHandler = asyncHandler(
           averageRating: { $ifNull: ["$averageRating", 0] },
         },
       },
-      {
-        $skip: (page - 1) * pageSize,
-      },
-      {
-        $limit: pageSize,
-      },
     ]);
+
+    courses = courses.slice(
+      (page - 1) * pageSize,
+      Math.min((page - 1) * pageSize + pageSize, courses.length)
+    );
 
     if (req.query.search) {
       const query = (req.query.search as string)
@@ -196,7 +195,7 @@ export const getCourses: RequestHandler = asyncHandler(
         break;
     }
     let count = await Course.countDocuments();
-    count = ~~(count / 8);
+    count = Math.ceil(count / 8);
     if (courses) {
       res.status(200).json({
         success: true,

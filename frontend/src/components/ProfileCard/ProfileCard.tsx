@@ -8,6 +8,7 @@ import ResetPasswordModal from "../Modal/ResetPasswordModal";
 // firebase
 import { storage } from "../../app/fireabse";
 import { ref, deleteObject } from "firebase/storage";
+import { toast } from "react-toastify";
 
 export default function ProfileCard() {
   const dispatch = useAppDispatch();
@@ -23,11 +24,9 @@ export default function ProfileCard() {
       if (profile?.profile) {
         const imageRef = ref(storage, profile.profile);
         deleteObject(imageRef)
-          .then(() => {
-            console.log("old image deleted");
-          })
+          .then(() => {})
           .catch((error) => {
-            console.log(error);
+            toast.error(error.message);
           });
       }
       dispatch(uploadProfile(croppedImage));

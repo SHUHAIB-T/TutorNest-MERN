@@ -19,7 +19,7 @@ const corsConfig = {
   credentials: true,
 };
 
-app.use(morgan("dev"));
+env.ENVIRONMENT === "development" && app.use(morgan("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());

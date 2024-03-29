@@ -22,7 +22,7 @@ export default function AdminStudentTable({
   const blockUser = (id: string) => {
     Swal.fire({
       title: "Are you sure?",
-      text:"are you sure want to block",
+      text: "are you sure want to block",
       icon: "question",
       showCancelButton: true,
       confirmButtonText: "Yes Block!",
@@ -35,7 +35,7 @@ export default function AdminStudentTable({
   const unblockUser = (id: string) => {
     Swal.fire({
       title: "Are you sure?",
-      text:"are you sure want to unblock",
+      text: "are you sure want to unblock",
       icon: "question",
       showCancelButton: true,
       confirmButtonText: "Yes Unblock!",
@@ -59,7 +59,7 @@ export default function AdminStudentTable({
             toast.success("User Blocked!");
           }
         } catch (err) {
-          console.log(err);
+          toast.error("Error");
         }
       }
     })();
@@ -79,7 +79,7 @@ export default function AdminStudentTable({
             toast.success("User Unblocked!");
           }
         } catch (err) {
-          console.log(err);
+          toast.error("Error");
         }
       }
     })();

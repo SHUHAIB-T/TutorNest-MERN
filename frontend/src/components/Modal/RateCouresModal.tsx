@@ -75,9 +75,9 @@ export default function RateCouresModal({
             setUpdated((e) => !e);
             setOpenModal(false);
           }
-        } catch (err) {
+        } catch (_err) {
           setSubmit(false);
-          console.log(err);
+          toast.error("Error");
         }
       }
     })();

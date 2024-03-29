@@ -28,7 +28,6 @@ const lessonModel_1 = __importDefault(require("../model/lessonModel"));
 exports.createEnrollment = (0, express_async_handler_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     const { courseId } = req.body;
-    console.log(req.body);
     const studentId = (_a = req.user) === null || _a === void 0 ? void 0 : _a._id;
     const course = yield courseModel_1.default.findOne({ _id: courseId }, { _id: 0, price: 1 });
     const amount = course === null || course === void 0 ? void 0 : course.price;
@@ -47,7 +46,6 @@ exports.createEnrollment = (0, express_async_handler_1.default)((req, res, next)
     const Razorder = yield (0, razorpayOrder_1.createRazorpayOrder)(enrollment._id, amount)
         .then((order) => order)
         .catch((err) => {
-        console.log("Error with razorpay ====>>>", err);
         if (err) {
             res.status(500);
             next(Error("Error occured in razorpay"));

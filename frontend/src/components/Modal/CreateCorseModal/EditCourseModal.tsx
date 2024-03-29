@@ -139,8 +139,8 @@ export default function EditCourseModal({
             setSubmit(false);
             setLoading(false);
           }
-        } catch (err) {
-          console.log(err);
+        } catch (_err) {
+          toast.error("Error")
           setLoading(false);
         }
       }

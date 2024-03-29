@@ -60,7 +60,7 @@ export default function AdminTutorTable({
             toast.success("User Blocked!");
           }
         } catch (err) {
-          console.log(err);
+          toast.error("Error");
         }
       }
     })();
@@ -80,7 +80,7 @@ export default function AdminTutorTable({
             toast.success("User Unblocked!");
           }
         } catch (err) {
-          console.log(err);
+          toast.error("Error");
         }
       }
     })();

@@ -277,7 +277,13 @@ exports.getAllTutors = (0, express_async_handler_1.default)((req, res) => __awai
             $project: {
                 profile: 1,
                 isInConnection: 1,
-                averageRating: 1,
+                averageRating: {
+                    $cond: {
+                        if: { $eq: ["$averageRating", null] },
+                        then: 0,
+                        else: "$averageRating",
+                    },
+                },
                 isRequested: {
                     $cond: {
                         if: { $gt: [{ $size: "$requests" }, 0] },
@@ -286,12 +292,6 @@ exports.getAllTutors = (0, express_async_handler_1.default)((req, res) => __awai
                     },
                 },
             },
-        },
-        {
-            $skip: (page - 1) * pageSize,
-        },
-        {
-            $limit: pageSize,
         },
     ]);
     if (req.query.search) {
@@ -356,28 +356,29 @@ exports.getAllTutors = (0, express_async_handler_1.default)((req, res) => __awai
     switch (sortQuery) {
         case "low-high":
             tutors.sort((a, b) => {
-                const priceA = parseFloat(a.profile.pricing);
-                const priceB = parseFloat(b.profile.pricing);
+                const priceA = parseInt(a.profile.pricing, 10);
+                const priceB = parseInt(b.profile.pricing, 10);
                 return priceA - priceB;
             });
             break;
         case "high-low":
             tutors.sort((a, b) => {
-                const priceA = parseFloat(a.profile.pricing);
-                const priceB = parseFloat(b.profile.pricing);
+                const priceA = parseInt(a.profile.pricing, 10);
+                const priceB = parseInt(b.profile.pricing, 10);
                 return priceB - priceA;
             });
             break;
         case "popular":
             tutors.sort((a, b) => {
-                const ratingA = parseFloat(a.averageRating);
-                const ratingB = parseFloat(b.averageRating);
+                const ratingA = parseInt(a.averageRating, 10);
+                const ratingB = parseInt(b.averageRating, 10);
                 return ratingB - ratingA;
             });
             break;
         default:
             break;
     }
+    tutors = tutors.slice((page - 1) * pageSize, Math.min((page - 1) * pageSize + pageSize, tutors.length));
     let count = yield teacherProfile_1.default.countDocuments();
     count = Math.ceil(count / 8);
     if (tutors) {

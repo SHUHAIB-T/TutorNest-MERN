@@ -107,9 +107,9 @@ export default function CreateCourseModal({
               setLoading(false);
             }
           }
-        } catch (err) {
+        } catch (_err) {
           setLoading(false);
-          console.log(err);
+          toast.error("Error");
         }
       }
     })();

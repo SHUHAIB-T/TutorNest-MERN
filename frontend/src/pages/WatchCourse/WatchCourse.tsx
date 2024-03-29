@@ -17,6 +17,7 @@ import RateCouresModal from "../../components/Modal/RateCouresModal";
 import { Irating } from "../../types/ratingTypes";
 import { formatDuration } from "../../utils";
 import { ILesson } from "../../types/courseType";
+import { toast } from "react-toastify";
 
 const darkTheme = createTheme({
   palette: {
@@ -109,8 +110,8 @@ export default function WatchCourse() {
       try {
         const { data } = await api.get("rating/course");
         setRatings(data.ratings);
-      } catch (err) {
-        console.log(err);
+      } catch (_err) {
+        toast.error("Error")
       }
     })();
   }, [updated]);
@@ -128,8 +129,8 @@ export default function WatchCourse() {
           isComplete: data.isComplete,
         });
       }
-    } catch (err) {
-      console.log(err);
+    } catch (_err) {
+      toast.error("Error")
     }
   };
   return (

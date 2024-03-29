@@ -3,6 +3,7 @@ import { IMyStudents } from "../../types/tutorTypes";
 import { useEffect, useState } from "react";
 import api from "../../API/api";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 interface PROP {
   students: IMyStudents[];
@@ -25,8 +26,8 @@ export default function MyStudentTable({ students }: PROP) {
           );
           setUserId("");
           navigate("/tutor/chat");
-        } catch (err) {
-          console.log(err);
+        } catch (_err) {
+          toast.error("Error")
         }
       }
     })();

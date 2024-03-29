@@ -124,13 +124,8 @@ exports.getCourses = (0, express_async_handler_1.default)((req, res, next) => __
                 averageRating: { $ifNull: ["$averageRating", 0] },
             },
         },
-        {
-            $skip: (page - 1) * pageSize,
-        },
-        {
-            $limit: pageSize,
-        },
     ]);
+    courses = courses.slice((page - 1) * pageSize, Math.min((page - 1) * pageSize + pageSize, courses.length));
     if (req.query.search) {
         const query = req.query.search
             .toLowerCase()
@@ -199,7 +194,7 @@ exports.getCourses = (0, express_async_handler_1.default)((req, res, next) => __
             break;
     }
     let count = yield courseModel_1.default.countDocuments();
-    count = ~~(count / 8);
+    count = Math.ceil(count / 8);
     if (courses) {
         res.status(200).json({
             success: true,
