@@ -236,8 +236,13 @@ exports.getAllTutors = (0, express_async_handler_1.default)((req, res) => __awai
                 profile: 1,
                 isInConnection: {
                     $cond: {
-                        if: { $isArray: "$profile.connections" },
-                        then: { $in: [userId, "$profile.connections"] },
+                        if: {
+                            $and: [
+                                { $isArray: "$profile.connections" },
+                                { $in: [{ $toString: userId }, "$profile.connections"] },
+                            ],
+                        },
+                        then: true,
                         else: false,
                     },
                 },
@@ -259,9 +264,9 @@ exports.getAllTutors = (0, express_async_handler_1.default)((req, res) => __awai
                             $expr: {
                                 $and: [
                                     {
-                                        $or: [
-                                            { $eq: ["$teacherId", "$$teacherId"] },
+                                        $and: [
                                             { $eq: ["$studentId", "$$studentId"] },
+                                            { $eq: ["$teacherId", "$$teacherId"] },
                                         ],
                                     },
                                     { $eq: ["$status", "PENDING"] },
