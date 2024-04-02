@@ -246,8 +246,13 @@ export const getAllTutors = asyncHandler(
           profile: 1,
           isInConnection: {
             $cond: {
-              if: { $isArray: "$profile.connections" },
-              then: { $in: [userId, "$profile.connections"] },
+              if: {
+                $and: [
+                  { $isArray: "$profile.connections" },
+                  { $in: [{ $toString: userId }, "$profile.connections"] },
+                ],
+              },
+              then: true,
               else: false,
             },
           },
@@ -269,9 +274,9 @@ export const getAllTutors = asyncHandler(
                 $expr: {
                   $and: [
                     {
-                      $or: [
-                        { $eq: ["$teacherId", "$$teacherId"] },
+                      $and: [
                         { $eq: ["$studentId", "$$studentId"] },
+                        { $eq: ["$teacherId", "$$teacherId"] },
                       ],
                     },
                     { $eq: ["$status", "PENDING"] },
