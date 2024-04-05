@@ -32,6 +32,7 @@ const courseSlice = createSlice({
     builder
       .addCase(getAllCourses.pending, (state) => {
         state.isLoading = true;
+        state.courses = [];
       })
       .addCase(getAllCourses.fulfilled, (state, action) => {
         state.isLoading = false;

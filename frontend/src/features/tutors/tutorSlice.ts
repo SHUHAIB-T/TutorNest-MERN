@@ -32,6 +32,7 @@ const tutorsSlice = createSlice({
     builder
       .addCase(getAllTutors.pending, (state) => {
         state.isLoading = true;
+        state.tutors = [];
       })
       .addCase(getAllTutors.fulfilled, (state, action) => {
         state.isLoading = false;
