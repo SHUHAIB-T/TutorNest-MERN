@@ -10,6 +10,7 @@ export interface IEnrollments {
 
 export interface myCourse extends ICourse {
   lessons?: ILesson[];
+  hasCertificate?: boolean;
 }
 
 export interface IinitialState {
@@ -21,4 +22,11 @@ export interface IinitialState {
     message: string;
     status: number | null;
   };
+}
+
+export interface ICerficate {
+  ID?: string;
+  createdAt?: string;
+  user?: { name: string };
+  course?: { title: string };
 }

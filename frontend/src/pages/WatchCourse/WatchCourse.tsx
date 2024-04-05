@@ -14,6 +14,7 @@ import LinearProgress, {
 } from "@mui/material/LinearProgress";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import RateCouresModal from "../../components/Modal/RateCouresModal";
+import ViewCertificateModal from "../../components/Modal/ViewCertificateModal";
 import { Irating } from "../../types/ratingTypes";
 import { formatDuration } from "../../utils";
 import { ILesson } from "../../types/courseType";
@@ -52,6 +53,7 @@ export default function WatchCourse() {
     video: "",
   });
   const [openModal, setOpenModal] = useState<boolean>(false);
+  const [openViewCetModal, setOpenViewCertModal] = useState<boolean>(false);
   const [isMobile, setIsMobile] = useState<boolean>(true);
   const [ratings, setRatings] = useState<Irating[]>([]);
   const [currentRating, setCurrentRating] = useState<Irating>();
@@ -71,7 +73,7 @@ export default function WatchCourse() {
       handleInitialMobileCheck();
       const handleResize = () => {
         const width = window.innerWidth;
-        setIsMobile(width <= 768); 
+        setIsMobile(width <= 768);
       };
 
       window.addEventListener("resize", handleResize);
@@ -111,7 +113,7 @@ export default function WatchCourse() {
         const { data } = await api.get("rating/course");
         setRatings(data.ratings);
       } catch (_err) {
-        toast.error("Error")
+        toast.error("Error");
       }
     })();
   }, [updated]);
@@ -130,7 +132,7 @@ export default function WatchCourse() {
         });
       }
     } catch (_err) {
-      toast.error("Error")
+      toast.error("Error");
     }
   };
   return (
@@ -142,6 +144,11 @@ export default function WatchCourse() {
         setOpenModal={setOpenModal}
         rateCouresId={rateCouresId}
         setRateCouresId={setRateCourseId}
+      />
+      <ViewCertificateModal
+        courseId={id}
+        openModal={openViewCetModal}
+        setOpenModal={setOpenViewCertModal}
       />
       <ThemeProvider theme={darkTheme}>
         <div ref={containerRef} className="bg-my-bg-dark min-h-screen">
@@ -196,6 +203,14 @@ export default function WatchCourse() {
                     >
                       Assessment
                     </button>
+                    {currentCoures.course.hasCertificate && (
+                      <button
+                        onClick={() => setOpenViewCertModal(true)}
+                        className="bg-primary py-1 px-3 rounded-md text-gray-200"
+                      >
+                        view certificate
+                      </button>
+                    )}
                   </div>
                 </>
               )}

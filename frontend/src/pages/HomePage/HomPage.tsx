@@ -10,6 +10,7 @@ import CoruseCardUser from "../../components/CouresCardUser/CoruseCardUser";
 import Skeleton from "@mui/material/Skeleton";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import Footer from "../../components/Footer/Footer";
+import ShowCertificateModal from "../../components/Modal/ShowCertificateModal";
 
 const darkTheme = createTheme({
   palette: {
@@ -19,6 +20,9 @@ const darkTheme = createTheme({
 
 export default function HomPage() {
   const [search, setSearch] = useState<string>();
+  const [certificateID, setCertificateID] = useState<string>("");
+  const [openModal, setOpenModal] = useState<boolean>(false);
+  const [submit, setSubmit] = useState<boolean>(false);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
@@ -27,6 +31,15 @@ export default function HomPage() {
       navigate(`/courses?search=${search}`);
     }
   };
+
+  const habdleVerifySubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (certificateID) {
+      setSubmit(true);
+      setOpenModal(true);
+    }
+  };
+
   const couresSearch: ISearch = {
     category: "",
     language: "",
@@ -42,6 +55,14 @@ export default function HomPage() {
 
   return (
     <>
+      <ShowCertificateModal
+        submit={submit}
+        setSubmit={setSubmit}
+        certificateID={certificateID}
+        setCertificateID={setCertificateID}
+        openModal={openModal}
+        setOpenModal={setOpenModal}
+      />
       <StudentNav />
       <div className="w-full flex flex-col items-center min-h-[100vh] bg-[#1e101c]">
         {!isLoading ? (
@@ -110,6 +131,27 @@ export default function HomPage() {
             </div>
           )}
         </div>
+      </div>
+      <div className="w-full flex flex-col text-center text-gray-200 items-center py-10  bg-[#301339]">
+        <h1 className="text-5xl font-bold">Have Certificate?</h1>
+        <h1 className="text-3xl">verify now</h1>
+        <form
+          onSubmit={habdleVerifySubmit}
+          className="w-full flex px-10 backdrop-blur-xl justify-center"
+        >
+          <div className="text-white shadow-2xl bg-[#2e1422] ring-[#662080] my-4 ring-1 flex w-96 items-center justify-between rounded-full">
+            <input
+              onChange={(e) => setCertificateID(e.target.value)}
+              type="text"
+              value={certificateID}
+              placeholder="Enter certificate ID eg:CERT6799367494"
+              className="rounded-s-full px-5 bg-[#1b0a1b] border-0 w-[90%] bg-transparent"
+            />
+            <button>
+              <SearchIcon className="me-2 " />
+            </button>
+          </div>
+        </form>
       </div>
       <Footer />
     </>

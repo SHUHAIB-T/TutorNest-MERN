@@ -154,7 +154,7 @@ export default function TutorDetailCard({
                 onClick={() => cancelConnection(_id as string)}
                 className="font-bold py-1 px-3 bg-primary rounded-lg"
               >
-                cancell request
+                cancel request
               </button>
             )}
             {isInConnection && (

@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import asynchandler from "express-async-handler";
 import Certificate from "../model/certficateModel";
+import mongoose from "mongoose";
 
 /**
  * @desc    create a certificate
@@ -11,15 +12,14 @@ export const createCertificate = asynchandler(
   async (req: Request, res: Response, next: NextFunction) => {
     const userId = req.user?._id;
     const { courseId, ID } = req.body;
-
-    const certificate = await Certificate.findByIdAndUpdate(
+    const certificate = await Certificate.findOneAndUpdate(
       {
-        userId,
-        courseId,
+        userId: userId,
+        courseId: new mongoose.Types.ObjectId(courseId),
       },
       {
-        courseId: courseId,
-        userId: userId,
+        courseId: new mongoose.Types.ObjectId(courseId),
+        userId: new mongoose.Types.ObjectId(userId),
         ID: ID,
       },
       {
@@ -75,7 +75,7 @@ export const verifyCertificate = asynchandler(
         $lookup: {
           from: "students",
           localField: "userId",
-          foreignField: "userId",
+          foreignField: "userID",
           as: "user",
         },
       },
@@ -97,16 +97,22 @@ export const verifyCertificate = asynchandler(
         $project: {
           ID: 1,
           "user.name": 1,
-          "course.name": 1,
+          "course.title": 1,
           createdAt: 1,
         },
       },
     ]);
     if (certificate) {
-      res.status(200).json({
-        success: true,
-        certificate: certificate[0],
-      });
+      if (certificate.length > 0) {
+        res.status(200).json({
+          success: true,
+          certificate: certificate[0],
+        });
+      } else {
+        res.status(200).json({
+          success: false,
+        });
+      }
     } else {
       res.status(404);
       next(Error("certificate not found"));

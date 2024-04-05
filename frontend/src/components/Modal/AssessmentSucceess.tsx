@@ -1,10 +1,11 @@
 import { Modal } from "flowbite-react";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { IResponse } from "../../types/assessment";
 import { useNavigate } from "react-router-dom";
 import Cirtificate from "../Cirtificate/Cirtificate";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
+import api from "../../API/api";
 
 type Prop = {
   openModal: boolean;
@@ -37,6 +38,23 @@ export default function AssessmentSucceess({
       });
     }
   };
+  const [ID, setID] = useState<string>("");
+
+  useEffect(() => {
+    (async function () {
+      if (AssessmentStatus?.success) {
+        try {
+          const { data } = await api.get(`/certificate/${id}`);
+          setID(data.ID);
+        } catch (err) {
+          await api.post("/certificate", {
+            courseId: id,
+            ID: ID ? ID : `CERT${Date.now()}`,
+          });
+        }
+      }
+    })();
+  }, [id, AssessmentStatus?.success, ID]);
 
   if (AssessmentStatus) {
     return (
